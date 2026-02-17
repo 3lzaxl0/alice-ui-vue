@@ -1,0 +1,191 @@
+@theme {
+  /* Border Radius Tokens */
+  --radius-alice-sm: 8px;
+  --radius-alice-md: 12px;
+  --radius-alice-lg: 16px;
+
+  /* Box Shadow Tokens */
+  --shadow-alice-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-alice-panel: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  --shadow-alice-input: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+
+  /* Transition Tokens */
+  --animate-alice-dropdown: alice-dropdown 0.2s ease-out;
+  --animate-alice-scale: alice-scale 0.15s ease-out;
+
+  /* Z-Index Tokens */
+  --z-index-alice-modal: 100;
+  --z-index-alice-popover: 60;
+  --z-index-alice-toast: 110;
+
+  /* Sizing Tokens */
+  --spacing-alice-input-height: 42px;
+}
+
+@layer base {
+  :root {
+    --alice-radius-default: var(--radius-alice-md);
+  }
+}
+
+/* Alice UI Global Styles */
+
+/* Slide Fade Transition (Legacy - keeping for backward compatibility if used elsewhere) */
+.slide-fade-enter-active {
+  transition: all 0.2s ease-out;
+}
+.slide-fade-leave-active {
+  transition: all 0.2s cubic-bezier(1, 0.5, 0.8, 1);
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateX(20px);
+  opacity: 0;
+}
+
+/* -------------------------------------------------------------------------- */
+/* New Standardized Transitions                                               */
+/* -------------------------------------------------------------------------- */
+
+/* Dropdown (Slide Down + Fade) - For Selects, Menus, Popovers */
+.alice-dropdown-enter-active {
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-dropdown-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 1, 1);
+}
+.alice-dropdown-enter-from,
+.alice-dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* Scale (Grow + Fade) - For Checkboxes, Radios, Icons */
+.alice-scale-enter-active {
+  transition: all 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-scale-leave-active {
+  transition: all 0.15s cubic-bezier(0.4, 0, 1, 1);
+}
+.alice-scale-enter-from,
+.alice-scale-leave-to {
+  opacity: 0;
+  transform: scale(0.5);
+}
+
+/* Toast (Slide In/Out + Scale) */
+.alice-toast-move,
+.alice-toast-enter-active,
+.alice-toast-leave-active {
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-toast-enter-from {
+  opacity: 0;
+  transform: translateX(30px) scale(0.95);
+}
+.alice-toast-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.alice-toast-leave-active {
+  position: absolute;
+}
+
+/* Fade (Simple Opacity) - For Overlays */
+.alice-fade-enter-active,
+.alice-fade-leave-active {
+  transition: opacity 0.15s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-fade-enter-from,
+.alice-fade-leave-to {
+  opacity: 0;
+}
+
+/* Modal (Slide Up + Scale) - For Dialog Content */
+.alice-modal-enter-active {
+  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-modal-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 1, 1);
+}
+.alice-modal-enter-from,
+.alice-modal-leave-to {
+  opacity: 0;
+  transform: translateY(2rem) scale(0.95);
+}
+
+/* Zoom (Subtle Scale) - For Popovers, Tooltips */
+.alice-zoom-enter-active {
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-zoom-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 1, 1);
+}
+.alice-zoom-enter-from,
+.alice-zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* Pop (Emerges from Center or Origin) */
+.alice-pop-enter-active {
+  transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.alice-pop-leave-active {
+  transition: all 0.2s cubic-bezier(0.4, 0, 1, 1);
+}
+.alice-pop-enter-from,
+.alice-pop-leave-to {
+  opacity: 0;
+  transform: scale(0.1);
+}
+
+/* -------------------------------------------------------------------------- */
+/* Utilities                                                                  */
+/* -------------------------------------------------------------------------- */
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #475569;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Dragging Animations */
+@keyframes alice-pulse-subtle {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.animate-alice-pulse-subtle {
+  animation: alice-pulse-subtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.alice-column-moving {
+  @apply transition-all duration-300 ease-in-out;
+  backdrop-filter: blur(1px);
+}
+
+.alice-columns-move {
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
