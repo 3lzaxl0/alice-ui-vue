@@ -62,7 +62,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
       >
         <Transition appear name="alice-modal">
           <div
-            class="bg-white dark:bg-slate-800 w-full overflow-hidden shadow-2xl relative flex flex-col rounded-alice-md"
+            class="bg-white dark:bg-slate-900 w-full overflow-hidden shadow-2xl relative flex flex-col rounded-alice-md"
             :class="[maxWidth]"
           >
             <!-- Header -->
@@ -87,7 +87,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
 
             <!-- Footer -->
             <div
-              class="px-6 py-4 border-t border-gray-100 dark:border-slate-700 bg-gray-50/50 dark:bg-slate-800/50 flex items-center justify-end gap-3"
+              class="px-6 py-4 border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/2 flex items-center justify-end gap-3"
             >
               <slot name="footer">
                 <AliceButton variant="ghost" @click="close" :disabled="loading">

@@ -26,6 +26,7 @@ defineProps<{
   }
   getGlobalIndex: (index: number) => number
   draggingColumnKey: string | null
+  showDividers: boolean
 }>()
 
 const emit = defineEmits<{
@@ -84,6 +85,7 @@ const emit = defineEmits<{
         :sticky-offsets="stickyOffsets"
         :column-widths="columnWidths"
         :dragging-column-key="draggingColumnKey"
+        :show-dividers="showDividers"
         @toggle-selection="emit('toggle-selection', $event)"
         @drag-over="(e, key) => emit('drag-over', e, key)"
         @drop="(e) => emit('drop', e)"

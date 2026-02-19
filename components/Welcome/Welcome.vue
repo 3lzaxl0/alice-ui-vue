@@ -41,7 +41,7 @@ defineProps<{
   <div class="flex flex-col gap-8 max-w-7xl mx-auto px-4 md:px-0">
     <!-- Hero Section -->
     <div
-      class="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 p-8 md:p-12 text-white shadow-xl rounded-alice-lg"
+      class="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 p-8 md:p-12 text-white shadow-lg rounded-3xl"
     >
       <div class="relative z-10">
         <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">

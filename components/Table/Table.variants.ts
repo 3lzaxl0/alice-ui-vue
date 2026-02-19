@@ -2,9 +2,9 @@ import { cva } from 'class-variance-authority'
 
 export const tableVariants = {
   header:
-    'sticky top-0 z-50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-700',
+    'sticky top-0 z-50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-950',
   headerCell: cva(
-    'px-6 py-4 border-b border-gray-100 dark:border-slate-700 whitespace-nowrap group select-none relative text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-700',
+    'px-6 py-4 border-b border-gray-100 dark:border-white/10 whitespace-nowrap group select-none relative text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-950',
     {
       variants: {
         sortable: {
@@ -19,6 +19,10 @@ export const tableVariants = {
           true: 'opacity-50',
           false: '',
         },
+        divided: {
+          true: 'border-r border-gray-100 dark:border-slate-700 last:border-r-0',
+          false: '',
+        },
       },
     },
   ),
@@ -30,7 +34,7 @@ export const tableVariants = {
       },
       striped: {
         true: '',
-        false: 'bg-white dark:bg-slate-900',
+        false: 'bg-white dark:bg-transparent',
       },
     },
     compoundVariants: [
@@ -38,7 +42,7 @@ export const tableVariants = {
         selected: false,
         striped: true,
         class:
-          'bg-slate-50 dark:bg-slate-800 odd:bg-white dark:odd:bg-slate-900 hover:bg-blue-50/50 dark:hover:bg-blue-900/10',
+          'bg-slate-50 dark:bg-white/2 odd:bg-white dark:odd:bg-transparent hover:bg-blue-50/50 dark:hover:bg-blue-900/10',
       },
     ],
     defaultVariants: {
@@ -60,8 +64,12 @@ export const tableVariants = {
         true: 'alice-column-moving animate-alice-pulse-subtle bg-blue-50/20 dark:bg-blue-900/10 border-x border-blue-200/30 dark:border-blue-700/30 grayscale-[0.1]',
         false: '',
       },
+      divided: {
+        true: 'border-r border-gray-100 dark:border-slate-700 last:border-r-0',
+        false: '',
+      },
     },
   }),
   selectionCell:
-    'w-12 px-6 py-3 text-center sticky left-0 z-50 border-b border-gray-100 dark:border-slate-700',
+    'w-12 px-6 py-3 text-center sticky left-0 z-50 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-950 group-[.bg-slate-50]:bg-slate-50 dark:group-[.dark\:bg-white\/2]:bg-slate-950',
 }

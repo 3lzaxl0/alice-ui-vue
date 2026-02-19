@@ -142,8 +142,9 @@ const isToday = (dateStr: string) => {
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <button
+        type="button"
         @click.stop="prevMonth"
-        class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-500 transition-colors"
+        class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-500 transition-all cursor-pointer active:scale-95"
       >
         <ChevronLeft :size="18" />
       </button>
@@ -151,8 +152,9 @@ const isToday = (dateStr: string) => {
         {{ currentMonthLabel }}
       </span>
       <button
+        type="button"
         @click.stop="nextMonth"
-        class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-500 transition-colors"
+        class="p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-500 transition-all cursor-pointer active:scale-95"
       >
         <ChevronRight :size="18" />
       </button>
@@ -172,16 +174,17 @@ const isToday = (dateStr: string) => {
     <!-- Days Grid -->
     <div class="grid grid-cols-7 gap-1">
       <button
+        type="button"
         v-for="(dayObj, idx) in calendarDays"
         :key="idx"
         @click.stop="selectDate(dayObj.dateStr)"
-        class="h-8 w-8 text-xs rounded-full flex items-center justify-center transition-all relative"
+        class="h-8 w-8 text-xs rounded-full flex items-center justify-center transition-all relative cursor-pointer active:scale-90"
         :class="[
           !dayObj.isCurrentMonth
             ? 'text-gray-300 dark:text-slate-600'
             : 'text-gray-700 dark:text-gray-200',
           modelValue === dayObj.dateStr
-            ? 'bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700'
+            ? 'bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700 ring-2 ring-blue-500/20'
             : 'hover:bg-gray-100 dark:hover:bg-slate-700',
           isToday(dayObj.dateStr) && modelValue !== dayObj.dateStr
             ? 'ring-1 ring-blue-500 text-blue-600 font-bold'

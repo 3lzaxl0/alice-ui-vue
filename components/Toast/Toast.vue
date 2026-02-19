@@ -36,7 +36,7 @@ defineOptions({
       <div
         v-for="toast in toasts"
         :key="toast.id"
-        class="pointer-events-auto flex items-start gap-3 p-4 bg-white dark:bg-slate-800 border shadow-lg relative overflow-hidden rounded-alice-md"
+        class="pointer-events-auto flex items-start gap-3 p-4 bg-white dark:bg-slate-900 border shadow-lg relative overflow-hidden rounded-alice-md"
         :class="[colors[toast.type] || colors.info]"
       >
         <!-- Icon -->

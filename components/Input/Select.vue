@@ -65,7 +65,7 @@ onUnmounted(() => document.removeEventListener('click', close))
 
     <div
       @click="!disabled && (isOpen = !isOpen)"
-      class="h-alice-input-height px-3 bg-white dark:bg-slate-800 border cursor-pointer flex items-center justify-between gap-2 transition-all duration-300 rounded-alice-md relative w-full"
+      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border cursor-pointer flex items-center justify-between gap-2 transition-all duration-300 rounded-alice-md relative w-full"
       :class="[
         isOpen
           ? 'border-blue-500 ring-2 ring-blue-500/20'
@@ -94,7 +94,7 @@ onUnmounted(() => document.removeEventListener('click', close))
     <transition name="alice-pop">
       <div
         v-if="isOpen"
-        class="absolute z-alice-modal top-full left-0 mt-1 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top"
+        class="absolute z-alice-modal top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top"
       >
         <div
           v-for="option in options"

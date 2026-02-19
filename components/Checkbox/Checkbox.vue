@@ -53,7 +53,7 @@ function toggle() {
       :class="[
         isChecked || indeterminate
           ? 'bg-blue-600 border-blue-600'
-          : 'bg-white dark:bg-slate-800 border-gray-300 dark:border-slate-600 group-hover:border-blue-500',
+          : 'bg-white dark:bg-white/5 border-gray-300 dark:border-white/10 group-hover:border-blue-500',
         disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer',
       ]"
     >

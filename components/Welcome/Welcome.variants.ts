@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const welcomeCardVariants = cva(
-  'group relative bg-white dark:bg-slate-800 p-6 shadow-sm border border-gray-100 dark:border-slate-700 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 rounded-alice-md',
+  'group relative bg-white dark:bg-white/3 p-6 shadow-sm dark:shadow-black/60 border border-gray-100 dark:border-white/10 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 rounded-2xl',
   {
     variants: {
       color: {
@@ -23,7 +23,7 @@ export const welcomeCardVariants = cva(
 )
 
 export const welcomeIconVariants = cva(
-  'w-12 h-12 flex items-center justify-center transition-colors duration-300 rounded-alice-md',
+  'w-12 h-12 flex items-center justify-center transition-colors duration-300 rounded-xl',
   {
     variants: {
       color: {

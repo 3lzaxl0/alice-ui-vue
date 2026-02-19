@@ -125,7 +125,7 @@ onUnmounted(() => {
           :style="tooltipStyle"
         >
           <div
-            class="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 shadow-alice-panel rounded-alice-md p-3 text-sm text-gray-700 dark:text-gray-200 pointer-events-auto w-max"
+            class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/10 shadow-alice-panel rounded-alice-md p-3 text-sm text-gray-700 dark:text-gray-200 pointer-events-auto w-max"
             :class="positionMap[position || 'top']"
             :style="{ maxWidth: maxWidth || '280px' }"
           >

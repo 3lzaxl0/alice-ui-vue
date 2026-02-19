@@ -154,7 +154,7 @@ onUnmounted(() => document.removeEventListener('click', close))
         autocomplete="off"
         @input="handleInput"
         @focus="handleFocus"
-        class="w-full h-alice-input-height px-3 text-sm bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 text-gray-900 dark:text-white shadow-alice-input focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-gray-100 dark:disabled:bg-slate-900 disabled:text-gray-400 rounded-alice-md pl-10"
+        class="w-full h-alice-input-height px-3 text-sm bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white shadow-alice-input focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-gray-100 dark:disabled:bg-slate-900 disabled:text-gray-400 rounded-alice-md pl-10"
         :class="[modelValue || searchQuery ? 'pr-10' : 'pr-3']"
       />
 
@@ -171,7 +171,7 @@ onUnmounted(() => document.removeEventListener('click', close))
       <transition name="alice-pop">
         <div
           v-if="isOpen && (results.length > 0 || loading || (searchQuery && results.length === 0))"
-          class="absolute z-50 mt-1 w-full bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top"
+          class="absolute z-50 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top"
         >
           <div v-if="loading" class="px-3 py-2 text-sm text-gray-500 flex items-center gap-2">
             <Loader2 :size="14" class="animate-spin" /> Buscando...

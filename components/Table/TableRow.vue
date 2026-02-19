@@ -24,6 +24,7 @@ defineProps<{
   stickyOffsets: Record<string, string>
   columnWidths: Record<string, string>
   draggingColumnKey: string | null
+  showDividers: boolean
 }>()
 
 const emit = defineEmits<{
@@ -58,12 +59,18 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
     <td
       v-if="selectionType !== 'none'"
       key="selection-cell"
-      :class="
+      :class="[
         tableVariants.cell({
           frozen: true,
           selected: isSelected,
-        })
-      "
+        }),
+        // Explicit bg needed: frozen cells use bg-inherit but dark rows are transparent
+        isSelected
+          ? ''
+          : striped
+            ? 'odd:dark:bg-slate-950 even:dark:bg-slate-900/50'
+            : 'dark:bg-slate-950',
+      ]"
       class="text-center left-0 p-0"
       :style="{ height: rowHeight + 'px' }"
       @click.stop="emit('toggle-selection', item)"
@@ -90,6 +97,7 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
           frozen: !!col.frozen,
           selected: isSelected,
           dragging: draggingColumnKey === String(col.key),
+          divided: showDividers,
         })
       "
       class="p-0"
@@ -103,7 +111,13 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
       @dragover="emit('drag-over', $event, String(col.key))"
       @drop="emit('drop', $event)"
     >
-      <div class="px-6 flex items-center h-full">
+      <div
+        class="px-6 flex items-center h-full"
+        :class="{
+          'justify-center': col.align === 'center',
+          'justify-end': col.align === 'right',
+        }"
+      >
         <slot :name="`cell-${String(col.key)}`" :item="item" :col="col">
           <!-- Status/Variant Logic -->
           <AliceBadge
@@ -130,14 +144,7 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
           </span>
 
           <!-- Numeric + Unit -->
-          <div
-            v-else-if="col.unitKey"
-            class="flex items-center gap-1.5 w-full"
-            :class="{
-              'justify-end': col.align === 'right',
-              'justify-center': col.align === 'center',
-            }"
-          >
+          <div v-else-if="col.unitKey" class="flex items-center gap-1.5 w-full">
             <span class="tabular-nums">
               {{ getSafeValue(item, col.key) }}
             </span>
@@ -149,14 +156,7 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
           </div>
 
           <!-- Special Type: Tags (Portable/Mobile friendly) -->
-          <div
-            v-else-if="(col.type as any) === 'tags'"
-            class="flex w-full"
-            :class="{
-              'justify-end': col.align === 'right',
-              'justify-center': col.align === 'center',
-            }"
-          >
+          <div v-else-if="(col.type as any) === 'tags'" class="flex w-full">
             <AliceTooltip trigger="click" max-width="320px">
               <template #trigger>
                 <div
@@ -216,14 +216,7 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
           </div>
 
           <!-- Default Text -->
-          <span
-            v-else
-            class="w-full"
-            :class="[
-              col.align === 'right' ? 'text-right' : '',
-              col.align === 'center' ? 'text-center' : '',
-            ]"
-          >
+          <span v-else :class="col.align === 'center' || col.align === 'right' ? '' : 'w-full'">
             {{
               col.formatter
                 ? col.formatter(getSafeValue(item, col.key))

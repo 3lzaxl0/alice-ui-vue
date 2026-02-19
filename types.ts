@@ -41,7 +41,7 @@ export interface Column<T> {
   badgeType?: 'normal' | 'filled' | 'soft'
   // Advanced Formatting
   unitKey?: keyof T | string // Key for unit of measure
-  dateFormat?: 'iso' | 'full' | 'short' | 'raw' | 'datetime'
+  dateFormat?: 'iso' | 'full' | 'short' | 'raw' | 'datetime' | 'timestamp'
   align?: 'left' | 'center' | 'right'
 }
 

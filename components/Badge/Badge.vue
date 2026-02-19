@@ -31,7 +31,7 @@ const computedClass = computed(() => {
 
 <template>
   <span :class="computedClass">
-    <component v-if="icon" :is="icon" :size="12" stroke-width="3" />
+    <component v-if="icon" :is="icon" :size="12" stroke-width="2" />
     {{ label }}
   </span>
 </template>

@@ -23,6 +23,7 @@ export { default as AliceTable } from './components/Table/Table.vue'
 export { default as AliceLabel } from './components/Label/Label.vue'
 export { default as AliceSidebar } from './components/Sidebar/Sidebar.vue'
 export { default as AliceSidebarItem } from './components/Sidebar/SidebarItem.vue'
+export { default as AliceSidebarGroup } from './components/Sidebar/SidebarGroup.vue'
 export { default as AliceWelcome } from './components/Welcome/Welcome.vue'
 
 // Components - Layout
@@ -31,7 +32,9 @@ export { default as AliceFilterPanel } from './components/FilterPanel/FilterPane
 // Components - Advanced Input
 export { default as AliceSearchInput } from './components/Input/SearchInput.vue'
 export { default as AliceMultiSelect } from './components/Input/MultiSelect.vue'
+export { default as AliceDatePicker } from './components/Input/DatePicker.vue'
 export { default as AliceSignature } from './components/Signature/Signature.vue'
 
 // Utils
 export * from './types'
+export { getLocalDateString, formatDate, toGraphQLDateTime } from './utils/date'

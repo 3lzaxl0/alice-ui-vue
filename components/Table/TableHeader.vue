@@ -23,6 +23,7 @@ const props = defineProps<{
   stickyOffsets: Record<string, string>
   draggingColumnKey: string | null
   dropIndicator: { key: string; side: 'left' | 'right' } | null
+  showDividers: boolean
 }>()
 
 const emit = defineEmits<{
@@ -65,7 +66,7 @@ onUnmounted(() => {
         v-if="selectionType !== 'none'"
         key="selection-header"
         :class="tableVariants.selectionCell"
-        class="bg-gray-50 dark:bg-slate-700"
+        class="bg-gray-50 dark:bg-slate-950"
       >
         <AliceCheckbox
           v-if="selectionType === 'multiple'"
@@ -83,6 +84,7 @@ onUnmounted(() => {
             sortable: !!col.sortable,
             frozen: !!col.frozen,
             dragging: draggingColumnKey === String(col.key),
+            divided: showDividers,
           })
         "
         :style="{

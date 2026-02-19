@@ -72,16 +72,18 @@ function closeMobile() {
 <template>
   <!-- Mobile Header (Visible only on mobile) -->
   <div
-    class="h-16 bg-linear-to-br from-blue-600 to-indigo-700 flex items-center px-4 justify-between lg:hidden shrink-0 z-30 relative shadow-md"
+    class="h-16 bg-white dark:bg-slate-900 border-b border-gray-200/50 dark:border-white/5 flex items-center px-4 justify-between lg:hidden shrink-0 z-30 relative shadow-xs"
   >
     <div class="flex items-center gap-3">
       <button
         @click="isMobileOpen = true"
-        class="p-2 text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+        class="p-2 text-gray-500 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
       >
         <Menu :size="24" />
       </button>
-      <span class="font-bold text-white text-lg tracking-tight">{{ title }}</span>
+      <span class="font-bold text-gray-900 dark:text-white text-lg tracking-tight">{{
+        title
+      }}</span>
     </div>
     <!-- Optional: Logo or other mobile actions -->
     <div class="w-8 h-8 flex items-center justify-center">
@@ -97,10 +99,12 @@ function closeMobile() {
   ></div>
 
   <aside
-    class="fixed inset-y-0 left-0 z-50 flex flex-col h-screen bg-linear-to-b from-blue-600 to-indigo-700 shadow-2xl transition-all duration-300 ease-in-out lg:translate-x-0"
+    class="fixed inset-y-0 left-0 z-50 flex flex-col h-screen transition-all duration-300 ease-in-out lg:translate-x-0"
     :class="[
-      // Mobile: Drawer transform
-      isMobileOpen ? 'translate-x-0' : '-translate-x-full',
+      // Mobile: Drawer transform + styles (needs background)
+      isMobileOpen
+        ? 'translate-x-0 shadow-2xl bg-white dark:bg-slate-900 lg:bg-transparent lg:dark:bg-transparent lg:shadow-none'
+        : '-translate-x-full',
 
       // Desktop: Width transition (always visible due to lg:translate-x-0)
       expanded ? 'lg:w-64 w-64' : 'lg:w-18 w-64',
@@ -112,7 +116,7 @@ function closeMobile() {
     <div class="h-20 flex items-center px-5 shrink-0 relative overflow-hidden">
       <!-- Logo Icon -->
       <div
-        class="shrink-0 text-white flex items-center justify-center bg-white/10 p-1.5 rounded-lg backdrop-blur-sm"
+        class="shrink-0 text-white flex items-center justify-center bg-blue-600 p-1.5 rounded-xl shadow-lg shadow-blue-600/20"
       >
         <img src="/favicon.ico" alt="Logo" class="w-6 h-6" />
       </div>
@@ -122,13 +126,14 @@ function closeMobile() {
         class="flex items-center justify-between flex-1 ml-3 transition-all duration-300"
         :class="expanded ? 'opacity-100' : 'opacity-0 overflow-hidden w-0'"
       >
-        <span class="font-bold text-white text-lg tracking-tight whitespace-nowrap">{{
-          title
-        }}</span>
+        <span
+          class="font-bold text-gray-900 dark:text-white text-lg tracking-tight whitespace-nowrap"
+          >{{ title }}</span
+        >
 
         <button
           @click.stop="togglePin"
-          class="p-1.5 text-white/50 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer hidden lg:block"
+          class="p-1.5 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors cursor-pointer hidden lg:block"
         >
           <PanelLeftClose v-if="isPinned" :size="18" />
           <PanelLeftOpen v-else :size="18" />
@@ -136,19 +141,19 @@ function closeMobile() {
       </div>
     </div>
 
-    <!-- Divider -->
-    <div class="px-3">
-      <div class="h-px bg-white/15 w-full mb-4"></div>
-    </div>
+    <!-- Divider (Removed for seamless look) -->
+    <!-- <div class="px-3">
+      <div class="h-px bg-gray-200/20 dark:bg-white/10 w-full mb-4"></div>
+    </div> -->
 
     <!-- Body -->
-    <div class="flex-1 overflow-y-auto px-3 flex flex-col gap-1 custom-scrollbar">
+    <div class="flex-1 overflow-y-auto px-3 flex flex-col gap-1 custom-scrollbar pt-4">
       <slot :expanded="expanded"></slot>
     </div>
 
     <!-- Divider -->
     <div class="px-3 mt-auto">
-      <div class="h-px bg-white/15 w-full mt-4"></div>
+      <div class="h-px bg-gray-200/20 dark:bg-white/10 w-full mt-4"></div>
     </div>
 
     <!-- Footer -->
@@ -179,7 +184,7 @@ function closeMobile() {
   <!-- Content Spacer (Desktop Only) -->
   <div
     class="transition-all duration-300 ease-in-out shrink-0 hidden lg:block"
-    :class="[isPinned ? 'w-64' : 'w-20']"
+    :class="[expanded ? 'w-64' : 'w-20']"
   ></div>
 </template>
 

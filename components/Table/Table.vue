@@ -40,6 +40,7 @@ interface Props<T> {
   variants?: TableVariant[]
   hideVariants?: boolean
   hideShadow?: boolean
+  showDividers?: boolean
 }
 
 const props = withDefaults(defineProps<Props<T>>(), {
@@ -54,6 +55,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   variants: () => [],
   hideVariants: false,
   hideShadow: false,
+  showDividers: true,
 })
 
 defineOptions({
@@ -258,12 +260,12 @@ defineExpose({
 <template>
   <div
     ref="tableContainer"
-    class="flex flex-col bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 alice-table-container rounded-alice-md"
+    class="flex flex-col border border-gray-100 dark:border-white/10 alice-table-container rounded-alice-md"
     :style="{ 'view-transition-name': transitionId }"
     :class="[
       isFullscreen
-        ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-slate-500/10 backdrop-blur-sm shadow-2xl'
-        : ['relative', !hideShadow ? 'shadow-alice-panel' : ''],
+        ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl'
+        : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
       mode === 'auto' ? 'flex-1 min-h-0' : 'h-fit min-h-[100px]',
     ]"
   >
@@ -347,6 +349,7 @@ defineExpose({
           :sticky-offsets="stickyOffsets"
           :dragging-column-key="draggingColumnKey"
           :drop-indicator="dropIndicator"
+          :show-dividers="showDividers"
           @toggle-select-all="toggleSelectAll"
           @sort="(key) => handleSort(key, true)"
           @filter-toggle="toggleFilter"
@@ -376,6 +379,7 @@ defineExpose({
           :virtual-state="virtualState"
           :get-global-index="getGlobalIndex"
           :dragging-column-key="draggingColumnKey"
+          :show-dividers="showDividers"
           @toggle-selection="toggleSelection as any"
           @drag-over="onDragOver"
           @drop="onDrop"

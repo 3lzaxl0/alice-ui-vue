@@ -51,7 +51,7 @@ const handleSaveVariant = () => {
     </template>
 
     <div
-      class="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 w-full md:w-72 p-4 flex flex-col gap-4 shadow-xl z-alice-popover text-left rounded-alice-md origin-top-right"
+      class="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 w-full md:w-72 p-4 flex flex-col gap-4 shadow-xl z-alice-popover text-left rounded-alice-md origin-top-right"
     >
       <!-- Header -->
       <div

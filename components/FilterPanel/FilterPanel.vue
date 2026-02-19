@@ -13,7 +13,7 @@ defineEmits<{
 
 <template>
   <div
-    class="bg-white dark:bg-slate-800 p-5 border border-gray-100 dark:border-slate-700 flex flex-col lg:flex-row gap-5 items-end lg:items-center justify-between transition-all duration-300 rounded-alice-md shadow-alice-sm"
+    class="bg-white dark:bg-white/2 p-5 border border-gray-100 dark:border-white/10 flex flex-col lg:flex-row gap-5 items-end lg:items-center justify-between transition-all duration-300 rounded-alice-md shadow-alice-sm"
   >
     <!-- Filters Area -->
     <div class="flex-1 w-full grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">

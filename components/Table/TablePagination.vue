@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 <template>
   <div
-    class="border-t border-gray-100 dark:border-slate-700 px-4 py-3 flex items-center justify-between bg-white dark:bg-slate-800 rounded-b-xl"
+    class="border-t border-gray-100 dark:border-white/10 px-4 py-3 flex items-center justify-between bg-white dark:bg-transparent rounded-b-xl"
   >
     <div class="text-sm text-gray-500 dark:text-gray-400">
       Página <span class="font-medium text-gray-900 dark:text-white">{{ currentPage }}</span> de

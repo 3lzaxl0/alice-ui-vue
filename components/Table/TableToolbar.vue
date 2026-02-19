@@ -37,7 +37,7 @@ const emit = defineEmits<{
 <template>
   <div
     class="flex border-b border-gray-100 dark:border-slate-700 shrink-0 relative rounded-t-xl"
-    :class="[hasSelection ? 'bg-blue-50/80 dark:bg-blue-900/40' : 'bg-white dark:bg-slate-800']"
+    :class="[hasSelection ? 'bg-blue-50/80 dark:bg-blue-900/40' : 'bg-white dark:bg-transparent']"
   >
     <transition name="alice-zoom" mode="out-in">
       <!-- Selection Mode Toolbar -->
