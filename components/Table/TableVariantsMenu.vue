@@ -42,12 +42,13 @@ const handleSaveVariant = () => {
 <template>
   <AlicePopover ref="popoverRef" placement="bottom-right" :close-onClick="false" mobile-fullscreen>
     <template #trigger>
-      <button
-        class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors outline-none"
+      <AliceButton
+        variant="ghost-subtle"
+        size="icon"
+        class="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
         title="Vistas y Configuración"
-      >
-        <Layout :size="16" />
-      </button>
+        :icon="Layout"
+      />
     </template>
 
     <div
@@ -61,12 +62,14 @@ const handleSaveVariant = () => {
           >Vistas y Configuración</span
         >
 
-        <button
+        <AliceButton
+          variant="ghost-subtle"
+          size="icon-sm"
+          :icon-size="16"
           @click="popoverRef?.close()"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 p-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg transition-colors"
-        >
-          <X :size="16" />
-        </button>
+          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
+          :icon="X"
+        />
       </div>
 
       <!-- Column Visibility Toggles -->
@@ -177,13 +180,15 @@ const handleSaveVariant = () => {
                 >{{ variant.label }}</span
               >
             </div>
-            <button
+            <AliceButton
               v-if="!variant.isPreset"
+              variant="ghost-subtle"
+              size="icon-sm"
+              :icon-size="14"
               @click.stop="emit('delete-variant', variant.name)"
-              class="p-1 text-red-400 hover:text-red-600 transition-colors outline-none"
-            >
-              <Trash2 :size="14" />
-            </button>
+              class="text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+              :icon="Trash2"
+            />
           </div>
         </div>
       </div>

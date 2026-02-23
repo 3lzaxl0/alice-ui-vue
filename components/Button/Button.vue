@@ -19,6 +19,7 @@ interface Props {
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
   icon?: object // Component
+  iconSize?: number
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -29,6 +30,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   disabled: false,
   type: 'button',
+  iconSize: 20,
 })
 
 const computedClass = computed(() => {
@@ -48,10 +50,13 @@ const computedClass = computed(() => {
       <Loader2 class="animate-spin" :size="20" />
     </div>
 
-    <!-- Content -->
-    <div :class="{ 'opacity-0': loading }" class="flex items-center gap-2">
-      <component :is="icon" v-if="icon" :size="20" />
-      <slot />
+    <!-- Content (Inner scaling for Zen Browser effect) -->
+    <div
+      :class="{ 'opacity-0': loading }"
+      class="flex items-center justify-center gap-2 w-full transition-transform duration-300 ease-out group-hover:scale-[1.04] group-active:scale-[0.97] transform-gpu backface-hidden antialiased"
+    >
+      <component :is="icon" v-if="icon" :size="iconSize" class="shrink-0" />
+      <span v-if="$slots.default" class="truncate"><slot /></span>
     </div>
   </button>
 </template>

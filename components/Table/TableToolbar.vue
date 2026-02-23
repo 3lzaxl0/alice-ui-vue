@@ -1,6 +1,7 @@
 <script setup lang="ts" generic="T">
 import { Maximize2, Minimize2, Download } from 'lucide-vue-next'
 import TableVariantsMenu from './TableVariantsMenu.vue'
+import AliceButton from '../Button/Button.vue'
 import type { Column, TableVariant } from '../../types'
 
 defineOptions({
@@ -83,21 +84,22 @@ const emit = defineEmits<{
             @save-state="emit('save-state')"
           />
 
-          <button
+          <AliceButton
+            variant="ghost-subtle"
+            size="icon"
+            class="hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
             @click="emit('export')"
-            class="p-2 text-gray-500 hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 rounded-lg transition-colors"
             title="Exportar a Excel"
-          >
-            <Download :size="16" />
-          </button>
-          <button
+            :icon="Download"
+          />
+          <AliceButton
+            variant="ghost-subtle"
+            size="icon"
+            class="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
             @click="emit('toggle-fullscreen')"
-            class="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-colors"
             :title="isFullscreen ? 'Restaurar' : 'Maximizar'"
-          >
-            <Minimize2 v-if="isFullscreen" :size="16" />
-            <Maximize2 v-else :size="16" />
-          </button>
+            :icon="isFullscreen ? Minimize2 : Maximize2"
+          />
         </div>
       </div>
     </transition>

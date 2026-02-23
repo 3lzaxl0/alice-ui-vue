@@ -145,12 +145,14 @@ function clearFilter() {
       class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700"
     >
       <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">Filtrar</span>
-      <button
+      <AliceButton
+        variant="ghost-subtle"
+        size="icon-sm"
+        :icon-size="16"
         @click="$emit('close')"
         class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
-      >
-        <X :size="16" />
-      </button>
+        :icon="X"
+      />
     </div>
 
     <!-- Controls -->

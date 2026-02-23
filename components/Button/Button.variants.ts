@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const buttonVariants = cva(
-  'relative flex items-center justify-center gap-2 font-semibold transition-all duration-300 outline-none select-none disabled:cursor-not-allowed disabled:opacity-70 active:scale-[0.98] cursor-pointer focus:ring-2 focus:ring-offset-2',
+  'group relative flex items-center justify-center gap-2 font-semibold transition-all duration-300 outline-none select-none disabled:cursor-not-allowed disabled:opacity-70 cursor-pointer focus:ring-2 focus:ring-offset-2',
   {
     variants: {
       variant: {
@@ -11,6 +11,7 @@ export const buttonVariants = cva(
         error: '',
         info: '',
         ghost: '',
+        'ghost-subtle': '',
       },
       design: {
         solid: '',
@@ -21,6 +22,8 @@ export const buttonVariants = cva(
         sm: 'px-3 py-1.5 text-xs',
         md: 'px-6 py-3 text-base',
         lg: 'px-8 py-4 text-lg',
+        icon: 'p-1.5 w-8 h-8',
+        'icon-sm': 'p-1 w-6 h-6',
       },
       rounded: {
         true: 'rounded-full',
@@ -33,31 +36,31 @@ export const buttonVariants = cva(
         variant: 'primary',
         design: 'solid',
         class:
-          'bg-blue-600 text-white hover:bg-blue-700 active:bg-blue-800 focus:ring-blue-500/50 shadow-sm dark:bg-blue-500 dark:hover:bg-blue-400 dark:active:bg-blue-600 dark:text-white',
+          'bg-blue-600 text-white shadow-sm hover:shadow-md hover:bg-blue-700 active:bg-blue-800 focus:ring-blue-500/50 dark:bg-blue-500 dark:hover:bg-blue-400 dark:active:bg-blue-600 dark:text-white',
       },
       {
         variant: 'success',
         design: 'solid',
         class:
-          'bg-emerald-600 text-white hover:bg-emerald-700 active:bg-emerald-800 focus:ring-emerald-500/50 shadow-sm dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:active:bg-emerald-600 dark:text-white',
+          'bg-emerald-600 text-white shadow-sm hover:shadow-md hover:bg-emerald-700 active:bg-emerald-800 focus:ring-emerald-500/50 dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:active:bg-emerald-600 dark:text-white',
       },
       {
         variant: 'warning',
         design: 'solid',
         class:
-          'bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700 focus:ring-amber-500/50 shadow-sm dark:bg-amber-400 dark:hover:bg-amber-300 dark:active:bg-amber-500 dark:text-white',
+          'bg-amber-500 text-white shadow-sm hover:shadow-md hover:bg-amber-600 active:bg-amber-700 focus:ring-amber-500/50 dark:bg-amber-400 dark:hover:bg-amber-300 dark:active:bg-amber-500 dark:text-white',
       },
       {
         variant: 'error',
         design: 'solid',
         class:
-          'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 focus:ring-red-500/50 shadow-sm dark:bg-red-500 dark:hover:bg-red-400 dark:active:bg-red-600 dark:text-white',
+          'bg-red-600 text-white shadow-sm hover:shadow-md hover:bg-red-700 active:bg-red-800 focus:ring-red-500/50 dark:bg-red-500 dark:hover:bg-red-400 dark:active:bg-red-600 dark:text-white',
       },
       {
         variant: 'info',
         design: 'solid',
         class:
-          'bg-cyan-600 text-white hover:bg-cyan-700 active:bg-cyan-800 focus:ring-cyan-500/50 shadow-sm dark:bg-cyan-500 dark:hover:bg-cyan-400 dark:active:bg-cyan-600 dark:text-white',
+          'bg-cyan-600 text-white shadow-sm hover:shadow-md hover:bg-cyan-700 active:bg-cyan-800 focus:ring-cyan-500/50 dark:bg-cyan-500 dark:hover:bg-cyan-400 dark:active:bg-cyan-600 dark:text-white',
       },
 
       // --- GHOST DESIGNS ---
@@ -129,6 +132,18 @@ export const buttonVariants = cva(
         variant: 'ghost',
         class:
           'text-gray-600 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-slate-800 dark:active:bg-slate-700',
+      },
+      // --- SUBTLE GHOST FOR ICONS ---
+      {
+        variant: 'ghost-subtle',
+        class:
+          'text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 active:bg-blue-100 dark:active:bg-blue-900/40 transition-colors',
+      },
+      // --- SUBTLE GHOST ERROR FOR ICONS ---
+      {
+        variant: 'ghost-subtle',
+        design: 'outline', // we can use outline or just a separate error variant if needed. Let's just create 'ghost-subtle-error' later if needed. But let's stick to this for now.
+        // Actually, let's create a generic subtle that takes color. But cva doesn't do dynamic color. We'll use classes on the component or another variant if needed.
       },
     ],
     defaultVariants: {

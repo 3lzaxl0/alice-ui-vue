@@ -28,6 +28,7 @@ export { default as AliceWelcome } from './components/Welcome/Welcome.vue'
 
 // Components - Layout
 export { default as AliceFilterPanel } from './components/FilterPanel/FilterPanel.vue'
+export { default as AlicePageHeader } from './components/PageHeader/PageHeader.vue'
 
 // Components - Advanced Input
 export { default as AliceSearchInput } from './components/Input/SearchInput.vue'

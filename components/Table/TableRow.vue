@@ -4,6 +4,7 @@ import AliceCheckbox from '../../components/Checkbox/Checkbox.vue'
 import AliceRadio from '../../components/Radio/Radio.vue'
 import AliceBadge from '../../components/Badge/Badge.vue'
 import AliceTooltip from '../../components/Tooltip/Tooltip.vue'
+import AliceButton from '../../components/Button/Button.vue'
 import { tableVariants } from './Table.variants'
 import type { Column } from '../../types'
 import { formatDate as sharedFormatDate } from '../../utils/date'
@@ -191,12 +192,14 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-widest"
                       >Contenido Detallado</span
                     >
-                    <button
+                    <AliceButton
+                      variant="ghost-subtle"
+                      size="icon-sm"
+                      :icon-size="14"
                       @click="close"
-                      class="p-1 -mr-1 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-lg text-gray-400 hover:text-gray-600 transition-colors"
-                    >
-                      <X :size="14" />
-                    </button>
+                      class="text-gray-400 hover:text-gray-600 -mr-1"
+                      :icon="X"
+                    />
                   </div>
                   <div
                     class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar"

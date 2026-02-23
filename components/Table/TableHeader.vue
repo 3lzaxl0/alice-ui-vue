@@ -2,6 +2,7 @@
 import { ArrowUp, ArrowDown, Filter } from 'lucide-vue-next'
 import { onMounted, onUnmounted } from 'vue'
 import AliceCheckbox from '../../components/Checkbox/Checkbox.vue'
+import AliceButton from '../../components/Button/Button.vue'
 import TableFilter from './TableFilter.vue'
 import { tableVariants } from './Table.variants'
 import type { Column, FilterValue } from '../../types'
@@ -129,13 +130,15 @@ onUnmounted(() => {
 
           <!-- Column Filter -->
           <div v-if="col.filterable" class="relative alice-filter-anchor">
-            <button
+            <AliceButton
+              variant="ghost-subtle"
+              size="icon-sm"
+              :icon-size="14"
               @click.stop="emit('filter-toggle', String(col.key))"
-              class="p-1 rounded-md hover:bg-gray-200 dark:hover:bg-slate-600 transition-colors"
+              class="hover:bg-gray-200 dark:hover:bg-slate-600"
               :class="{ 'text-blue-500': activeFilters[String(col.key)] }"
-            >
-              <Filter :size="14" />
-            </button>
+              :icon="Filter"
+            />
 
             <transition name="alice-pop">
               <div

@@ -1,7 +1,7 @@
 import { cva } from 'class-variance-authority'
 
 export const sidebarItemVariants = cva(
-  'relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200 group outline-none select-none cursor-pointer overflow-hidden rounded-xl shrink-0',
+  'group relative flex items-center gap-3 px-3 py-2.5 transition-all duration-200 outline-none select-none cursor-pointer overflow-hidden rounded-xl shrink-0',
   {
     variants: {
       active: {

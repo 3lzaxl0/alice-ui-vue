@@ -3,6 +3,7 @@ import { ref, watch, onMounted, onUnmounted, computed, nextTick } from 'vue'
 import { Calendar as CalendarIcon, X } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import AliceCalendar from './Calendar.vue'
+import AliceButton from '../Button/Button.vue'
 
 defineOptions({
   name: 'AliceDatePicker',
@@ -257,24 +258,27 @@ onUnmounted(() => document.removeEventListener('click', close))
       <!-- Actions Area -->
       <div class="flex items-center gap-1">
         <!-- Clear Action -->
-        <button
-          type="button"
+        <AliceButton
           v-if="modelValue && !disabled"
+          variant="ghost-subtle"
+          size="icon-sm"
+          :icon-size="14"
           @click="clearDate"
-          class="shrink-0 p-1 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md transition-all duration-200"
+          class="hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400"
           tabindex="-1"
-        >
-          <X :size="14" />
-        </button>
+          :icon="X"
+        />
 
         <!-- Divider -->
         <div v-if="!disabled" class="w-px h-4 bg-gray-100 dark:bg-slate-700 mx-0.5"></div>
 
         <!-- Calendar Button -->
-        <button
-          type="button"
+        <AliceButton
+          variant="ghost-subtle"
+          size="icon-sm"
+          :icon-size="16"
           @click.stop="toggleCalendar"
-          class="shrink-0 p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200 rounded-md cursor-pointer flex items-center justify-center"
+          class="text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
           :class="{
             'text-blue-500 bg-blue-50 dark:bg-blue-900/20': isOpen,
             'cursor-not-allowed opacity-50': disabled,
@@ -282,9 +286,8 @@ onUnmounted(() => document.removeEventListener('click', close))
           :disabled="disabled"
           tabindex="-1"
           title="Abrir calendario"
-        >
-          <CalendarIcon :size="16" />
-        </button>
+          :icon="CalendarIcon"
+        />
       </div>
     </div>
 
