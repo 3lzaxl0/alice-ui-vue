@@ -33,6 +33,8 @@ export interface Column<T> {
   filterable?: boolean
   frozen?: boolean // Sticky column
   hidden?: boolean // New: Toggle visibility
+  hideFromMenu?: boolean // Hide from the column variants menu
+  isKey?: boolean // Mark as primary key (or part of composite PK) for selection persistence
   type?: FilterType
   filterOptions?: FilterOption[] // For 'select' type
   render?: (item: T) => unknown // Optional custom render function (if not using slots)

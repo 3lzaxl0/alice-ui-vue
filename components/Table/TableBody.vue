@@ -15,7 +15,7 @@ defineProps<{
   displayedData: T[]
   visibleColumns: Column<T>[]
   selectionType: 'none' | 'single' | 'multiple'
-  selectedSet: Set<T>
+  selectedSet: Set<unknown>
   striped: boolean
   rowHeight: number
   stickyOffsets: Record<string, string>
@@ -25,6 +25,7 @@ defineProps<{
     paddingBottom: number
   }
   getGlobalIndex: (index: number) => number
+  getItemKey: (item: T) => unknown
   draggingColumnKey: string | null
   showDividers: boolean
 }>()
@@ -73,13 +74,13 @@ const emit = defineEmits<{
     <template v-if="!loading && processedData.length > 0">
       <TableRow
         v-for="(item, index) in isVirtual ? virtualData : displayedData"
-        :key="(item as any).id || (item as any).codigo || index"
+        :key="String(getItemKey(item as any))"
         :item="item"
         :index="index"
         :global-index="getGlobalIndex(index)"
         :visible-columns="visibleColumns"
         :selection-type="selectionType"
-        :is-selected="selectedSet.has(item)"
+        :is-selected="selectedSet.has(getItemKey(item))"
         :striped="striped"
         :row-height="rowHeight"
         :sticky-offsets="stickyOffsets"

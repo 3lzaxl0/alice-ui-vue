@@ -112,6 +112,7 @@ const {
 // 3. Selection Logic
 const {
   selectedSet,
+  getItemKey,
   isAllSelected,
   isIndeterminate,
   hasSelection,
@@ -121,6 +122,7 @@ const {
   toRef(props, 'selectionType'),
   toRef(props, 'selected'),
   processedData,
+  toRef(props, 'columns') as unknown as import('vue').Ref<Column<T>[]>,
   (newSelected) => {
     emit('update:selected', newSelected)
     emit('selection-change', newSelected)
@@ -378,6 +380,7 @@ defineExpose({
           :column-widths="columnWidths"
           :virtual-state="virtualState"
           :get-global-index="getGlobalIndex"
+          :get-item-key="getItemKey"
           :dragging-column-key="draggingColumnKey"
           :show-dividers="showDividers"
           @toggle-selection="toggleSelection as any"

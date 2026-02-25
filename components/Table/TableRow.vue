@@ -145,7 +145,14 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
           </span>
 
           <!-- Numeric + Unit -->
-          <div v-else-if="col.unitKey" class="flex items-center gap-1.5 w-full">
+          <div
+            v-else-if="col.unitKey"
+            class="flex items-center gap-1.5 w-full"
+            :class="{
+              'justify-center': col.align === 'center',
+              'justify-end': col.align === 'right',
+            }"
+          >
             <span class="tabular-nums">
               {{ getSafeValue(item, col.key) }}
             </span>

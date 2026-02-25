@@ -45,13 +45,13 @@ const emit = defineEmits<{
       <div
         v-if="hasSelection"
         key="selection"
-        class="flex w-full items-center justify-between px-4 py-3 min-h-[52px]"
+        class="flex w-full items-center justify-between px-4 py-3 min-h-[60px]"
       >
         <div class="text-sm font-bold text-blue-700 dark:text-blue-300">
           {{ selectedCount }} seleccionados
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 min-h-9">
           <slot name="selection-actions" />
         </div>
       </div>
@@ -60,7 +60,7 @@ const emit = defineEmits<{
       <div
         v-else
         key="normal"
-        class="flex w-full items-center justify-between px-4 py-3 min-h-[52px]"
+        class="flex w-full items-center justify-between px-4 py-3 min-h-[60px]"
       >
         <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
           {{ dataCount }} registros

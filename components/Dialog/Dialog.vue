@@ -11,6 +11,7 @@ interface Props {
   confirmVariant?: 'primary' | 'success' | 'warning' | 'error' | 'info'
   loading?: boolean
   maxWidth?: string
+  overflowVisible?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   confirmVariant: 'primary',
   loading: false,
   maxWidth: 'max-w-md',
+  overflowVisible: false,
 })
 
 const emit = defineEmits<{
@@ -62,8 +64,8 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
       >
         <Transition appear name="alice-modal">
           <div
-            class="bg-white dark:bg-slate-900 w-full overflow-hidden shadow-2xl relative flex flex-col rounded-alice-md"
-            :class="[maxWidth]"
+            class="bg-white dark:bg-slate-900 w-full shadow-2xl relative flex flex-col rounded-alice-md"
+            :class="[maxWidth, overflowVisible ? 'overflow-visible' : 'overflow-hidden']"
           >
             <!-- Header -->
             <div
@@ -81,7 +83,10 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
             </div>
 
             <!-- Content Area -->
-            <div class="px-6 py-6 overflow-y-auto max-h-[70vh]">
+            <div
+              class="px-6 py-6 max-h-[70vh]"
+              :class="[overflowVisible ? 'overflow-visible' : 'overflow-y-auto']"
+            >
               <slot />
             </div>
 

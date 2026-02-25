@@ -79,7 +79,7 @@ const handleSaveVariant = () => {
         </span>
         <div class="flex flex-col gap-1 max-h-40 overflow-y-auto custom-scrollbar p-1">
           <div
-            v-for="col in columns"
+            v-for="col in columns.filter((c) => !c.hideFromMenu)"
             :key="String(col.key)"
             class="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-lg cursor-pointer transition-colors"
             @click.stop="emit('toggle-column', String(col.key), hiddenColumns.has(String(col.key)))"

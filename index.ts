@@ -33,6 +33,7 @@ export { default as AlicePageHeader } from './components/PageHeader/PageHeader.v
 // Components - Advanced Input
 export { default as AliceSearchInput } from './components/Input/SearchInput.vue'
 export { default as AliceMultiSelect } from './components/Input/MultiSelect.vue'
+export { default as AliceSelect } from './components/Input/Select.vue'
 export { default as AliceDatePicker } from './components/Input/DatePicker.vue'
 export { default as AliceSignature } from './components/Signature/Signature.vue'
 
