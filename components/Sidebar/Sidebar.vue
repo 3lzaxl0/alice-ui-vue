@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { ref, computed, provide } from 'vue'
-import { PanelLeftOpen, PanelLeftClose, Menu, Sun, Moon, LogOut } from 'lucide-vue-next'
+import { PanelLeftOpen, PanelLeftClose, Menu, Sun, Moon, LogOut, UserCircle } from 'lucide-vue-next'
 import SidebarItem from './SidebarItem.vue'
+import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
 
 defineOptions({
   name: 'AliceSidebar',
 })
+
+interface UserRole {
+  domainCode: string
+  roleName: string
+}
 
 const props = withDefaults(
   defineProps<{
@@ -13,12 +19,19 @@ const props = withDefaults(
     persistence?: boolean
     showThemeToggle?: boolean
     showLogout?: boolean
+    userName?: string
+    /** Currently active domainCode (v-model compatible) */
+    activeRoleCode?: string | null
+    userRoles?: UserRole[]
   }>(),
   {
     title: 'Portal Agua',
     persistence: false,
     showThemeToggle: true,
     showLogout: true,
+    userName: '',
+    activeRoleCode: null,
+    userRoles: () => [],
   },
 )
 
@@ -45,6 +58,7 @@ if (isDark.value) {
 // Emits
 const emit = defineEmits<{
   (e: 'logout'): void
+  (e: 'switchRole', domainCode: string): void
 }>()
 
 const isHovered = ref(false)
@@ -66,6 +80,38 @@ provide('alice-sidebar-expanded', expanded)
 
 function closeMobile() {
   isMobileOpen.value = false
+}
+
+function handleMouseLeave() {
+  isHovered.value = false
+}
+
+// User initials for collapsed avatar
+const userInitials = computed(() => {
+  if (!props.userName) return '?'
+  const parts = props.userName.trim().split(/\s+/)
+  if (parts.length >= 2 && parts[0] && parts[1]) {
+    return (parts[0][0]! + parts[1][0]!).toUpperCase()
+  }
+  return parts[0]?.[0]?.toUpperCase() ?? '?'
+})
+
+// Convert userRoles to DropdownMenu options
+const roleOptions = computed(() =>
+  props.userRoles.map((r) => ({
+    label: r.roleName,
+    value: r.domainCode,
+  })),
+)
+
+// Active role label for display when dropdown not needed
+const activeRoleLabel = computed(() => {
+  const role = props.userRoles.find((r) => r.domainCode === props.activeRoleCode)
+  return role?.roleName ?? ''
+})
+
+function handleRoleChange(value: string | number) {
+  emit('switchRole', String(value))
 }
 </script>
 
@@ -110,30 +156,56 @@ function closeMobile() {
       expanded ? 'lg:w-64 w-64' : 'lg:w-18 w-64',
     ]"
     @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
+    @mouseleave="handleMouseLeave"
   >
-    <!-- Header -->
-    <div class="h-20 flex items-center px-5 shrink-0 relative overflow-hidden">
-      <!-- Logo Icon -->
+    <!-- Header: User Profile -->
+    <div class="h-20 flex items-center px-5 shrink-0 relative">
+      <!-- User Avatar (Initials) -->
       <div
-        class="shrink-0 text-white flex items-center justify-center bg-blue-600 p-1.5 rounded-xl shadow-lg shadow-blue-600/20"
+        class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 text-white text-xs font-bold shadow-lg shadow-blue-600/20 select-none"
       >
-        <img src="/favicon.ico" alt="Logo" class="w-6 h-6" />
+        <template v-if="userName">{{ userInitials }}</template>
+        <UserCircle v-else :size="20" />
       </div>
 
-      <!-- Title & Pin (Visible when expanded) -->
+      <!-- User Info & Pin (Visible when expanded) -->
       <div
-        class="flex items-center justify-between flex-1 ml-3 transition-all duration-300"
+        class="flex items-center justify-between flex-1 ml-3 transition-all duration-300 min-w-0"
         :class="expanded ? 'opacity-100' : 'opacity-0 overflow-hidden w-0'"
       >
-        <span
-          class="font-bold text-gray-900 dark:text-white text-lg tracking-tight whitespace-nowrap"
-          >{{ title }}</span
-        >
+        <div class="min-w-0 flex-1">
+          <!-- User Name -->
+          <p
+            class="text-sm font-bold text-gray-900 dark:text-white truncate leading-tight"
+            :title="userName"
+          >
+            {{ userName || title }}
+          </p>
+
+          <!-- Active Role (DropdownMenu if multiple, static text if single) -->
+          <template v-if="userRoles.length > 1">
+            <DropdownMenu
+              id="sidebar-role-selector"
+              :model-value="activeRoleCode"
+              :options="roleOptions"
+              design="ghost"
+              size="sm"
+              placeholder="Seleccionar rol..."
+              @update:model-value="handleRoleChange"
+            />
+          </template>
+          <p
+            v-else-if="activeRoleLabel"
+            class="text-[11px] text-gray-400 dark:text-gray-500 truncate"
+            :title="activeRoleLabel"
+          >
+            {{ activeRoleLabel }}
+          </p>
+        </div>
 
         <button
           @click.stop="togglePin"
-          class="p-1.5 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors cursor-pointer hidden lg:block"
+          class="p-1.5 text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors cursor-pointer hidden lg:block shrink-0"
         >
           <PanelLeftClose v-if="isPinned" :size="18" />
           <PanelLeftOpen v-else :size="18" />
@@ -141,13 +213,8 @@ function closeMobile() {
       </div>
     </div>
 
-    <!-- Divider (Removed for seamless look) -->
-    <!-- <div class="px-3">
-      <div class="h-px bg-gray-200/20 dark:bg-white/10 w-full mb-4"></div>
-    </div> -->
-
     <!-- Body -->
-    <div class="flex-1 overflow-y-auto px-3 flex flex-col gap-1 custom-scrollbar pt-4">
+    <div class="flex-1 overflow-y-auto px-3 flex flex-col gap-1 custom-scrollbar-sm pt-4">
       <slot :expanded="expanded"></slot>
     </div>
 
@@ -187,19 +254,3 @@ function closeMobile() {
     :class="[expanded ? 'w-64' : 'w-20']"
   ></div>
 </template>
-
-<style scoped>
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 2px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-</style>

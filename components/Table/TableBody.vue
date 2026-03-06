@@ -56,7 +56,7 @@ const emit = defineEmits<{
     <tr v-else-if="processedData.length === 0">
       <td
         :colspan="visibleColumns.length + (selectionType !== 'none' ? 1 : 0)"
-        class="px-6 py-12 text-center text-gray-400"
+        class="px-6 py-12 text-center text-gray-400 sticky left-0 w-full bg-white dark:bg-slate-950"
       >
         No se encontraron registros
       </td>

@@ -18,7 +18,6 @@ export const badgeVariants = cva(
         amber: '',
         blue: '',
         violet: '',
-        rose: '',
         teal: '',
       },
       type: {
@@ -102,14 +101,14 @@ export const badgeVariants = cva(
           'bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-900/20 dark:text-violet-300 dark:border-violet-800/50',
       },
 
-      // ── Pink → rose ────────────────────────────────────────────
-      { variant: 'pink', type: 'normal', class: 'text-rose-600 dark:text-rose-300' },
-      { variant: 'pink', type: 'filled', class: 'bg-rose-600 text-white border-rose-600' },
+      // ── Pink ───────────────────────────────────────────────────
+      { variant: 'pink', type: 'normal', class: 'text-pink-600 dark:text-pink-300' },
+      { variant: 'pink', type: 'filled', class: 'bg-pink-600 text-white border-pink-600' },
       {
         variant: 'pink',
         type: 'soft',
         class:
-          'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800/50',
+          'bg-pink-50 text-pink-600 border-pink-200 dark:bg-pink-900/20 dark:text-pink-300 dark:border-pink-800/50',
       },
 
       // ── Cyan ───────────────────────────────────────────────────
@@ -160,16 +159,6 @@ export const badgeVariants = cva(
         type: 'soft',
         class:
           'bg-violet-50 text-violet-600 border-violet-200 dark:bg-violet-900/20 dark:text-violet-300 dark:border-violet-800/50',
-      },
-
-      // ── Rose (alias de error/pink) ─────────────────────────────
-      { variant: 'rose', type: 'normal', class: 'text-rose-600 dark:text-rose-300' },
-      { variant: 'rose', type: 'filled', class: 'bg-rose-600 text-white border-rose-600' },
-      {
-        variant: 'rose',
-        type: 'soft',
-        class:
-          'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-900/20 dark:text-rose-300 dark:border-rose-800/50',
       },
 
       // ── Teal ───────────────────────────────────────────────────

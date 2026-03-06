@@ -67,6 +67,12 @@ const emit = defineEmits<{
         </div>
 
         <div class="flex items-center gap-2">
+          <!-- Custom Actions (e.g. "Nuevo Registro") -->
+          <slot name="toolbar-actions" />
+
+          <!-- Divider (only if toolbar-actions has content) -->
+          <div v-if="$slots['toolbar-actions']" class="w-px h-5 bg-gray-200 dark:bg-slate-700" />
+
           <!-- Variants Menu (Decoupled) -->
           <TableVariantsMenu
             v-if="!hideVariants"

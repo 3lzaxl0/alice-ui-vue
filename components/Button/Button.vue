@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, type Component } from 'vue'
 import { Loader2 } from 'lucide-vue-next'
 import { buttonVariants } from './Button.variants'
 import type { VariantProps } from 'class-variance-authority'
@@ -18,7 +18,7 @@ interface Props {
   loading?: boolean
   disabled?: boolean
   type?: 'button' | 'submit' | 'reset'
-  icon?: object // Component
+  icon?: Component | object // Component
   iconSize?: number
 }
 

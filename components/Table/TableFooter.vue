@@ -1,0 +1,210 @@
+<script setup lang="ts" generic="T">
+import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import type { Column } from '../../types'
+
+defineOptions({ name: 'AliceTableFooter' })
+
+type FooterOp = 'sum' | 'avg' | 'count' | 'min' | 'max'
+
+const OPTIONS: { op: FooterOp; label: string; icon: string }[] = [
+  { op: 'sum', label: 'Suma', icon: 'Σ' },
+  { op: 'avg', label: 'Promedio', icon: 'x̄' },
+  { op: 'count', label: 'Conteo', icon: '#' },
+  { op: 'min', label: 'Mínimo', icon: '↓' },
+  { op: 'max', label: 'Máximo', icon: '↑' },
+]
+
+const SHORT_LABELS: Record<FooterOp, string> = {
+  sum: 'Σ Suma',
+  avg: 'x̄ Prom',
+  count: '# Total',
+  min: '↓ Mín',
+  max: '↑ Máx',
+}
+
+const props = defineProps<{
+  visibleColumns: Column<T>[]
+  processedData: T[]
+  selectionType: 'none' | 'single' | 'multiple'
+  stickyOffsets: Record<string, string>
+  columnWidths: Record<string, string>
+  showDividers: boolean
+}>()
+
+const footerOperations = defineModel<Record<string, string>>('footerOperations', {
+  default: () => ({}),
+})
+
+watch(
+  () => props.visibleColumns,
+  (cols) => {
+    for (const col of cols) {
+      const key = String(col.key)
+      if (col.footer && !(key in footerOperations.value)) {
+        footerOperations.value[key] = col.footer
+      }
+    }
+  },
+  { immediate: true },
+)
+
+const hasFooter = computed(() =>
+  props.visibleColumns.some((col) => footerOperations.value[String(col.key)]),
+)
+
+const openMenu = ref<string | null>(null)
+const menuRef = ref<HTMLElement | null>(null)
+
+function getActiveOp(col: Column<T>): FooterOp | null {
+  const key = String(col.key)
+  return (footerOperations.value[key] as FooterOp) || null
+}
+
+function toggleMenu(col: Column<T>) {
+  if (!col.footer) return
+  const key = String(col.key)
+  openMenu.value = openMenu.value === key ? null : key
+}
+
+function selectOp(col: Column<T>, op: FooterOp) {
+  const next = { ...footerOperations.value }
+  next[String(col.key)] = op
+  footerOperations.value = next
+  openMenu.value = null
+}
+
+// Close on outside click
+function handleClickOutside(e: MouseEvent) {
+  if (menuRef.value && !menuRef.value.contains(e.target as Node)) {
+    openMenu.value = null
+  }
+}
+
+onMounted(() => document.addEventListener('mousedown', handleClickOutside, true))
+onUnmounted(() => document.removeEventListener('mousedown', handleClickOutside, true))
+
+function getNumericValues(key: string | number | symbol): number[] {
+  return props.processedData
+    .map((item) => Number((item as Record<string | number | symbol, unknown>)[key]))
+    .filter((v) => !isNaN(v))
+}
+
+function computeAggregate(col: Column<T>): string {
+  const op = getActiveOp(col)
+  if (!op) return ''
+
+  const values = getNumericValues(col.key)
+  if (values.length === 0) return '—'
+
+  let result: number
+  switch (op) {
+    case 'sum':
+      result = values.reduce((a, b) => a + b, 0)
+      break
+    case 'avg':
+      result = values.reduce((a, b) => a + b, 0) / values.length
+      break
+    case 'count':
+      return String(values.length)
+    case 'min':
+      result = Math.min(...values)
+      break
+    case 'max':
+      result = Math.max(...values)
+      break
+    default:
+      return ''
+  }
+
+  return result % 1 === 0
+    ? result.toLocaleString('es-PE')
+    : result.toLocaleString('es-PE', { minimumFractionDigits: 1, maximumFractionDigits: 2 })
+}
+</script>
+
+<template>
+  <tfoot v-if="hasFooter" ref="menuRef" class="sticky bottom-0 z-40">
+    <tr>
+      <!-- Selection spacer -->
+      <td
+        v-if="selectionType !== 'none'"
+        class="bg-gray-50/95 dark:bg-slate-900/95 backdrop-blur-sm border-t-2 border-gray-200 dark:border-slate-600 px-6 py-2.5 sticky left-0 z-50"
+      />
+
+      <td
+        v-for="col in visibleColumns"
+        :key="String(col.key)"
+        class="bg-gray-50/95 dark:bg-slate-900/95 backdrop-blur-sm border-t-2 border-gray-200 dark:border-slate-600 px-6 py-2.5 relative"
+        :class="[
+          showDividers ? 'border-r border-gray-100 dark:border-slate-700 last:border-r-0' : '',
+        ]"
+        :style="{
+          position: col.frozen ? 'sticky' : undefined,
+          left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
+          zIndex: col.frozen ? 50 : undefined,
+          width: columnWidths[String(col.key)] || col.width,
+          minWidth: col.minWidth,
+          maxWidth: col.maxWidth,
+        }"
+      >
+        <!-- Clickable footer cell -->
+        <div
+          v-if="getActiveOp(col)"
+          class="flex items-center gap-2 cursor-pointer select-none group/footer"
+          :class="{
+            'justify-center': col.align === 'center',
+            'justify-end': col.align === 'right',
+          }"
+          @click="toggleMenu(col)"
+        >
+          <!-- Operation badge -->
+          <span
+            class="text-[9px] leading-none font-bold px-1.5 py-0.5 rounded border transition-colors whitespace-nowrap"
+            :class="
+              openMenu === String(col.key)
+                ? 'border-blue-400 dark:border-blue-500 bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300'
+                : 'border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-400 dark:text-gray-500 group-hover/footer:border-blue-300 group-hover/footer:text-blue-500'
+            "
+          >
+            {{ SHORT_LABELS[getActiveOp(col)!] }}
+          </span>
+
+          <!-- Value -->
+          <span class="text-sm font-semibold tabular-nums text-gray-700 dark:text-gray-200">
+            {{ computeAggregate(col) }}
+          </span>
+        </div>
+
+        <!-- Popover menu (opens upward) -->
+        <transition
+          enter-active-class="transition ease-out duration-150"
+          enter-from-class="opacity-0 translate-y-1"
+          enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition ease-in duration-100"
+          leave-from-class="opacity-100 translate-y-0"
+          leave-to-class="opacity-0 translate-y-1"
+        >
+          <div
+            v-if="openMenu === String(col.key)"
+            class="absolute bottom-full mb-1 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-lg shadow-lg py-1 min-w-[140px] z-alice-popover"
+          >
+            <button
+              v-for="opt in OPTIONS"
+              :key="opt.op"
+              class="w-full px-3 py-1.5 text-left text-xs flex items-center gap-2 transition-colors"
+              :class="
+                getActiveOp(col) === opt.op
+                  ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 font-semibold'
+                  : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800'
+              "
+              @click.stop="selectOp(col, opt.op)"
+            >
+              <span class="w-4 text-center font-bold text-[11px]">{{ opt.icon }}</span>
+              <span>{{ opt.label }}</span>
+            </button>
+          </div>
+        </transition>
+      </td>
+    </tr>
+  </tfoot>
+</template>

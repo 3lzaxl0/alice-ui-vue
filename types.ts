@@ -14,6 +14,8 @@ export interface TableState {
   columnWidths: Record<string, string>
   orderedColumnKeys: string[]
   hiddenColumns: string[]
+  footerOperations?: Record<string, string>
+  activeVariantName?: string | null
 }
 
 export interface TableVariant {
@@ -45,6 +47,10 @@ export interface Column<T> {
   unitKey?: keyof T | string // Key for unit of measure
   dateFormat?: 'iso' | 'full' | 'short' | 'raw' | 'datetime' | 'timestamp'
   align?: 'left' | 'center' | 'right'
+  // Text Truncation: truncate text at this many characters and show a "Ver más" link
+  maxLength?: number
+  // Footer Aggregation
+  footer?: 'sum' | 'avg' | 'count' | 'min' | 'max'
 }
 
 export interface SortState {

@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { ChevronDown, X } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import AliceCheckbox from '../Checkbox/Checkbox.vue'
+import { useMultiSelect } from './useMultiSelect'
 
 interface Option {
   label: string
@@ -26,51 +27,22 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: (string | number)[]): void
 }>()
 
-const isOpen = ref(false)
-const containerRef = ref<HTMLElement | null>(null)
+const {
+  isOpen,
+  containerRef,
+  buttonRef,
+  activeIndex,
+  selectedDisplay,
+  fullSelectionLabel,
+  toggleOption,
+  clearAll,
+  toggleOpen,
+  handleClickOutside,
+  handleKeydown,
+} = useMultiSelect(props, emit)
 
-const selectedDisplay = computed(() => {
-  if (props.modelValue.length === 0) return ''
-  if (props.modelValue.length === 1) {
-    const opt = props.options.find((o) => o.value === props.modelValue[0])
-    return opt ? opt.label : ''
-  }
-  const firstOpt = props.options.find((o) => o.value === props.modelValue[0])
-  const firstLabel = firstOpt ? firstOpt.label : ''
-  return `${firstLabel}, +${props.modelValue.length - 1}`
-})
-
-const fullSelectionLabel = computed(() => {
-  return props.options
-    .filter((opt) => props.modelValue.includes(opt.value))
-    .map((opt) => opt.label)
-    .join(', ')
-})
-
-function toggleOption(value: string | number) {
-  const newValue = [...props.modelValue]
-  const index = newValue.indexOf(value)
-  if (index === -1) {
-    newValue.push(value)
-  } else {
-    newValue.splice(index, 1)
-  }
-  emit('update:modelValue', newValue)
-}
-
-function clearAll(event: Event) {
-  event.stopPropagation()
-  emit('update:modelValue', [])
-}
-
-function close(e: MouseEvent) {
-  if (containerRef.value && !containerRef.value.contains(e.target as Node)) {
-    isOpen.value = false
-  }
-}
-
-onMounted(() => document.addEventListener('click', close))
-onUnmounted(() => document.removeEventListener('click', close))
+onMounted(() => document.addEventListener('click', handleClickOutside))
+onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 </script>
 
 <template>
@@ -80,8 +52,15 @@ onUnmounted(() => document.removeEventListener('click', close))
     </AliceLabel>
 
     <div
-      @click="isOpen = !isOpen"
-      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 cursor-pointer flex items-center justify-between gap-2 hover:border-blue-500/50 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300 rounded-alice-md relative pr-9"
+      ref="buttonRef"
+      role="combobox"
+      :aria-expanded="isOpen"
+      aria-haspopup="listbox"
+      :aria-controls="isOpen ? `${id}-listbox` : undefined"
+      tabindex="0"
+      @click="toggleOpen"
+      @keydown="handleKeydown"
+      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 cursor-pointer flex items-center justify-between gap-2 hover:border-blue-500/50 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300 rounded-alice-md relative pr-9 outline-none"
       :class="[isOpen ? 'border-blue-500 ring-2 ring-blue-500/20' : '']"
       :title="modelValue.length > 1 ? fullSelectionLabel : undefined"
     >
@@ -122,17 +101,26 @@ onUnmounted(() => document.removeEventListener('click', close))
     <transition name="alice-pop">
       <div
         v-if="isOpen"
-        class="absolute z-50 top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top"
+        :id="`${id}-listbox`"
+        ref="listboxRef"
+        role="listbox"
+        aria-multiselectable="true"
+        class="absolute z-50 top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
       >
         <div
-          v-for="option in options"
+          v-for="(option, index) in options"
           :key="option.value"
+          role="option"
+          :aria-selected="modelValue.includes(option.value)"
           @click="toggleOption(option.value)"
-          class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-3"
+          class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2 outline-none"
           :class="[
             modelValue.includes(option.value)
               ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-600 dark:border-blue-400 font-medium'
-              : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
+              : 'bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
+            index === activeIndex
+              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
+              : '',
           ]"
         >
           <div class="flex items-center gap-2 flex-1 min-w-0">

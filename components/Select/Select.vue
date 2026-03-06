@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import { ChevronDown, Check } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
+import { useSelect } from './useSelect'
 
 interface Option {
   label: string
@@ -27,34 +28,22 @@ const emit = defineEmits<{
   (e: 'change', value: string | number): void
 }>()
 
-const isOpen = ref(false)
-const containerRef = ref<HTMLElement | null>(null)
+const {
+  isOpen,
+  containerRef,
+  buttonRef,
+  listboxRef,
+  activeIndex,
+  selectedOption,
+  displayLabel,
+  selectOption,
+  toggleOpen,
+  handleClickOutside,
+  handleKeydown,
+} = useSelect(props, emit)
 
-// Find selected option object
-const selectedOption = computed(() => {
-  return props.options.find((opt) => opt.value === props.modelValue)
-})
-
-const displayLabel = computed(() => {
-  if (selectedOption.value) return selectedOption.value.label
-  return props.placeholder || 'Seleccionar...'
-})
-
-function selectOption(option: Option) {
-  if (props.disabled) return
-  emit('update:modelValue', option.value)
-  emit('change', option.value)
-  isOpen.value = false
-}
-
-function close(e: MouseEvent) {
-  if (containerRef.value && !containerRef.value.contains(e.target as Node)) {
-    isOpen.value = false
-  }
-}
-
-onMounted(() => document.addEventListener('click', close))
-onUnmounted(() => document.removeEventListener('click', close))
+onMounted(() => document.addEventListener('click', handleClickOutside))
+onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 </script>
 
 <template>
@@ -64,8 +53,15 @@ onUnmounted(() => document.removeEventListener('click', close))
     </AliceLabel>
 
     <div
-      @click="!disabled && (isOpen = !isOpen)"
-      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border cursor-pointer flex items-center justify-between gap-2 transition-all duration-300 rounded-alice-md relative w-full"
+      ref="buttonRef"
+      role="combobox"
+      :aria-expanded="isOpen"
+      aria-haspopup="listbox"
+      :aria-controls="isOpen && id ? `${id}-listbox` : undefined"
+      :tabindex="disabled ? -1 : 0"
+      @click="toggleOpen"
+      @keydown="handleKeydown"
+      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border cursor-pointer flex items-center justify-between gap-2 transition-all duration-300 rounded-alice-md relative w-full outline-none"
       :class="[
         isOpen
           ? 'border-blue-500 ring-2 ring-blue-500/20'
@@ -94,17 +90,25 @@ onUnmounted(() => document.removeEventListener('click', close))
     <transition name="alice-pop">
       <div
         v-if="isOpen"
-        class="absolute z-alice-modal top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top"
+        :id="id ? `${id}-listbox` : undefined"
+        ref="listboxRef"
+        role="listbox"
+        class="absolute z-alice-modal top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
       >
         <div
-          v-for="option in options"
+          v-for="(option, index) in options"
           :key="option.value"
+          role="option"
+          :aria-selected="modelValue === option.value"
           @click="selectOption(option)"
           class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2"
           :class="[
             modelValue === option.value
               ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-600 dark:border-blue-400 font-medium'
               : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
+            index === activeIndex
+              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
+              : '',
           ]"
         >
           <span class="truncate">{{ option.label }}</span>

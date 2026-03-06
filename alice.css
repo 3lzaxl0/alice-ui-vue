@@ -141,29 +141,81 @@
 }
 
 /* -------------------------------------------------------------------------- */
-/* Utilities                                                                  */
+/* Scrollbar Styles                                                           */
 /* -------------------------------------------------------------------------- */
 
+/* Default scrollbar — wider, easier to grab, with subtle track */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 10px;
+  height: 10px;
 }
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  margin: 4px 0;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: #94a3b8;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  min-height: 40px;
 }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #64748b;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background: #475569;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+.custom-scrollbar::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
+/* Dark mode */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #475569;
+  border: 2px solid transparent;
+  background-clip: padding-box;
 }
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #64748b;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:active {
+  background: #94a3b8;
+  border: 1px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Compact variant — for sidebar and narrow panels */
+.custom-scrollbar-sm::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar-sm::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar-sm::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 6px;
+  min-height: 30px;
+}
+.custom-scrollbar-sm::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.7);
+}
+.dark .custom-scrollbar-sm::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+}
+.dark .custom-scrollbar-sm::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Dragging Animations */

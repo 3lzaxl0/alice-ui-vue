@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue'
+import { computed, inject, type Component } from 'vue'
 import { sidebarItemVariants } from './Sidebar.variants'
 
 defineOptions({
@@ -7,7 +7,7 @@ defineOptions({
 })
 
 interface Props {
-  icon?: object
+  icon?: Component | object
   label: string
   to?: string
   active?: boolean

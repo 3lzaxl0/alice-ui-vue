@@ -1,10 +1,12 @@
 <script setup lang="ts" generic="T">
 import { Package, Eye, X } from 'lucide-vue-next'
+import { ref } from 'vue'
 import AliceCheckbox from '../../components/Checkbox/Checkbox.vue'
 import AliceRadio from '../../components/Radio/Radio.vue'
 import AliceBadge from '../../components/Badge/Badge.vue'
 import AliceTooltip from '../../components/Tooltip/Tooltip.vue'
 import AliceButton from '../../components/Button/Button.vue'
+import AliceDialog from '../../components/Dialog/Dialog.vue'
 import { tableVariants } from './Table.variants'
 import type { Column } from '../../types'
 import { formatDate as sharedFormatDate } from '../../utils/date'
@@ -41,6 +43,27 @@ function formatDate(value: unknown, format: string) {
 
 function getSafeValue(item: T, key: string | number | symbol): unknown {
   return (item as Record<string | number | symbol, unknown>)[key]
+}
+
+// Expand dialog state for maxLength truncation
+const expandDialogVisible = ref(false)
+const expandDialogTitle = ref('')
+const expandDialogContent = ref('')
+
+function openExpandDialog(title: string, content: string) {
+  expandDialogTitle.value = title
+  expandDialogContent.value = content
+  expandDialogVisible.value = true
+}
+
+/**
+ * Returns true if the column has maxLength set and the cell has content.
+ * The actual visual truncation is handled by CSS (text-overflow: ellipsis).
+ */
+function hasExpandableContent(col: Column<T>, item: T): boolean {
+  if (!col.maxLength) return false
+  const val = String(getSafeValue(item, col.key) ?? '')
+  return val.length > 0
 }
 </script>
 
@@ -164,7 +187,14 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
           </div>
 
           <!-- Special Type: Tags (Portable/Mobile friendly) -->
-          <div v-else-if="(col.type as any) === 'tags'" class="flex w-full">
+          <div
+            v-else-if="(col.type as any) === 'tags'"
+            class="flex w-full"
+            :class="{
+              'justify-center': col.align === 'center',
+              'justify-end': col.align === 'right',
+            }"
+          >
             <AliceTooltip trigger="click" max-width="320px">
               <template #trigger>
                 <div
@@ -225,6 +255,28 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
             </AliceTooltip>
           </div>
 
+          <!-- Truncated Text (CSS-based, adapts to column width) -->
+          <div
+            v-else-if="col.maxLength && hasExpandableContent(col, item)"
+            class="flex items-center gap-1 w-full min-w-0 group/truncate"
+          >
+            <span class="truncate flex-1 min-w-0">
+              {{
+                col.formatter
+                  ? col.formatter(getSafeValue(item, col.key))
+                  : getSafeValue(item, col.key)
+              }}
+            </span>
+            <AliceButton
+              variant="ghost-subtle"
+              size="icon-sm"
+              :icon="Eye"
+              :icon-size="12"
+              class="shrink-0 opacity-0 group-hover/truncate:opacity-100 transition-opacity"
+              @click.stop="openExpandDialog(col.header, String(getSafeValue(item, col.key) ?? ''))"
+            />
+          </div>
+
           <!-- Default Text -->
           <span v-else :class="col.align === 'center' || col.align === 'right' ? '' : 'w-full'">
             {{
@@ -237,4 +289,11 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
       </div>
     </td>
   </transition-group>
+
+  <!-- Expand Dialog -->
+  <AliceDialog v-model:show="expandDialogVisible" :title="expandDialogTitle" hide-footer>
+    <p class="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap wrap-break-word">
+      {{ expandDialogContent }}
+    </p>
+  </AliceDialog>
 </template>

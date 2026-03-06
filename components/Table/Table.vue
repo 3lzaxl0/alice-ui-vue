@@ -4,6 +4,7 @@ import { toRef, ref, computed, watch } from 'vue'
 import TableToolbar from './TableToolbar.vue'
 import TableHeader from './TableHeader.vue'
 import TableBody from './TableBody.vue'
+import TableFooter from './TableFooter.vue'
 import TablePagination from './TablePagination.vue'
 
 // Imports from Types and Composables
@@ -129,7 +130,8 @@ const {
   },
 )
 
-// 4. Persistence & Variants Type
+// 4. State & Persistence Logic
+const footerOperations = ref<Record<string, string>>({})
 const {
   saveState,
   applyVariant,
@@ -143,6 +145,7 @@ const {
   columnWidths,
   orderedColumnKeys,
   hiddenColumns,
+  footerOperations,
   toRef(props, 'variants'),
   toRef(props, 'columns'),
 )
@@ -296,6 +299,9 @@ defineExpose({
       <template #selection-actions>
         <slot name="selection-actions" :selected="Array.from(selectedSet)" />
       </template>
+      <template #toolbar-actions>
+        <slot name="toolbar-actions" />
+      </template>
     </TableToolbar>
 
     <!-- Table Content -->
@@ -392,6 +398,16 @@ defineExpose({
             <slot :name="name" v-bind="slotProps" />
           </template>
         </TableBody>
+
+        <TableFooter
+          :visible-columns="visibleColumns as Column<T>[]"
+          :processed-data="processedData as T[]"
+          :selection-type="selectionType"
+          :sticky-offsets="stickyOffsets"
+          :column-widths="columnWidths"
+          :show-dividers="showDividers"
+          v-model:footer-operations="footerOperations"
+        />
       </table>
     </div>
 

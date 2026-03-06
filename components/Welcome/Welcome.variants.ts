@@ -1,19 +1,19 @@
 import { cva } from 'class-variance-authority'
 
 export const welcomeCardVariants = cva(
-  'group relative bg-white dark:bg-white/3 p-6 shadow-sm dark:shadow-black/60 border border-gray-100 dark:border-white/10 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 rounded-2xl',
+  'group relative bg-slate-950/1 dark:bg-white/1 p-6 shadow-sm dark:shadow-black/60 border border-gray-100 dark:border-white/10 hover:shadow-xl transition-all duration-300 ease-out hover:-translate-y-1 rounded-2xl',
   {
     variants: {
       color: {
-        emerald: 'hover:border-emerald-500/30 dark:hover:border-emerald-400/30',
-        cyan: 'hover:border-cyan-500/30 dark:hover:border-cyan-400/30',
-        indigo: 'hover:border-indigo-500/30 dark:hover:border-indigo-400/30',
-        amber: 'hover:border-amber-500/30 dark:hover:border-amber-400/30',
-        blue: 'hover:border-blue-500/30 dark:hover:border-blue-400/30',
-        violet: 'hover:border-violet-500/30 dark:hover:border-violet-400/30',
-        rose: 'hover:border-rose-500/30 dark:hover:border-rose-400/30',
-        teal: 'hover:border-teal-500/30 dark:hover:border-teal-400/30',
-        default: 'hover:border-blue-500/30 dark:hover:border-blue-400/30',
+        emerald: 'hover:border-emerald-500 dark:hover:border-emerald-400',
+        cyan: 'hover:border-cyan-500 dark:hover:border-cyan-400',
+        indigo: 'hover:border-indigo-500 dark:hover:border-indigo-400',
+        amber: 'hover:border-amber-500 dark:hover:border-amber-400',
+        blue: 'hover:border-blue-500 dark:hover:border-blue-400',
+        violet: 'hover:border-violet-500 dark:hover:border-violet-400',
+        rose: 'hover:border-rose-500 dark:hover:border-rose-400',
+        teal: 'hover:border-teal-500 dark:hover:border-teal-400',
+        default: 'hover:border-blue-500 dark:hover:border-blue-400',
       },
     },
     defaultVariants: {

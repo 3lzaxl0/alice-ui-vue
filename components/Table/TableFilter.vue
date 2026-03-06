@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { X, Check } from 'lucide-vue-next'
-import AliceInput from '../../components/Input/Input.vue'
-import AliceSelect from '../../components/Input/Select.vue'
-import AliceDatePicker from '../../components/Input/DatePicker.vue'
+import AliceInput from '../Input/Input.vue'
+import AliceSelect from '../Select/Select.vue'
+import AliceDatePicker from '../DatePicker/DatePicker.vue'
 import AliceButton from '../../components/Button/Button.vue'
 import type { FilterType, FilterOption, FilterValue } from '../../types'
 

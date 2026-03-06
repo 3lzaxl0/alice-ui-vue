@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, type Component } from 'vue'
 import { Eye, EyeOff } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import { inputVariants } from './Input.variants'
+import { useInput } from './useInput'
 
 defineOptions({
   name: 'AliceInput',
@@ -16,7 +17,7 @@ interface Props {
   placeholder?: string
   required?: boolean
   disabled?: boolean
-  icon?: object // Component
+  icon?: Component | object // Component
   autocomplete?: string
   error?: boolean
   maxlength?: number
@@ -35,22 +36,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number): void
 }>()
 
-/* -------------------------------------------------------------------------- */
-/*                                    STATE                                   */
-/* -------------------------------------------------------------------------- */
-const showPassword = ref(false)
-
-/* -------------------------------------------------------------------------- */
-/*                                   COMPUTED                                 */
-/* -------------------------------------------------------------------------- */
-const currentType = computed(() => {
-  if (props.type === 'password' && showPassword.value) {
-    return 'text'
-  }
-  return props.type
-})
-
-const isPassword = computed(() => props.type === 'password')
+const { showPassword, currentType, isPassword, handleInput, togglePassword } = useInput(props, emit)
 
 const inputClass = computed(() => {
   return inputVariants({
@@ -59,11 +45,6 @@ const inputClass = computed(() => {
     isPassword: isPassword.value,
   })
 })
-
-function handleInput(event: Event) {
-  const target = event.target as HTMLInputElement
-  emit('update:modelValue', target.value)
-}
 </script>
 
 <template>
@@ -100,7 +81,7 @@ function handleInput(event: Event) {
       <button
         v-if="isPassword"
         type="button"
-        @click="showPassword = !showPassword"
+        @click="togglePassword"
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-blue-500 transition-colors cursor-pointer outline-none"
       >
         <Eye v-if="!showPassword" :size="18" />

@@ -6,6 +6,7 @@ export function useTableState<T>(
   columnWidths: Ref<Record<string, string>>,
   orderedColumnKeys: Ref<string[]>,
   hiddenColumns: Ref<Set<string>>,
+  footerOperations: Ref<Record<string, string>>,
   variants: Ref<TableVariant[]> = ref([]),
   columns: Ref<Column<T>[]>, // New dependency
 ) {
@@ -37,6 +38,13 @@ export function useTableState<T>(
 
     // Reset hidden
     hiddenColumns.value = new Set(cols.filter((c) => c.hidden).map((c) => String(c.key)))
+
+    // Reset footers
+    const newFooters: Record<string, string> = {}
+    cols.forEach((c) => {
+      if (c.footer) newFooters[String(c.key)] = c.footer
+    })
+    footerOperations.value = newFooters
 
     activeVariantName.value = null
     saveState()
@@ -85,6 +93,22 @@ export function useTableState<T>(
     if (state.hiddenColumns && Array.isArray(state.hiddenColumns)) {
       hiddenColumns.value = new Set(state.hiddenColumns)
     }
+
+    // Restore footers
+    const newFooters: Record<string, string> = {}
+    columns.value.forEach((c) => {
+      if (c.footer) newFooters[String(c.key)] = c.footer
+    })
+
+    if (state.footerOperations) {
+      Object.assign(newFooters, state.footerOperations)
+    }
+    footerOperations.value = newFooters
+
+    // Restore active variant
+    if (state.activeVariantName !== undefined) {
+      activeVariantName.value = state.activeVariantName
+    }
   }
 
   // Save state to local storage (Current View)
@@ -95,6 +119,8 @@ export function useTableState<T>(
       columnWidths: columnWidths.value,
       orderedColumnKeys: orderedColumnKeys.value,
       hiddenColumns: Array.from(hiddenColumns.value),
+      footerOperations: { ...footerOperations.value },
+      activeVariantName: activeVariantName.value,
     }
 
     const key = `alice-table-state-${tableId.value}`
@@ -109,6 +135,7 @@ export function useTableState<T>(
       columnWidths: { ...columnWidths.value },
       orderedColumnKeys: [...orderedColumnKeys.value],
       hiddenColumns: Array.from(hiddenColumns.value),
+      footerOperations: { ...footerOperations.value },
     }
 
     const variantName = name.toLowerCase().replace(/\s+/g, '-')
@@ -150,7 +177,7 @@ export function useTableState<T>(
 
   // Auto-save watcher? Or manual save?
   watch(
-    [columnWidths, orderedColumnKeys, hiddenColumns],
+    [columnWidths, orderedColumnKeys, hiddenColumns, footerOperations, activeVariantName],
     () => {
       // Debounce could be good, but for now direct save
       if (isReady.value) {

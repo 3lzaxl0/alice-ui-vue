@@ -35,14 +35,11 @@ function toggle() {
 </script>
 
 <template>
-  <div
-    class="relative inline-flex items-center cursor-pointer select-none group"
-    @click.stop="toggle"
-  >
+  <div class="relative inline-flex items-center cursor-pointer select-none" @click.stop="toggle">
     <input
       :id="id"
       type="checkbox"
-      class="sr-only"
+      class="sr-only peer"
       :checked="isChecked"
       :disabled="disabled"
       @change.stop
@@ -65,7 +62,7 @@ function toggle() {
 
     <!-- Focus Ring -->
     <div
-      class="absolute -inset-1 rounded-lg ring-2 ring-blue-500/20 opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none"
+      class="absolute -inset-1 rounded-lg ring-2 ring-blue-500/20 opacity-0 peer-focus-visible:opacity-100 transition-opacity pointer-events-none"
     ></div>
   </div>
 </template>
