@@ -32,6 +32,7 @@ export interface Column<T> {
   minWidth?: string
   maxWidth?: string
   sortable?: boolean
+  defaultSort?: 'asc' | 'desc'
   filterable?: boolean
   frozen?: boolean // Sticky column
   hidden?: boolean // New: Toggle visibility

@@ -1,8 +1,9 @@
 import { ref, computed, type Ref } from 'vue'
-import type { FilterValue } from '../../../types'
+import type { FilterValue, Column } from '../../../types'
 import { getLocalDateString, formatDate as sharedFormatDate } from '../../../utils/date'
 
 export function useTableData<T>(
+  columns: Ref<Column<T>[]>,
   data: Ref<T[]>,
   pagination: Ref<boolean>,
   itemsPerPage: Ref<number>,
@@ -13,8 +14,11 @@ export function useTableData<T>(
   const currentPage = ref(1)
 
   // Sorting
-  const currentSortColumn = ref<string | null>(null)
-  const currentSortDirection = ref<'asc' | 'desc' | null>(null)
+  const defaultCol = columns.value.find((c) => c.defaultSort)
+  const currentSortColumn = ref<string | null>(defaultCol ? String(defaultCol.key) : null)
+  const currentSortDirection = ref<'asc' | 'desc' | null>(
+    defaultCol ? defaultCol.defaultSort! : null,
+  )
 
   // Filtering
   const activeFilters = ref<Record<string, { value: unknown; operator: string }>>({})

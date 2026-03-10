@@ -14,6 +14,8 @@ import { useTableData } from './composables/useTableData'
 import { useSelection } from './composables/useSelection'
 import { useTableState } from './composables/useTableState'
 import { useVirtualScroll } from './composables/useVirtualScroll'
+import { useTableExport } from './composables/useTableExport'
+import { useAliceToast } from '../../index'
 
 /* -------------------------------------------------------------------------- */
 /*                                    TYPES                                   */
@@ -42,6 +44,7 @@ interface Props<T> {
   hideVariants?: boolean
   hideShadow?: boolean
   showDividers?: boolean
+  visibleRows?: number
 }
 
 const props = withDefaults(defineProps<Props<T>>(), {
@@ -64,7 +67,6 @@ defineOptions({
 })
 
 const emit = defineEmits<{
-  (e: 'export'): void
   (e: 'sort-change', sort: { column: string | null; direction: 'asc' | 'desc' | null }): void
   (e: 'filter-change', filters: Record<string, { value: unknown; operator: string }>): void
   (e: 'update:selected', selected: T[]): void
@@ -91,7 +93,12 @@ const {
   clearFilter,
   prevPage,
   nextPage,
-} = useTableData(toRef(props, 'data'), toRef(props, 'pagination'), toRef(props, 'itemsPerPage'))
+} = useTableData(
+  toRef(props, 'columns'),
+  toRef(props, 'data'),
+  toRef(props, 'pagination'),
+  toRef(props, 'itemsPerPage'),
+)
 
 // 2. Columns Logic
 const {
@@ -159,6 +166,46 @@ const { scrollViewport, virtualState, virtualData, isVirtual, handleScroll } = u
   toRef(props, 'buffer'),
 )
 
+// 6. Export Logic
+const { add: addToast } = useAliceToast()
+
+const { exportToExcel } = useTableExport(
+  displayedData, // We export only what is currently filtered & sorted visually
+  visibleColumns, // We export only the columns visible to the user and in their current order
+  toRef(props, 'tableId'),
+)
+
+const isExporting = ref(false)
+
+const handleExport = async () => {
+  if (isExporting.value) return
+  isExporting.value = true
+
+  try {
+    const success = await exportToExcel()
+    if (success) {
+      addToast({
+        title: 'Exportación completada',
+        message: 'El archivo Excel se ha descargado exitosamente.',
+        type: 'success',
+      })
+    } else {
+      throw new Error('Export returned false')
+    }
+  } catch (error) {
+    // Assert error as Error object to access message safely
+    const errorMessage =
+      error instanceof Error ? error.message : 'Hubo un problema al generar el archivo Excel.'
+    addToast({
+      title: 'Error de Exportación',
+      message: errorMessage,
+      type: 'error',
+    })
+  } finally {
+    isExporting.value = false
+  }
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                    STATE                                   */
 /* -------------------------------------------------------------------------- */
@@ -169,6 +216,19 @@ const isFullscreen = ref(false)
 const transitionId = computed(() =>
   props.tableId ? `alice-table-${props.tableId}` : 'alice-table-default',
 )
+
+// Computed viewport style for strict fixed heights
+const viewportStyle = computed(() => {
+  const style: Record<string, string> = { overflowAnchor: 'none', contain: 'content' }
+  if (props.visibleRows) {
+    const pxHeight = props.visibleRows * props.rowHeight
+    style.height = `${pxHeight}px`
+    style.minHeight = `${pxHeight}px`
+    style.maxHeight = `${pxHeight}px`
+    style.flex = 'none'
+  }
+  return style
+})
 
 // Calculate position for the vertical drop indicator using DOM coordinates for 100% accuracy
 const dropIndicatorOffset = ref<number | null>(null)
@@ -271,7 +331,7 @@ defineExpose({
       isFullscreen
         ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl'
         : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
-      mode === 'auto' ? 'flex-1 min-h-0' : 'h-fit min-h-[100px]',
+      mode === 'auto' && !visibleRows ? 'flex-1 min-h-0' : 'h-fit',
     ]"
   >
     <!-- Toolbar -->
@@ -286,8 +346,9 @@ defineExpose({
       :hidden-columns="hiddenColumns"
       :all-variants="allVariants"
       :active-variant-name="activeVariantName"
+      :is-exporting="isExporting"
       @toggle-fullscreen="toggleFullscreen"
-      @export="emit('export')"
+      @export="handleExport"
       @reset-to-default="resetToDefault"
       @toggle-column="toggleColumnVisibility"
       @save-variant="handleSaveVariant"
@@ -307,9 +368,9 @@ defineExpose({
     <!-- Table Content -->
     <div
       ref="scrollViewport"
-      class="flex-1 min-h-0 overflow-auto custom-scrollbar relative"
-      :class="[!pagination ? 'rounded-b-xl' : '']"
-      style="overflow-anchor: none; contain: content"
+      class="overflow-auto custom-scrollbar relative"
+      :class="[!pagination ? 'rounded-b-xl' : '', !visibleRows ? 'flex-1 min-h-0' : '']"
+      :style="viewportStyle"
       @scroll="handleScroll"
     >
       <!-- Modern Vertical Drop Indicator -->

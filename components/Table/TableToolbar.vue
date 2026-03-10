@@ -20,6 +20,7 @@ defineProps<{
   hiddenColumns: Set<string>
   allVariants: TableVariant[]
   activeVariantName: string | null
+  isExporting?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -53,6 +54,17 @@ const emit = defineEmits<{
 
         <div class="flex items-center gap-2 min-h-9">
           <slot name="selection-actions" />
+
+          <div class="w-px h-5 bg-blue-200/50 dark:bg-blue-800/50 mx-1"></div>
+
+          <AliceButton
+            variant="ghost-subtle"
+            size="icon"
+            class="hover:text-blue-600 hover:bg-white/50 dark:hover:bg-black/20"
+            @click="emit('toggle-fullscreen')"
+            :title="isFullscreen ? 'Restaurar' : 'Maximizar'"
+            :icon="isFullscreen ? Minimize2 : Maximize2"
+          />
         </div>
       </div>
 
@@ -97,6 +109,8 @@ const emit = defineEmits<{
             @click="emit('export')"
             title="Exportar a Excel"
             :icon="Download"
+            :loading="isExporting"
+            :disabled="isExporting"
           />
           <AliceButton
             variant="ghost-subtle"

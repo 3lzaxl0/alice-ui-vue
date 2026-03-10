@@ -132,8 +132,11 @@ function handleRoleChange(value: string | number) {
       }}</span>
     </div>
     <!-- Optional: Logo or other mobile actions -->
-    <div class="w-8 h-8 flex items-center justify-center">
-      <img src="/favicon.ico" alt="Logo" class="w-6 h-6" />
+    <div
+      class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 text-white text-xs font-bold shadow-lg shadow-blue-600/20 select-none"
+    >
+      <template v-if="userName">{{ userInitials }}</template>
+      <UserCircle v-else :size="20" />
     </div>
   </div>
 

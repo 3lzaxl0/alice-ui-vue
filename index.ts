@@ -19,7 +19,6 @@ export const useAliceToast = useToastHook
 
 // Components - Table
 export { default as AliceTable } from './components/Table/Table.vue'
-// export { default as AliceTableFilter } from './components/Table/TableFilter.vue';
 
 // Components - Navigation
 export { default as AliceLabel } from './components/Label/Label.vue'
