@@ -40,6 +40,22 @@ export function useMultiSelect(
       .join(', ')
   })
 
+  const someSelected = computed(() => props.modelValue.length > 0)
+  const allSelected = computed(
+    () => props.options.length > 0 && props.modelValue.length === props.options.length,
+  )
+
+  function toggleAll() {
+    if (allSelected.value) {
+      emit('update:modelValue', [])
+    } else {
+      emit(
+        'update:modelValue',
+        props.options.map((opt) => opt.value),
+      )
+    }
+  }
+
   function toggleOption(value: string | number) {
     const newValue = [...props.modelValue]
     const index = newValue.indexOf(value)
@@ -160,6 +176,9 @@ export function useMultiSelect(
     activeIndex,
     selectedDisplay,
     fullSelectionLabel,
+    someSelected,
+    allSelected,
+    toggleAll,
     toggleOption,
     clearAll,
     toggleOpen,

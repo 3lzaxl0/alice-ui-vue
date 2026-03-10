@@ -1,14 +1,53 @@
 <script setup lang="ts">
+import { provide, onUnmounted } from 'vue'
 import AliceButton from '../Button/Button.vue'
 import { Filter } from 'lucide-vue-next'
+import { FilterPanelKey, type ValidatorFn } from './useFilterValidation'
+import { useToast } from '../Toast/useToast'
 
 defineOptions({
   name: 'AliceFilterPanel',
 })
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'filter'): void
 }>()
+
+const { add } = useToast()
+
+// Registry of child validators (Inputs)
+const validators = new Map<string, ValidatorFn>()
+
+provide(FilterPanelKey, {
+  registerValidator: (id: string, validator: ValidatorFn) => {
+    validators.set(id, validator)
+  },
+  unregisterValidator: (id: string) => {
+    validators.delete(id)
+  },
+})
+
+function handleFilter() {
+  // Execute all registered validators
+  for (const validate of validators.values()) {
+    const result = validate()
+    if (!result.valid) {
+      add({
+        type: 'warning',
+        title: 'Filtro Requerido',
+        message: `El filtro "${result.name}" es obligatorio.`,
+      })
+      return // Halt filter propagation
+    }
+  }
+
+  // All inputs passed validation
+  emit('filter')
+}
+
+onUnmounted(() => {
+  validators.clear()
+})
 </script>
 
 <template>
@@ -22,7 +61,7 @@ defineEmits<{
 
     <!-- Action Button -->
     <div class="shrink-0 w-full lg:w-auto">
-      <AliceButton @click="$emit('filter')" :icon="Filter" class="w-full lg:w-auto min-w-[120px]">
+      <AliceButton @click="handleFilter" :icon="Filter" class="w-full lg:w-auto min-w-[100px]">
         Filtrar
       </AliceButton>
     </div>

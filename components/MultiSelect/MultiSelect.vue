@@ -5,11 +5,6 @@ import AliceLabel from '../Label/Label.vue'
 import AliceCheckbox from '../Checkbox/Checkbox.vue'
 import { useMultiSelect } from './useMultiSelect'
 
-interface Option {
-  label: string
-  value: string | number
-}
-
 defineOptions({
   name: 'AliceMultiSelect',
 })
@@ -17,10 +12,12 @@ defineOptions({
 const props = defineProps<{
   id: string
   modelValue: (string | number)[]
-  options: Option[]
+  options: { label: string; value: string | number }[]
   label?: string
   placeholder?: string
   disabled?: boolean
+  required?: boolean
+  enableSelectAll?: boolean
 }>()
 
 const emit = defineEmits<{
@@ -34,12 +31,19 @@ const {
   activeIndex,
   selectedDisplay,
   fullSelectionLabel,
+  someSelected,
+  allSelected,
+  toggleAll,
   toggleOption,
   clearAll,
   toggleOpen,
   handleClickOutside,
   handleKeydown,
 } = useMultiSelect(props, emit)
+
+import { useFilterValidation } from '../FilterPanel/useFilterValidation'
+
+useFilterValidation(props)
 
 onMounted(() => document.addEventListener('click', handleClickOutside))
 onUnmounted(() => document.removeEventListener('click', handleClickOutside))
@@ -107,6 +111,20 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         aria-multiselectable="true"
         class="absolute z-50 top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
       >
+        <!-- Select All Option -->
+        <div
+          v-if="enableSelectAll && options.length > 0"
+          @click="toggleAll"
+          class="px-3 py-2.5 text-sm cursor-pointer flex items-center gap-2 border-b border-gray-100 dark:border-white/10 font-bold text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+        >
+          <AliceCheckbox
+            :model-value="allSelected"
+            :indeterminate="someSelected && !allSelected"
+            class="pointer-events-none"
+          />
+          <span>Seleccionar Todos ({{ options.length }})</span>
+        </div>
+
         <div
           v-for="(option, index) in options"
           :key="option.value"
