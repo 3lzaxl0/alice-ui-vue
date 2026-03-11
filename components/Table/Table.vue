@@ -220,7 +220,8 @@ const transitionId = computed(() =>
 // Computed viewport style for strict fixed heights
 const viewportStyle = computed(() => {
   const style: Record<string, string> = { overflowAnchor: 'none', contain: 'content' }
-  if (props.visibleRows) {
+  // Only apply fixed height if we are NOT in fullscreen mode
+  if (props.visibleRows && !isFullscreen.value) {
     const pxHeight = props.visibleRows * props.rowHeight
     style.height = `${pxHeight}px`
     style.minHeight = `${pxHeight}px`
@@ -329,9 +330,9 @@ defineExpose({
     :style="{ 'view-transition-name': transitionId }"
     :class="[
       isFullscreen
-        ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl'
+        ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden'
         : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
-      mode === 'auto' && !visibleRows ? 'flex-1 min-h-0' : 'h-fit',
+      (mode === 'auto' && !visibleRows) || isFullscreen ? 'flex-1 min-h-0' : 'h-fit',
     ]"
   >
     <!-- Toolbar -->

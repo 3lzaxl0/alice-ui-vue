@@ -26,6 +26,7 @@ export { default as AliceSidebar } from './components/Sidebar/Sidebar.vue'
 export { default as AliceSidebarItem } from './components/Sidebar/SidebarItem.vue'
 export { default as AliceSidebarGroup } from './components/Sidebar/SidebarGroup.vue'
 export { default as AliceWelcome } from './components/Welcome/Welcome.vue'
+export { default as AliceUnauthorized } from './components/Unauthorized/Unauthorized.vue'
 
 // Components - Layout
 export { default as AliceFilterPanel } from './components/FilterPanel/FilterPanel.vue'
