@@ -21,6 +21,12 @@ interface Props {
   autocomplete?: string
   error?: boolean
   maxlength?: number
+  inputmode?: 'none' | 'text' | 'decimal' | 'numeric' | 'tel' | 'search' | 'email' | 'url'
+  pattern?: string
+  step?: string | number
+  min?: string | number
+  max?: string | number
+  onlyIntegers?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -30,6 +36,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   placeholder: '',
   error: false,
+  inputmode: 'text',
 })
 
 const emit = defineEmits<{
@@ -73,6 +80,11 @@ const inputClass = computed(() => {
         :name="id"
         :autocomplete="autocomplete"
         :maxlength="maxlength"
+        :inputmode="inputmode"
+        :pattern="pattern"
+        :step="step"
+        :min="min"
+        :max="max"
         :class="inputClass"
         @input="handleInput"
       />

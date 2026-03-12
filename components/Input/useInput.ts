@@ -4,6 +4,7 @@ export function useInput(
   props: {
     type: string
     modelValue: string | number
+    onlyIntegers?: boolean
   },
   emit: {
     (e: 'update:modelValue', value: string | number): void
@@ -22,7 +23,18 @@ export function useInput(
 
   function handleInput(event: Event) {
     const target = event.target as HTMLInputElement
-    emit('update:modelValue', target.value)
+    let value = target.value
+
+    if (props.onlyIntegers) {
+      // Remove everything that is NOT a digit
+      value = value.replace(/\D/g, '')
+      // Sync the input value in case someone typed a non-digit
+      if (target.value !== value) {
+        target.value = value
+      }
+    }
+
+    emit('update:modelValue', value)
   }
 
   function togglePassword() {
