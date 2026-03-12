@@ -1,0 +1,10 @@
+{
+  "name": "@alice/ui",
+  "version": "1.0.0",
+  "description": "Librería de componentes UI para el Portal de Agua",
+  "private": true,
+  "type": "module",
+  "main": "index.ts",
+  "author": "TI",
+  "license": "UNLICENSED"
+}
