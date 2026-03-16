@@ -91,13 +91,14 @@ defineExpose({
       >
         <div
           @click="closeOnClick ? close() : undefined"
+          class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/10 shadow-alice-panel rounded-alice-md"
           :class="
             mobileFullscreen
-              ? 'max-md:w-full max-md:bg-white dark:max-md:bg-slate-900 max-md:rounded-t-xl max-md:overflow-hidden max-md:animate-slide-up'
+              ? 'max-md:w-full max-md:rounded-b-none max-md:rounded-t-xl max-md:overflow-hidden max-md:animate-slide-up max-md:border-b-0 max-md:border-l-0 max-md:border-r-0'
               : ''
           "
         >
-          <slot />
+          <slot :close="close" />
         </div>
       </div>
     </transition>

@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
-import { X, Check } from 'lucide-vue-next'
+import { X } from 'lucide-vue-next'
 import AliceInput from '../Input/Input.vue'
+import AliceCheckbox from '../Checkbox/Checkbox.vue'
 import AliceSelect from '../Select/Select.vue'
 import AliceDatePicker from '../DatePicker/DatePicker.vue'
 import AliceButton from '../../components/Button/Button.vue'
@@ -198,21 +199,15 @@ function clearFilter() {
       >
         <div
           v-for="opt in options"
-          :key="opt.value"
+          :key="String(opt.value)"
           @click="toggleOption(opt.value)"
           class="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-          :class="{ 'bg-blue-50 dark:bg-blue-900/20': selectedOptions.includes(opt.value) }"
+          :class="{ 'bg-blue-50/50 dark:bg-blue-900/20': selectedOptions.includes(opt.value) }"
         >
-          <div
-            class="w-4 h-4 rounded border flex items-center justify-center transition-colors"
-            :class="
-              selectedOptions.includes(opt.value)
-                ? 'bg-blue-500 border-blue-500'
-                : 'border-gray-300 dark:border-slate-600'
-            "
-          >
-            <Check v-if="selectedOptions.includes(opt.value)" :size="12" class="text-white" />
-          </div>
+          <AliceCheckbox
+            :model-value="selectedOptions.includes(opt.value)"
+            class="pointer-events-none"
+          />
           <span class="text-sm text-gray-700 dark:text-gray-300">{{ opt.label }}</span>
         </div>
       </div>

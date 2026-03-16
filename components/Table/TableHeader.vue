@@ -12,6 +12,7 @@ defineOptions({
 })
 
 const props = defineProps<{
+  data: T[]
   visibleColumns: Column<T>[]
   selectionType: 'none' | 'single' | 'multiple'
   isAllSelected: boolean
@@ -57,6 +58,34 @@ onMounted(() => {
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })
+
+function getOptionsForColumn(col: Column<T>) {
+  if (col.filterOptions && col.filterOptions.length > 0) {
+    return col.filterOptions
+  }
+
+  if (col.type === 'select' && props.data) {
+    const key = col.key as keyof T
+    const uniqueValues = new Set<unknown>()
+
+    props.data.forEach((item) => {
+      const val = item[key]
+      if (val !== null && val !== undefined && val !== '') {
+        uniqueValues.add(val)
+      }
+    })
+
+    return Array.from(uniqueValues)
+      .map((val) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const label = col.formatter ? col.formatter(val as any) : String(val)
+        return { label: String(label), value: val as string | number }
+      })
+      .sort((a, b) => a.label.localeCompare(b.label))
+  }
+
+  return []
+}
 </script>
 
 <template>
@@ -149,7 +178,7 @@ onUnmounted(() => {
               >
                 <TableFilter
                   :type="col.type || 'text'"
-                  :options="col.filterOptions"
+                  :options="getOptionsForColumn(col)"
                   :model-value="activeFilters[String(col.key)] || { value: null }"
                   @update:model-value="
                     (val: FilterValue) => emit('filter-apply', String(col.key), val)

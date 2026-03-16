@@ -407,6 +407,7 @@ defineExpose({
 
       <table class="w-full text-left border-separate border-spacing-0">
         <TableHeader
+          :data="data"
           :visible-columns="visibleColumns as Column<T>[]"
           :selection-type="selectionType"
           :is-all-selected="isAllSelected"

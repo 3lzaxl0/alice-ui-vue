@@ -34,7 +34,12 @@ export function useInput(
       }
     }
 
-    emit('update:modelValue', value)
+    if (props.type === 'number') {
+      const parsed = parseFloat(value)
+      emit('update:modelValue', isNaN(parsed) ? 0 : parsed)
+    } else {
+      emit('update:modelValue', value)
+    }
   }
 
   function togglePassword() {

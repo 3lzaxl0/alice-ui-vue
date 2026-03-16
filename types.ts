@@ -42,6 +42,7 @@ export interface Column<T> {
   filterOptions?: FilterOption[] // For 'select' type
   render?: (item: T) => unknown // Optional custom render function (if not using slots)
   formatter?: (value: unknown) => string // Custom formatter
+  tooltipFormatter?: (value: unknown) => string | undefined // Tooltip formatter
   variantMap?: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default' | string>
   badgeType?: 'normal' | 'filled' | 'soft'
   // Advanced Formatting

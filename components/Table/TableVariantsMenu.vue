@@ -51,9 +51,7 @@ const handleSaveVariant = () => {
       />
     </template>
 
-    <div
-      class="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 w-full md:w-72 p-4 flex flex-col gap-4 shadow-xl z-alice-popover text-left rounded-alice-md origin-top-right"
-    >
+    <div class="w-full md:w-72 p-4 flex flex-col gap-4 text-left origin-top-right">
       <!-- Header -->
       <div
         class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700"

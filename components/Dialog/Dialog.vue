@@ -15,6 +15,7 @@ interface Props {
   overflowVisible?: boolean
   hideFooter?: boolean
   preventClose?: boolean
+  closeOnBackdropClick?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -26,6 +27,7 @@ const props = withDefaults(defineProps<Props>(), {
   overflowVisible: false,
   hideFooter: false,
   preventClose: false,
+  closeOnBackdropClick: false,
 })
 
 const emit = defineEmits<{
@@ -46,7 +48,7 @@ function close() {
 }
 
 function handleBackdropClick() {
-  if (props.preventClose) return
+  if (props.preventClose || !props.closeOnBackdropClick) return
   close()
 }
 

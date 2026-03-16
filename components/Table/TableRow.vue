@@ -5,6 +5,7 @@ import AliceCheckbox from '../../components/Checkbox/Checkbox.vue'
 import AliceRadio from '../../components/Radio/Radio.vue'
 import AliceBadge from '../../components/Badge/Badge.vue'
 import AliceTooltip from '../../components/Tooltip/Tooltip.vue'
+import AlicePopover from '../../components/Popover/Popover.vue'
 import AliceButton from '../../components/Button/Button.vue'
 import AliceDialog from '../../components/Dialog/Dialog.vue'
 import { tableVariants } from './Table.variants'
@@ -144,23 +145,38 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
       >
         <slot :name="`cell-${String(col.key)}`" :item="item" :col="col">
           <!-- Status/Variant Logic -->
-          <AliceBadge
-            v-if="col.variantMap"
-            :label="
-              col.formatter
-                ? col.formatter(getSafeValue(item, col.key))
-                : String(getSafeValue(item, col.key))
-            "
-            :variant="
-              (col.variantMap[String(getSafeValue(item, col.key))] as
-                | 'default'
-                | 'info'
-                | 'success'
-                | 'warning'
-                | 'error') || 'default'
-            "
-            :type="col.badgeType || 'soft'"
-          />
+          <template v-if="col.variantMap">
+            <AliceTooltip
+              v-if="col.tooltipFormatter && col.tooltipFormatter(getSafeValue(item, col.key))"
+              :content="col.tooltipFormatter(getSafeValue(item, col.key))"
+              position="top"
+            >
+              <AliceBadge
+                :label="
+                  col.formatter
+                    ? col.formatter(getSafeValue(item, col.key))
+                    : String(getSafeValue(item, col.key))
+                "
+                :variant="
+                  (col.variantMap[String(getSafeValue(item, col.key))] as any) || 'default'
+                "
+                :type="col.badgeType || 'soft'"
+              />
+            </AliceTooltip>
+
+            <AliceBadge
+              v-else
+              :label="
+                col.formatter
+                  ? col.formatter(getSafeValue(item, col.key))
+                  : String(getSafeValue(item, col.key))
+              "
+              :variant="
+                (col.variantMap[String(getSafeValue(item, col.key))] as any) || 'default'
+              "
+              :type="col.badgeType || 'soft'"
+            />
+          </template>
 
           <!-- Date Formatting -->
           <span v-else-if="col.dateFormat" class="whitespace-nowrap">
@@ -195,7 +211,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               'justify-end': col.align === 'right',
             }"
           >
-            <AliceTooltip trigger="click" max-width="320px">
+            <AlicePopover placement="bottom-right">
               <template #trigger>
                 <div
                   class="inline-flex items-center gap-2 cursor-pointer group/tags py-1.5 px-3 rounded-full bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/50 hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm hover:scale-[1.02] transition-all duration-200 active:scale-95"
@@ -222,7 +238,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               </template>
 
               <template #default="{ close }">
-                <div class="flex flex-col gap-3 min-w-[200px]">
+                <div class="flex flex-col gap-3 min-w-[200px] p-3">
                   <div
                     class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700"
                   >
@@ -252,7 +268,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                   </div>
                 </div>
               </template>
-            </AliceTooltip>
+            </AlicePopover>
           </div>
 
           <!-- Truncated Text (CSS-based, adapts to column width) -->
