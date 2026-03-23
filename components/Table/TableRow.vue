@@ -26,6 +26,7 @@ defineProps<{
   striped: boolean
   rowHeight: number
   stickyOffsets: Record<string, string>
+  stickyRightOffsets: Record<string, string>
   columnWidths: Record<string, string>
   draggingColumnKey: string | null
   showDividers: boolean
@@ -84,23 +85,17 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
     <td
       v-if="selectionType !== 'none'"
       key="selection-cell"
-      :class="[
+      :class="
         tableVariants.cell({
           frozen: true,
           selected: isSelected,
-        }),
-        // Explicit bg needed: frozen cells use bg-inherit but dark rows are transparent
-        isSelected
-          ? ''
-          : striped
-            ? 'odd:dark:bg-slate-950 even:dark:bg-slate-900/50'
-            : 'dark:bg-slate-950',
-      ]"
+        })
+      "
       class="text-center left-0 p-0"
       :style="{ height: rowHeight + 'px' }"
       @click.stop="emit('toggle-selection', item)"
     >
-      <div class="px-6 flex items-center justify-center h-full">
+      <div class="px-3 flex items-center justify-center h-full">
         <AliceCheckbox
           v-if="selectionType === 'multiple'"
           :model-value="isSelected"
@@ -120,6 +115,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
       :class="
         tableVariants.cell({
           frozen: !!col.frozen,
+          frozenRight: !!col.frozenRight,
           selected: isSelected,
           dragging: draggingColumnKey === String(col.key),
           divided: showDividers,
@@ -128,6 +124,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
       class="p-0"
       :style="{
         left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
+        right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
         width: columnWidths[String(col.key)] || col.width,
         minWidth: col.minWidth,
         maxWidth: col.maxWidth,
@@ -137,7 +134,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
       @drop="emit('drop', $event)"
     >
       <div
-        class="px-6 flex items-center h-full"
+        class="px-3 flex items-center h-full"
         :class="{
           'justify-center': col.align === 'center',
           'justify-end': col.align === 'right',
@@ -246,7 +243,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                       >Contenido Detallado</span
                     >
                     <AliceButton
-                      variant="ghost-subtle"
+                      variant="primary" design="ghost-subtle"
                       size="icon-sm"
                       :icon-size="14"
                       @click="close"
@@ -284,7 +281,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               }}
             </span>
             <AliceButton
-              variant="ghost-subtle"
+              variant="primary" design="ghost-subtle"
               size="icon-sm"
               :icon="Eye"
               :icon-size="12"

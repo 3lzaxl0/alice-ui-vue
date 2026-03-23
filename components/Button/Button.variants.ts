@@ -11,12 +11,12 @@ export const buttonVariants = cva(
         error: '',
         info: '',
         ghost: '',
-        'ghost-subtle': '',
       },
       design: {
         solid: '',
         ghost: '',
         outline: '',
+        'ghost-subtle': '',
       },
       size: {
         sm: 'px-3 py-1.5 text-xs',
@@ -133,17 +133,43 @@ export const buttonVariants = cva(
         class:
           'text-gray-600 hover:bg-gray-100 active:bg-gray-200 dark:text-gray-400 dark:hover:bg-slate-800 dark:active:bg-slate-700',
       },
-      // --- SUBTLE GHOST FOR ICONS ---
+      
+      // --- SUBTLE GHOST DESIGNS ---
       {
-        variant: 'ghost-subtle',
+        variant: 'primary',
+        design: 'ghost-subtle',
         class:
-          'text-gray-400 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 active:bg-blue-100 dark:active:bg-blue-900/40 transition-colors',
+          'text-gray-400 dark:text-gray-500 hover:text-blue-600 hover:bg-blue-50 active:bg-blue-100 dark:hover:bg-blue-900/20 dark:active:bg-blue-900/40 dark:hover:text-blue-400 transition-colors',
       },
-      // --- SUBTLE GHOST ERROR FOR ICONS ---
       {
-        variant: 'ghost-subtle',
-        design: 'outline', // we can use outline or just a separate error variant if needed. Let's just create 'ghost-subtle-error' later if needed. But let's stick to this for now.
-        // Actually, let's create a generic subtle that takes color. But cva doesn't do dynamic color. We'll use classes on the component or another variant if needed.
+        variant: 'success',
+        design: 'ghost-subtle',
+        class:
+          'text-gray-400 dark:text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 dark:hover:bg-emerald-900/20 dark:active:bg-emerald-900/40 dark:hover:text-emerald-400 transition-colors',
+      },
+      {
+        variant: 'warning',
+        design: 'ghost-subtle',
+        class:
+          'text-gray-400 dark:text-gray-500 hover:text-amber-600 hover:bg-amber-50 active:bg-amber-100 dark:hover:bg-amber-900/20 dark:active:bg-amber-900/40 dark:hover:text-amber-400 transition-colors',
+      },
+      {
+        variant: 'error',
+        design: 'ghost-subtle',
+        class:
+          'text-gray-400 dark:text-gray-500 hover:text-red-600 hover:bg-red-50 active:bg-red-100 dark:hover:bg-red-900/20 dark:active:bg-red-900/40 dark:hover:text-red-400 transition-colors',
+      },
+      {
+        variant: 'info',
+        design: 'ghost-subtle',
+        class:
+          'text-gray-400 dark:text-gray-500 hover:text-cyan-600 hover:bg-cyan-50 active:bg-cyan-100 dark:hover:bg-cyan-900/20 dark:active:bg-cyan-900/40 dark:hover:text-cyan-400 transition-colors',
+      },
+      {
+        variant: 'ghost',
+        design: 'ghost-subtle',
+        class:
+          'text-gray-400 dark:text-gray-500 hover:text-gray-700 hover:bg-gray-100 active:bg-gray-200 dark:hover:bg-slate-800 dark:active:bg-slate-700 dark:hover:text-gray-300 transition-colors',
       },
     ],
     defaultVariants: {

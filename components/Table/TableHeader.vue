@@ -23,6 +23,7 @@ const props = defineProps<{
   openFilterColumn: string | null
   columnWidths: Record<string, string>
   stickyOffsets: Record<string, string>
+  stickyRightOffsets: Record<string, string>
   draggingColumnKey: string | null
   dropIndicator: { key: string; side: 'left' | 'right' } | null
   showDividers: boolean
@@ -113,6 +114,7 @@ function getOptionsForColumn(col: Column<T>) {
           tableVariants.headerCell({
             sortable: !!col.sortable,
             frozen: !!col.frozen,
+            frozenRight: !!col.frozenRight,
             dragging: draggingColumnKey === String(col.key),
             divided: showDividers,
           })
@@ -122,8 +124,9 @@ function getOptionsForColumn(col: Column<T>) {
           minWidth: col.minWidth,
           maxWidth: col.maxWidth,
           left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
+          right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
         }"
-        draggable="true"
+        :draggable="openFilterColumn !== String(col.key)"
         @dragstart="emit('drag-start', $event, String(col.key))"
         @dragover="emit('drag-over', $event, String(col.key))"
         @dragend="emit('drag-end', $event)"
@@ -160,7 +163,7 @@ function getOptionsForColumn(col: Column<T>) {
           <!-- Column Filter -->
           <div v-if="col.filterable" class="relative alice-filter-anchor">
             <AliceButton
-              variant="ghost-subtle"
+              variant="primary" design="ghost-subtle"
               size="icon-sm"
               :icon-size="14"
               @click.stop="emit('filter-toggle', String(col.key))"

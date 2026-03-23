@@ -4,7 +4,7 @@ export const tableVariants = {
   header:
     'sticky top-0 z-50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-950',
   headerCell: cva(
-    'px-6 py-4 border-b border-gray-100 dark:border-white/10 whitespace-nowrap group select-none relative text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-950',
+    'px-3 py-4 border-b border-gray-100 dark:border-white/10 whitespace-nowrap group select-none relative text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider bg-gray-50 dark:bg-slate-950',
     {
       variants: {
         sortable: {
@@ -12,6 +12,10 @@ export const tableVariants = {
           false: '',
         },
         frozen: {
+          true: 'sticky z-50',
+          false: '',
+        },
+        frozenRight: {
           true: 'sticky z-50',
           false: '',
         },
@@ -29,12 +33,12 @@ export const tableVariants = {
   row: cva('transition-colors duration-150 group', {
     variants: {
       selected: {
-        true: '!bg-blue-50 dark:!bg-blue-600/5',
+        true: '!bg-blue-50 dark:!bg-slate-800',
         false: '',
       },
       striped: {
         true: '',
-        false: 'bg-white dark:bg-transparent',
+        false: 'bg-white dark:bg-slate-950 hover:bg-blue-50 dark:hover:bg-slate-900',
       },
     },
     compoundVariants: [
@@ -42,7 +46,7 @@ export const tableVariants = {
         selected: false,
         striped: true,
         class:
-          'bg-slate-50 dark:bg-white/2 odd:bg-white dark:odd:bg-transparent hover:bg-blue-50/50 dark:hover:bg-blue-900/10',
+          'bg-slate-50 dark:bg-slate-900 odd:bg-white dark:odd:bg-slate-950 hover:bg-blue-50 dark:hover:bg-slate-800',
       },
     ],
     defaultVariants: {
@@ -53,6 +57,10 @@ export const tableVariants = {
   cell: cva('whitespace-nowrap border-b border-gray-100 dark:border-slate-700', {
     variants: {
       frozen: {
+        true: 'sticky z-30 bg-inherit',
+        false: '',
+      },
+      frozenRight: {
         true: 'sticky z-30 bg-inherit',
         false: '',
       },
@@ -71,5 +79,5 @@ export const tableVariants = {
     },
   }),
   selectionCell:
-    'w-12 px-6 py-3 text-center sticky left-0 z-50 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-950 group-[.bg-slate-50]:bg-slate-50 dark:group-[.dark\:bg-white\/2]:bg-slate-950',
+    'w-12 px-3 py-3 text-center sticky left-0 z-50 border-b border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-950 group-[.bg-slate-50]:bg-slate-50 dark:group-[.dark\:bg-white\/2]:bg-slate-950',
 }

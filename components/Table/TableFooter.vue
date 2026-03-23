@@ -27,6 +27,7 @@ const props = defineProps<{
   processedData: T[]
   selectionType: 'none' | 'single' | 'multiple'
   stickyOffsets: Record<string, string>
+  stickyRightOffsets: Record<string, string>
   columnWidths: Record<string, string>
   showDividers: boolean
 }>()
@@ -139,9 +140,10 @@ function computeAggregate(col: Column<T>): string {
           showDividers ? 'border-r border-gray-100 dark:border-slate-700 last:border-r-0' : '',
         ]"
         :style="{
-          position: col.frozen ? 'sticky' : undefined,
+          position: col.frozen || col.frozenRight ? 'sticky' : undefined,
           left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
-          zIndex: col.frozen ? 50 : undefined,
+          right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
+          zIndex: col.frozen || col.frozenRight ? 50 : undefined,
           width: columnWidths[String(col.key)] || col.width,
           minWidth: col.minWidth,
           maxWidth: col.maxWidth,

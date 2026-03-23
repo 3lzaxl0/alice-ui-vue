@@ -59,7 +59,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   variants: () => [],
   hideVariants: false,
   hideShadow: false,
-  showDividers: true,
+  showDividers: false,
 })
 
 defineOptions({
@@ -107,6 +107,7 @@ const {
   hiddenColumns,
   visibleColumns,
   stickyOffsets,
+  stickyRightOffsets,
   startResize,
   handleDragStart,
   handleDragOver,
@@ -418,6 +419,7 @@ defineExpose({
           :open-filter-column="openFilterColumn"
           :column-widths="columnWidths"
           :sticky-offsets="stickyOffsets"
+          :sticky-right-offsets="stickyRightOffsets"
           :dragging-column-key="draggingColumnKey"
           :drop-indicator="dropIndicator"
           :show-dividers="showDividers"
@@ -446,6 +448,7 @@ defineExpose({
           :striped="striped"
           :row-height="rowHeight"
           :sticky-offsets="stickyOffsets"
+          :sticky-right-offsets="stickyRightOffsets"
           :column-widths="columnWidths"
           :virtual-state="virtualState"
           :get-global-index="getGlobalIndex"
@@ -467,6 +470,7 @@ defineExpose({
           :processed-data="processedData as T[]"
           :selection-type="selectionType"
           :sticky-offsets="stickyOffsets"
+          :sticky-right-offsets="stickyRightOffsets"
           :column-widths="columnWidths"
           :show-dividers="showDividers"
           v-model:footer-operations="footerOperations"

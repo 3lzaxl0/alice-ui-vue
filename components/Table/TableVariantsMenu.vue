@@ -43,7 +43,7 @@ const handleSaveVariant = () => {
   <AlicePopover ref="popoverRef" placement="bottom-right" :close-onClick="false" mobile-fullscreen>
     <template #trigger>
       <AliceButton
-        variant="ghost-subtle"
+        variant="primary" design="ghost-subtle"
         size="icon"
         class="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
         title="Vistas y Configuración"
@@ -61,7 +61,7 @@ const handleSaveVariant = () => {
         >
 
         <AliceButton
-          variant="ghost-subtle"
+          variant="primary" design="ghost-subtle"
           size="icon-sm"
           :icon-size="16"
           @click="popoverRef?.close()"
@@ -137,7 +137,7 @@ const handleSaveVariant = () => {
                 allVariants.find((v) => v.name === activeVariantName && !v.isPreset)
               "
               @click="emit('update-active-variant')"
-              variant="ghost"
+              variant="primary" design="ghost-subtle"
               size="sm"
               class="px-2"
               title="Actualizar vista actual"
@@ -180,7 +180,7 @@ const handleSaveVariant = () => {
             </div>
             <AliceButton
               v-if="!variant.isPreset"
-              variant="ghost-subtle"
+              variant="primary" design="ghost-subtle"
               size="icon-sm"
               :icon-size="14"
               @click.stop="emit('delete-variant', variant.name)"

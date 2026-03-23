@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="T">
-import { Maximize2, Minimize2, Download } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { Maximize2, Minimize2, Download, MoreVertical } from 'lucide-vue-next'
 import TableVariantsMenu from './TableVariantsMenu.vue'
 import AliceButton from '../Button/Button.vue'
+import AlicePopover from '../Popover/Popover.vue'
 import type { Column, TableVariant } from '../../types'
 
 defineOptions({
@@ -34,6 +36,8 @@ const emit = defineEmits<{
   (e: 'apply-variant', variant: TableVariant): void
   (e: 'save-state'): void
 }>()
+
+const mobileMenuOpen = ref(false)
 </script>
 
 <template>
@@ -58,7 +62,7 @@ const emit = defineEmits<{
           <div class="w-px h-5 bg-blue-200/50 dark:bg-blue-800/50 mx-1"></div>
 
           <AliceButton
-            variant="ghost-subtle"
+            variant="primary" design="ghost-subtle"
             size="icon"
             class="hover:text-blue-600 hover:bg-white/50 dark:hover:bg-black/20"
             @click="emit('toggle-fullscreen')"
@@ -78,14 +82,41 @@ const emit = defineEmits<{
           {{ dataCount }} registros
         </div>
 
-        <div class="flex items-center gap-2">
-          <!-- Custom Actions (e.g. "Nuevo Registro") -->
-          <slot name="toolbar-actions" />
+        <div class="flex items-center gap-1 sm:gap-2">
+          <!-- Custom Actions (e.g. "Nuevo Registro") on Desktop -->
+          <div class="hidden sm:flex items-center gap-2">
+            <slot name="toolbar-actions" />
+          </div>
 
-          <!-- Divider (only if toolbar-actions has content) -->
-          <div v-if="$slots['toolbar-actions']" class="w-px h-5 bg-gray-200 dark:bg-slate-700" />
+          <!-- Divider (Desktop only, if toolbar-actions has content) -->
+          <div v-if="$slots['toolbar-actions']" class="hidden sm:block w-px h-5 bg-gray-200 dark:bg-slate-700 mx-1" />
 
-          <!-- Variants Menu (Decoupled) -->
+          <!-- Mobile Custom Actions Overflow -->
+          <div v-if="$slots['toolbar-actions']" class="sm:hidden flex items-center">
+            <AlicePopover v-model="mobileMenuOpen" placement="bottom-right">
+              <template #trigger>
+                <AliceButton
+                  variant="primary" design="ghost-subtle"
+                  size="icon"
+                  class="hover:bg-gray-100 dark:hover:bg-slate-800"
+                  :icon="MoreVertical"
+                />
+              </template>
+              <template #default>
+                <div class="flex flex-col min-w-[200px] p-1 gap-1">
+                  <!-- Injected custom actions in mobile -->
+                  <div class="flex flex-col gap-1 px-2 py-1" @click="mobileMenuOpen = false">
+                    <slot name="toolbar-actions" />
+                  </div>
+                </div>
+              </template>
+            </AlicePopover>
+            
+            <!-- Mobile Divider -->
+            <div class="w-px h-5 bg-gray-200 dark:bg-slate-700 mx-1" />
+          </div>
+
+          <!-- Variants Menu (Always Visible) -->
           <TableVariantsMenu
             v-if="!hideVariants"
             :table-id="tableId"
@@ -103,7 +134,7 @@ const emit = defineEmits<{
           />
 
           <AliceButton
-            variant="ghost-subtle"
+            variant="primary" design="ghost-subtle"
             size="icon"
             class="hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
             @click="emit('export')"
@@ -112,8 +143,9 @@ const emit = defineEmits<{
             :loading="isExporting"
             :disabled="isExporting"
           />
+
           <AliceButton
-            variant="ghost-subtle"
+            variant="primary" design="ghost-subtle"
             size="icon"
             class="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
             @click="emit('toggle-fullscreen')"

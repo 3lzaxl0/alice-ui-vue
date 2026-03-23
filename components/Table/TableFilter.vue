@@ -147,7 +147,7 @@ function clearFilter() {
     >
       <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">Filtrar</span>
       <AliceButton
-        variant="ghost-subtle"
+        variant="primary" design="ghost-subtle"
         size="icon-sm"
         :icon-size="16"
         @click="$emit('close')"

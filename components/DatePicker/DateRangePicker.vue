@@ -81,7 +81,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <!-- Clear Action -->
         <AliceButton
           v-if="modelValue && !disabled"
-          variant="ghost-subtle"
+          variant="primary" design="ghost-subtle"
           size="icon-sm"
           :icon-size="14"
           @click.stop="clearRange"
@@ -95,7 +95,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
         <!-- Calendar Button -->
         <AliceButton
-          variant="ghost-subtle"
+          variant="primary" design="ghost-subtle"
           size="icon-sm"
           :icon-size="16"
           @click.stop="toggleCalendar"

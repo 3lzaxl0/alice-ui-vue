@@ -55,7 +55,7 @@ const emit = defineEmits<{
         <div class="flex flex-col sm:flex-row gap-4 w-full justify-center items-center">
           <AliceButton
             v-if="showHome"
-            variant="ghost-subtle"
+            variant="primary" design="ghost-subtle"
             @click="emit('go-home')"
             :icon="Home"
             :icon-size="18"

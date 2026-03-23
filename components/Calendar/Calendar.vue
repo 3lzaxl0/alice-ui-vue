@@ -30,7 +30,7 @@ const {
 </script>
 
 <template>
-  <div class="calendar-container w-[280px]">
+  <div class="calendar-container w-[280px] max-md:w-full p-2 mx-auto">
     <!-- Header -->
     <div class="flex items-center justify-between mb-4">
       <button
@@ -79,7 +79,7 @@ const {
         :key="idx"
         @click.stop="selectDate(dayObj.dateStr)"
         tabindex="-1"
-        class="h-8 w-8 text-xs rounded-full flex items-center justify-center transition-all relative cursor-pointer active:scale-90"
+        class="h-8 w-8 text-xs rounded-full flex items-center justify-center transition-all relative cursor-pointer active:scale-90 mx-auto"
         :class="[
           !dayObj.isCurrentMonth
             ? 'text-gray-300 dark:text-slate-600'

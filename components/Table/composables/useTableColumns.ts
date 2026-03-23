@@ -194,6 +194,25 @@ export function useTableColumns<T>(
     return offsets
   })
 
+  const stickyRightOffsets = computed(() => {
+    const offsets: Record<string, string> = {}
+    let currentOffset = 0 // px from the right edge
+
+    // Iterate backwards through visible columns
+    for (let i = visibleColumns.value.length - 1; i >= 0; i--) {
+      const col = visibleColumns.value[i]
+      if (!col) continue
+      
+      if (col.frozenRight) {
+        offsets[String(col.key)] = `${currentOffset}px`
+        const wStr = columnWidths.value[String(col.key)] || col.width || '150px'
+        const w = parseInt(wStr, 10) || 150
+        currentOffset += w
+      }
+    }
+    return offsets
+  })
+
   const hiddenColumns = ref<Set<string>>(new Set())
 
   // Initialize hidden columns from props
@@ -232,6 +251,7 @@ export function useTableColumns<T>(
     // Computed
     visibleColumns: finalVisibleColumns,
     stickyOffsets,
+    stickyRightOffsets,
 
     // Methods
     startResize,

@@ -12,6 +12,8 @@ interface Props {
   loading?: boolean
   maxWidth?: string
   width?: string
+  size?: 'default' | 'fullscreen'
+  padding?: 'default' | 'compact' | 'none'
   overflowVisible?: boolean
   hideFooter?: boolean
   preventClose?: boolean
@@ -23,7 +25,9 @@ const props = withDefaults(defineProps<Props>(), {
   cancelLabel: 'Cancelar',
   confirmVariant: 'primary',
   loading: false,
-  maxWidth: 'max-w-md',
+  maxWidth: 'max-w-2xl',
+  size: 'default',
+  padding: 'default',
   overflowVisible: false,
   hideFooter: false,
   preventClose: false,
@@ -66,6 +70,20 @@ function handleEscape(e: KeyboardEvent) {
 
 onMounted(() => window.addEventListener('keydown', handleEscape))
 onUnmounted(() => window.removeEventListener('keydown', handleEscape))
+
+import { computed } from 'vue'
+
+const contentPadding = computed(() => {
+  if (props.padding === 'none') return 'p-0'
+  if (props.padding === 'compact') return 'p-4'
+  return 'px-6 py-6'
+})
+
+const headerFooterPadding = computed(() => {
+  if (props.padding === 'none') return 'p-0'
+  if (props.padding === 'compact') return 'px-4 py-3'
+  return 'px-6 py-4'
+})
 </script>
 
 <template>
@@ -78,12 +96,16 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
       >
         <Transition appear name="alice-modal">
           <div
-            class="bg-white dark:bg-slate-900 w-full shadow-2xl relative flex flex-col rounded-alice-md transition-all duration-300 ease-in-out"
-            :class="[width || maxWidth, overflowVisible ? 'overflow-visible' : 'overflow-hidden']"
+            class="bg-white dark:bg-slate-900 shadow-2xl relative flex flex-col transition-all duration-300 ease-in-out w-full rounded-alice-md"
+            :class="[
+              size === 'fullscreen' ? 'h-full max-w-none' : [width || maxWidth],
+              overflowVisible ? 'overflow-visible' : 'overflow-hidden'
+            ]"
           >
             <!-- Header -->
             <div
-              class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-slate-700"
+              class="flex items-center justify-between border-b border-gray-100 dark:border-slate-700"
+              :class="headerFooterPadding"
             >
               <h3 class="text-xl font-bold text-gray-900 dark:text-white leading-none">
                 {{ title }}
@@ -99,8 +121,12 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
 
             <!-- Content Area -->
             <div
-              class="px-6 py-6 max-h-[70vh]"
-              :class="[overflowVisible ? 'overflow-visible' : 'overflow-y-auto']"
+              class="flex flex-col"
+              :class="[
+                size === 'fullscreen' ? 'flex-1 min-h-0' : 'max-h-[70vh]',
+                overflowVisible ? 'overflow-visible' : 'overflow-y-auto w-full custom-scrollbar',
+                contentPadding
+              ]"
             >
               <slot />
             </div>
@@ -108,7 +134,8 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
             <!-- Footer -->
             <div
               v-if="!hideFooter"
-              class="px-6 py-4 border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/2 flex items-center justify-end gap-3"
+              class="border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/2 flex items-center justify-end gap-3"
+              :class="headerFooterPadding"
             >
               <slot name="footer">
                 <AliceButton variant="ghost" @click="close" :disabled="loading">

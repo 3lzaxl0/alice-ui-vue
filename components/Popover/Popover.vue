@@ -71,14 +71,7 @@ defineExpose({
       <slot name="trigger" :open="isOpen" />
     </div>
 
-    <transition
-      enter-active-class="transition ease-out duration-200"
-      enter-from-class="opacity-0 translate-y-1"
-      enter-to-class="opacity-100 translate-y-0"
-      leave-active-class="transition ease-in duration-150"
-      leave-from-class="opacity-100 translate-y-0"
-      leave-to-class="opacity-0 translate-y-1"
-    >
+    <transition name="alice-dropdown">
       <div
         v-if="isOpen"
         class="absolute z-alice-popover mt-2 focus:outline-none"
@@ -88,6 +81,7 @@ defineExpose({
             ? 'max-md:fixed max-md:inset-0 max-md:mt-0 max-md:w-full max-md:h-full max-md:bg-black/50 max-md:z-50 max-md:flex max-md:items-end max-md:justify-center'
             : '',
         ]"
+        @click.self="mobileFullscreen ? close() : undefined"
       >
         <div
           @click="closeOnClick ? close() : undefined"

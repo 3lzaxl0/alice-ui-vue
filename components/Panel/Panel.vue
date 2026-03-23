@@ -11,11 +11,13 @@ interface Props {
   icon?: Component
   variant?: 'primary' | 'success' | 'warning' | 'error' | 'info' | 'gray'
   bodyPadding?: string
+  overflowVisible?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   bodyPadding: 'p-0',
+  overflowVisible: false,
 })
 
 const variantClasses = {
@@ -55,12 +57,13 @@ const variantClasses = {
 
 <template>
   <div
-    class="flex flex-col bg-white dark:bg-slate-900/50 border border-gray-100 dark:border-white/10 h-full overflow-hidden rounded-alice-md shadow-alice-sm transition-all duration-300"
+    class="flex flex-col bg-white dark:bg-slate-900/50 border border-gray-100 dark:border-white/10 h-full rounded-alice-md shadow-alice-sm transition-all duration-300"
+    :class="overflowVisible ? 'overflow-visible' : 'overflow-hidden'"
   >
     <!-- Header -->
     <div
-      class="px-5 py-3.5 border-b shrink-0 select-none transition-colors duration-300"
-      :class="variantClasses[props.variant].header"
+      class="px-5 py-3.5 border-b shrink-0 select-none transition-colors duration-300 relative z-10"
+      :class="[variantClasses[props.variant].header, overflowVisible ? 'rounded-t-[inherit]' : '']"
     >
       <h3 class="font-bold flex items-center gap-2.5" :class="variantClasses[props.variant].title">
         <component :is="icon" v-if="icon" :size="18" stroke-width="2.5" />
@@ -72,7 +75,7 @@ const variantClasses = {
     </div>
 
     <!-- Content Area -->
-    <div class="flex-1 overflow-hidden" :class="bodyPadding">
+    <div class="flex-1" :class="[bodyPadding, overflowVisible ? 'overflow-visible' : 'overflow-hidden']">
       <slot />
     </div>
   </div>

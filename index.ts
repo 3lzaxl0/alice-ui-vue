@@ -32,6 +32,7 @@ export { default as AliceUnauthorized } from './components/Unauthorized/Unauthor
 export { default as AliceFilterPanel } from './components/FilterPanel/FilterPanel.vue'
 export { default as AlicePageHeader } from './components/PageHeader/PageHeader.vue'
 export { default as AlicePanel } from './components/Panel/Panel.vue'
+export { default as AliceUnderConstruction } from './components/UnderConstruction/UnderConstruction.vue'
 
 // Components - Advanced Input
 export { default as AliceSearchInput } from './components/SearchInput/SearchInput.vue'

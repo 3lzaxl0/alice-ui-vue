@@ -34,7 +34,8 @@ export interface Column<T> {
   sortable?: boolean
   defaultSort?: 'asc' | 'desc'
   filterable?: boolean
-  frozen?: boolean // Sticky column
+  frozen?: boolean // Sticky column on the left
+  frozenRight?: boolean // Sticky column on the right
   hidden?: boolean // New: Toggle visibility
   hideFromMenu?: boolean // Hide from the column variants menu
   isKey?: boolean // Mark as primary key (or part of composite PK) for selection persistence

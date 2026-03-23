@@ -19,6 +19,7 @@ defineProps<{
   striped: boolean
   rowHeight: number
   stickyOffsets: Record<string, string>
+  stickyRightOffsets: Record<string, string>
   columnWidths: Record<string, string>
   virtualState: {
     paddingTop: number
@@ -84,6 +85,7 @@ const emit = defineEmits<{
         :striped="striped"
         :row-height="rowHeight"
         :sticky-offsets="stickyOffsets"
+        :sticky-right-offsets="stickyRightOffsets"
         :column-widths="columnWidths"
         :dragging-column-key="draggingColumnKey"
         :show-dividers="showDividers"
