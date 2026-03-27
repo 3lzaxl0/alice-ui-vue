@@ -1,6 +1,6 @@
 <script setup lang="ts" generic="T">
 import { ArrowUp, ArrowDown, Filter } from 'lucide-vue-next'
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import AliceCheckbox from '../../components/Checkbox/Checkbox.vue'
 import AliceButton from '../../components/Button/Button.vue'
 import TableFilter from './TableFilter.vue'
@@ -43,10 +43,49 @@ const emit = defineEmits<{
   (e: 'drop', event: DragEvent): void
 }>()
 
+const filterPosition = ref({ top: 0, left: 0 })
+const filterTriggerRefs = ref<Record<string, HTMLElement>>({})
+
+const updateFilterPosition = () => {
+  if (!props.openFilterColumn) return
+  const trigger = filterTriggerRefs.value[props.openFilterColumn]
+  if (!trigger) return
+
+  const rect = trigger.getBoundingClientRect()
+  const filterWidth = 288 // Corresponds to w-72 (desktop)
+
+  const colIndex = props.visibleColumns.findIndex((c) => String(c.key) === props.openFilterColumn)
+
+  let left = 0
+  if (colIndex === 0) {
+    left = rect.left
+  } else {
+    left = rect.right - filterWidth
+  }
+
+  // Screen boundary checks
+  if (left + filterWidth > window.innerWidth - 10) left = window.innerWidth - filterWidth - 10
+  if (left < 10) left = 10
+
+  filterPosition.value = {
+    top: rect.bottom + 8,
+    left,
+  }
+}
+
+watch(
+  () => props.openFilterColumn,
+  (newVal) => {
+    if (newVal) {
+      updateFilterPosition()
+    }
+  },
+)
+
 const handleClickOutside = (event: MouseEvent) => {
   if (props.openFilterColumn) {
     const target = event.target as HTMLElement
-    if (!target.closest('.alice-filter-anchor')) {
+    if (!target.closest('.alice-filter-anchor') && !target.closest('.alice-table-filter-popover')) {
       emit('filter-close')
     }
   }
@@ -54,10 +93,14 @@ const handleClickOutside = (event: MouseEvent) => {
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
+  window.addEventListener('scroll', updateFilterPosition, true)
+  window.addEventListener('resize', updateFilterPosition)
 })
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('scroll', updateFilterPosition, true)
+  window.removeEventListener('resize', updateFilterPosition)
 })
 
 function getOptionsForColumn(col: Column<T>) {
@@ -108,7 +151,7 @@ function getOptionsForColumn(col: Column<T>) {
       </th>
 
       <th
-        v-for="(col, index) in visibleColumns"
+        v-for="col in visibleColumns"
         :key="String(col.key)"
         :class="
           tableVariants.headerCell({
@@ -134,7 +177,70 @@ function getOptionsForColumn(col: Column<T>) {
         @click="emit('sort', String(col.key))"
       >
         <div class="flex items-center gap-2">
+
+          <!-- Filter Button -->
+          <div
+            v-if="col.filterable"
+            class="relative alice-filter-anchor"
+            :ref="
+              (el) => {
+                if (el) filterTriggerRefs[String(col.key)] = el as HTMLElement
+              }
+            "
+          >
+            <AliceButton
+              variant="primary"
+              design="ghost-subtle"
+              size="icon-sm"
+              @click.stop="emit('filter-toggle', String(col.key))"
+              class="hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200"
+            >
+              <Filter
+                :size="14"
+                :fill="activeFilters[String(col.key)] ? 'currentColor' : 'none'"
+                :class="activeFilters[String(col.key)] ? 'text-blue-600 dark:text-blue-400' : ''"
+              />
+            </AliceButton>
+
+            <!-- Indicator Dot -->
+            <div
+              v-if="activeFilters[String(col.key)]"
+              class="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-blue-500 rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none"
+            />
+
+            <Teleport to="body">
+              <transition name="alice-pop">
+                <div
+                  v-if="openFilterColumn === String(col.key)"
+                  class="fixed z-alice-popover cursor-default alice-table-filter-popover"
+                  :class="
+                    visibleColumns.findIndex((c) => String(c.key) === props.openFilterColumn) === 0
+                      ? 'origin-top-left'
+                      : 'origin-top-right'
+                  "
+                  :style="{
+                    top: filterPosition.top + 'px',
+                    left: filterPosition.left + 'px',
+                  }"
+                  @click.stop
+                >
+                  <TableFilter
+                    :type="col.type || 'text'"
+                    :options="getOptionsForColumn(col)"
+                    :model-value="activeFilters[String(col.key)] || { value: null }"
+                    @update:model-value="
+                      (val: FilterValue) => emit('filter-apply', String(col.key), val)
+                    "
+                    @close="emit('filter-close')"
+                  />
+                </div>
+              </transition>
+            </Teleport>
+          </div>
+
+          <!-- Header Title -->
           <span
+            class="font-bold"
             :class="[
               col.align === 'right' ? 'ml-auto' : '',
               col.align === 'center' ? 'mx-auto' : '',
@@ -160,37 +266,6 @@ function getOptionsForColumn(col: Column<T>) {
             </div>
           </div>
 
-          <!-- Column Filter -->
-          <div v-if="col.filterable" class="relative alice-filter-anchor">
-            <AliceButton
-              variant="primary" design="ghost-subtle"
-              size="icon-sm"
-              :icon-size="14"
-              @click.stop="emit('filter-toggle', String(col.key))"
-              class="hover:bg-gray-200 dark:hover:bg-slate-600"
-              :class="{ 'text-blue-500': activeFilters[String(col.key)] }"
-              :icon="Filter"
-            />
-
-            <transition name="alice-pop">
-              <div
-                v-if="openFilterColumn === String(col.key)"
-                class="absolute top-full mt-2 z-50 cursor-default"
-                :class="index === 0 ? 'left-0 origin-top-left' : 'right-0 origin-top-right'"
-                @click.stop
-              >
-                <TableFilter
-                  :type="col.type || 'text'"
-                  :options="getOptionsForColumn(col)"
-                  :model-value="activeFilters[String(col.key)] || { value: null }"
-                  @update:model-value="
-                    (val: FilterValue) => emit('filter-apply', String(col.key), val)
-                  "
-                  @close="emit('filter-close')"
-                />
-              </div>
-            </transition>
-          </div>
         </div>
 
         <!-- Resize Handle -->

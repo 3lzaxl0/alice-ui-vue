@@ -44,6 +44,7 @@ export interface Column<T> {
   render?: (item: T) => unknown // Optional custom render function (if not using slots)
   formatter?: (value: unknown) => string // Custom formatter
   tooltipFormatter?: (value: unknown) => string | undefined // Tooltip formatter
+  variant?: 'success' | 'warning' | 'error' | 'info' | 'default' | string
   variantMap?: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default' | string>
   badgeType?: 'normal' | 'filled' | 'soft'
   // Advanced Formatting
@@ -52,6 +53,8 @@ export interface Column<T> {
   align?: 'left' | 'center' | 'right'
   // Text Truncation: truncate text at this many characters and show a "Ver más" link
   maxLength?: number
+  // Presentation
+  hideZero?: boolean // Hides the cell content if value is exactly 0 or '0'
   // Footer Aggregation
   footer?: 'sum' | 'avg' | 'count' | 'min' | 'max'
 }

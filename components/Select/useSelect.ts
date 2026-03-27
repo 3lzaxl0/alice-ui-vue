@@ -13,8 +13,8 @@ export function useSelect(
     disabled?: boolean
   },
   emit: {
-    (e: 'update:modelValue', value: string | number): void
-    (e: 'change', value: string | number): void
+    (e: 'update:modelValue', value: string | number | null): void
+    (e: 'change', value: string | number | null): void
   },
 ) {
   const isOpen = ref(false)
@@ -131,6 +131,12 @@ export function useSelect(
     }
   }
 
+  function clearValue() {
+    if (props.disabled) return
+    emit('update:modelValue', null)
+    emit('change', null)
+  }
+
   return {
     isOpen,
     containerRef,
@@ -140,6 +146,7 @@ export function useSelect(
     selectedOption,
     displayLabel,
     selectOption,
+    clearValue,
     toggleOpen,
     handleClickOutside,
     handleKeydown,

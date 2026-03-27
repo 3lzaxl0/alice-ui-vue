@@ -5,6 +5,7 @@ export function useInput(
     type: string
     modelValue: string | number
     onlyIntegers?: boolean
+    disabled?: boolean
   },
   emit: {
     (e: 'update:modelValue', value: string | number): void
@@ -46,11 +47,17 @@ export function useInput(
     showPassword.value = !showPassword.value
   }
 
+  function clearValue() {
+    if (props.disabled) return
+    emit('update:modelValue', '')
+  }
+
   return {
     showPassword,
     currentType,
     isPassword,
     handleInput,
     togglePassword,
+    clearValue,
   }
 }

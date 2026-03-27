@@ -1,14 +1,14 @@
 import { ref, computed, onMounted, onUnmounted, type Ref } from 'vue'
 
 export function useVirtualScroll<T>(
-  processedData: Ref<T[]>, // The data after filtering/sorting
+  processedData: Ref<T[]>,
   mode: Ref<'auto' | 'fixed'>,
   pagination: Ref<boolean>,
   rowHeight: Ref<number>,
   buffer: Ref<number>,
 ) {
   const scrollTop = ref(0)
-  const viewportHeight = ref(600) // Default fallback
+  const viewportHeight = ref(600)
   const scrollViewport = ref<HTMLElement | null>(null)
 
   const isVirtual = computed(() => !pagination.value && mode.value === 'auto')
@@ -26,32 +26,26 @@ export function useVirtualScroll<T>(
     const count = processedData.value.length
     const visibleCount = Math.ceil(viewportHeight.value / rowHeight.value)
 
-    const start = Math.floor(scrollTop.value / rowHeight.value)
-    const paddedStart = Math.max(0, start - buffer.value)
+    const rawStart = Math.floor(scrollTop.value / rowHeight.value)
+    const startIndex = Math.max(0, rawStart - buffer.value)
+    const endIndex = Math.min(count, rawStart + visibleCount + buffer.value)
 
-    const end = Math.min(count, start + visibleCount + buffer.value)
+    const paddingTop = startIndex * rowHeight.value
+    const paddingBottom = Math.max(0, (count - endIndex) * rowHeight.value)
 
-    const paddingTop = paddedStart * rowHeight.value
-    const paddingBottom = (count - end) * rowHeight.value
-
-    return {
-      startIndex: paddedStart,
-      endIndex: end,
-      paddingTop,
-      paddingBottom,
-    }
+    return { startIndex, endIndex, paddingTop, paddingBottom }
   })
 
-  const scrollRAF = ref<number | null>(null)
+  // Throttle scroll with RAF for smooth 60fps
+  let ticking = false
 
   function handleScroll(e: Event) {
     const target = e.target as HTMLElement
-
-    // Throttle updates with RAF
-    if (!scrollRAF.value) {
-      scrollRAF.value = requestAnimationFrame(() => {
+    if (!ticking) {
+      ticking = true
+      requestAnimationFrame(() => {
         scrollTop.value = target.scrollTop
-        scrollRAF.value = null
+        ticking = false
       })
     }
   }
@@ -65,7 +59,6 @@ export function useVirtualScroll<T>(
   onMounted(() => {
     updateViewport()
     window.addEventListener('resize', updateViewport)
-    // Initial check
     if (scrollViewport.value) {
       scrollTop.value = scrollViewport.value.scrollTop
     }
@@ -73,7 +66,6 @@ export function useVirtualScroll<T>(
 
   onUnmounted(() => {
     window.removeEventListener('resize', updateViewport)
-    if (scrollRAF.value) cancelAnimationFrame(scrollRAF.value)
   })
 
   const virtualData = computed(() => {

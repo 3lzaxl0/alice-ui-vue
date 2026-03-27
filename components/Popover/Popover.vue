@@ -78,7 +78,7 @@ defineExpose({
         :class="[
           placement === 'bottom-right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left',
           mobileFullscreen
-            ? 'max-md:fixed max-md:inset-0 max-md:mt-0 max-md:w-full max-md:h-full max-md:bg-black/50 max-md:z-50 max-md:flex max-md:items-end max-md:justify-center'
+            ? 'max-md:fixed max-md:inset-0 max-md:mt-0 max-md:w-full max-md:h-full max-md:bg-black/50 max-md:z-alice-modal max-md:flex max-md:items-end max-md:justify-center'
             : '',
         ]"
         @click.self="mobileFullscreen ? close() : undefined"

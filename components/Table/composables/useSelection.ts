@@ -76,6 +76,20 @@ export function useSelection<T>(
     }
   }
 
+  function setSelection(item: T, isSelected: boolean) {
+    if (selectionType.value !== 'multiple') return
+
+    const itemKey = getItemKey(item)
+    const currentlySelected = selectedSet.value.has(itemKey)
+
+    if (isSelected && !currentlySelected) {
+      emitChange([...selected.value, item])
+    } else if (!isSelected && currentlySelected) {
+      const newSelected = selected.value.filter((i) => getItemKey(i) !== itemKey)
+      emitChange(newSelected)
+    }
+  }
+
   function toggleSelectAll() {
     if (selectionType.value !== 'multiple') return
 
@@ -116,6 +130,7 @@ export function useSelection<T>(
     isIndeterminate,
     hasSelection: pHasSelection,
     toggleSelection,
+    setSelection,
     toggleSelectAll,
   }
 }

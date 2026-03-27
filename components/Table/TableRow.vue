@@ -34,6 +34,8 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'toggle-selection', item: T): void
+  (e: 'selection-drag-start', item: T): void
+  (e: 'selection-drag-hover', item: T): void
   (e: 'drag-over', event: DragEvent, key: string): void
   (e: 'drop', event: DragEvent): void
 }>()
@@ -70,13 +72,12 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
 </script>
 
 <template>
-  <transition-group
-    name="alice-columns"
-    tag="tr"
+  <tr
     :class="
       tableVariants.row({
         selected: isSelected,
         striped: striped,
+        isEvenIndex: globalIndex % 2 === 0,
       })
     "
     :style="{ height: rowHeight + 'px' }"
@@ -89,22 +90,25 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
         tableVariants.cell({
           frozen: true,
           selected: isSelected,
+          striped: striped,
+          isEvenIndex: globalIndex % 2 === 0,
         })
       "
       class="text-center left-0 p-0"
       :style="{ height: rowHeight + 'px' }"
-      @click.stop="emit('toggle-selection', item)"
+      @mousedown.prevent="emit('selection-drag-start', item)"
+      @mouseenter="emit('selection-drag-hover', item)"
     >
       <div class="px-3 flex items-center justify-center h-full">
         <AliceCheckbox
           v-if="selectionType === 'multiple'"
           :model-value="isSelected"
-          @update:model-value="emit('toggle-selection', item)"
+          class="pointer-events-none"
         />
         <AliceRadio
           v-else-if="selectionType === 'single'"
           :model-value="isSelected"
-          @update:model-value="emit('toggle-selection', item)"
+          class="pointer-events-none"
         />
       </div>
     </td>
@@ -117,6 +121,8 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
           frozen: !!col.frozen,
           frozenRight: !!col.frozenRight,
           selected: isSelected,
+          striped: striped,
+          isEvenIndex: globalIndex % 2 === 0,
           dragging: draggingColumnKey === String(col.key),
           divided: showDividers,
         })
@@ -141,8 +147,13 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
         }"
       >
         <slot :name="`cell-${String(col.key)}`" :item="item" :col="col">
+          <!-- Hide Zero Logic -->
+          <template v-if="col.hideZero && (getSafeValue(item, col.key) === 0 || getSafeValue(item, col.key) === '0')">
+            <span :class="col.align === 'center' || col.align === 'right' ? '' : 'w-full'"></span>
+          </template>
+
           <!-- Status/Variant Logic -->
-          <template v-if="col.variantMap">
+          <template v-else-if="col.variant || col.variantMap">
             <AliceTooltip
               v-if="col.tooltipFormatter && col.tooltipFormatter(getSafeValue(item, col.key))"
               :content="col.tooltipFormatter(getSafeValue(item, col.key))"
@@ -154,9 +165,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                     ? col.formatter(getSafeValue(item, col.key))
                     : String(getSafeValue(item, col.key))
                 "
-                :variant="
-                  (col.variantMap[String(getSafeValue(item, col.key))] as any) || 'default'
-                "
+                :variant="(col.variant || (col.variantMap && col.variantMap[String(getSafeValue(item, col.key))])) as any || 'default'"
                 :type="col.badgeType || 'soft'"
               />
             </AliceTooltip>
@@ -168,9 +177,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                   ? col.formatter(getSafeValue(item, col.key))
                   : String(getSafeValue(item, col.key))
               "
-              :variant="
-                (col.variantMap[String(getSafeValue(item, col.key))] as any) || 'default'
-              "
+              :variant="(col.variant || (col.variantMap && col.variantMap[String(getSafeValue(item, col.key))])) as any || 'default'"
               :type="col.badgeType || 'soft'"
             />
           </template>
@@ -243,7 +250,8 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                       >Contenido Detallado</span
                     >
                     <AliceButton
-                      variant="primary" design="ghost-subtle"
+                      variant="primary"
+                      design="ghost-subtle"
                       size="icon-sm"
                       :icon-size="14"
                       @click="close"
@@ -281,7 +289,8 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               }}
             </span>
             <AliceButton
-              variant="primary" design="ghost-subtle"
+              variant="primary"
+              design="ghost-subtle"
               size="icon-sm"
               :icon="Eye"
               :icon-size="12"
@@ -301,7 +310,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
         </slot>
       </div>
     </td>
-  </transition-group>
+  </tr>
 
   <!-- Expand Dialog -->
   <AliceDialog v-model:show="expandDialogVisible" :title="expandDialogTitle" hide-footer>

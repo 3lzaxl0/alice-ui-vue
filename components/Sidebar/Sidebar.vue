@@ -39,7 +39,14 @@ const props = withDefaults(
 const isDark = ref(localStorage.getItem('theme') === 'dark')
 
 function toggleTheme() {
-  isDark.value = !isDark.value
+  const isDarkTheme = !isDark.value
+
+  // VERY IMPORTANT: Disable all standard CSS transitions while changing the theme
+  // This prevents the massive lag spike caused by 1000+ elements transitioning simultaneously
+  document.documentElement.classList.add('theme-transitioning')
+
+  // Apply the theme immediately (instant toggle)
+  isDark.value = isDarkTheme
   const html = document.documentElement
   if (isDark.value) {
     html.classList.add('dark')
@@ -48,6 +55,13 @@ function toggleTheme() {
     html.classList.remove('dark')
     localStorage.setItem('theme', 'light')
   }
+
+  // Wait for the browser to paint the new instant DOM state, then release the transition lock
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.documentElement.classList.remove('theme-transitioning')
+    })
+  })
 }
 
 // Initialize theme

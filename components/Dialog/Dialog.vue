@@ -18,6 +18,8 @@ interface Props {
   hideFooter?: boolean
   preventClose?: boolean
   closeOnBackdropClick?: boolean
+  description?: string
+  bodyClass?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -32,6 +34,7 @@ const props = withDefaults(defineProps<Props>(), {
   hideFooter: false,
   preventClose: false,
   closeOnBackdropClick: false,
+  bodyClass: 'flex flex-col gap-6',
 })
 
 const emit = defineEmits<{
@@ -104,12 +107,22 @@ const headerFooterPadding = computed(() => {
           >
             <!-- Header -->
             <div
-              class="flex items-center justify-between border-b border-gray-100 dark:border-slate-700"
+              class="flex items-start justify-between border-b border-gray-100 dark:border-slate-700"
               :class="headerFooterPadding"
             >
-              <h3 class="text-xl font-bold text-gray-900 dark:text-white leading-none">
-                {{ title }}
-              </h3>
+              <div class="flex flex-col gap-1.5 pr-4">
+                <h3 class="text-xl font-bold text-gray-900 dark:text-white leading-none">
+                  {{ title }}
+                </h3>
+                <div 
+                  v-if="$slots.description || description" 
+                  class="text-sm text-gray-600 dark:text-gray-400 [&_strong]:font-bold [&_strong]:text-gray-900 dark:[&_strong]:text-white"
+                >
+                  <slot name="description">
+                    {{ description }}
+                  </slot>
+                </div>
+              </div>
               <button
                 v-if="!preventClose"
                 @click="close"
@@ -121,11 +134,11 @@ const headerFooterPadding = computed(() => {
 
             <!-- Content Area -->
             <div
-              class="flex flex-col"
               :class="[
                 size === 'fullscreen' ? 'flex-1 min-h-0' : 'max-h-[70vh]',
                 overflowVisible ? 'overflow-visible' : 'overflow-y-auto w-full custom-scrollbar',
-                contentPadding
+                contentPadding,
+                bodyClass
               ]"
             >
               <slot />

@@ -18,6 +18,9 @@ const props = defineProps<{
   disabled?: boolean
   required?: boolean
   enableSelectAll?: boolean
+  error?: boolean | string
+  errorMessage?: string
+  helperText?: string
 }>()
 
 const emit = defineEmits<{
@@ -51,7 +54,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
 <template>
   <div class="flex flex-col gap-0 w-full relative group" ref="containerRef">
-    <AliceLabel v-if="label" :for="id" :disabled="disabled">
+    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="!!error || !!errorMessage">
       {{ label }}
     </AliceLabel>
 
@@ -65,7 +68,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
       @click="toggleOpen"
       @keydown="handleKeydown"
       class="h-alice-input-height px-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 cursor-pointer flex items-center justify-between gap-2 hover:border-blue-500/50 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300 rounded-alice-md relative pr-9 outline-none"
-      :class="[isOpen ? 'border-blue-500 ring-2 ring-blue-500/20' : '']"
+      :class="[
+        isOpen ? 'border-blue-500 ring-2 ring-blue-500/20' : '',
+        (!!error || !!errorMessage) ? 'border-red-500 dark:border-red-400 focus-within:ring-red-500/20 focus-within:border-red-500 dark:focus-within:border-red-400' : ''
+      ]"
       :title="modelValue.length > 1 ? fullSelectionLabel : undefined"
     >
       <!-- Selection Content -->
@@ -155,5 +161,16 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         </div>
       </div>
     </transition>
+
+    <!-- Feedback Messages -->
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+      {{ error }}
+    </p>
+    <p v-else-if="errorMessage" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+      {{ errorMessage }}
+    </p>
+    <p v-else-if="helperText" class="mt-1 text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+      {{ helperText }}
+    </p>
   </div>
 </template>

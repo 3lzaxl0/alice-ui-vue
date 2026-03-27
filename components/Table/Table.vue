@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="T">
-import { toRef, ref, computed, watch } from 'vue'
+import { toRef, ref, computed, watch, onMounted, onUnmounted } from 'vue'
 
 import TableToolbar from './TableToolbar.vue'
 import TableHeader from './TableHeader.vue'
@@ -51,7 +51,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   loading: false,
   mode: 'fixed',
   itemsPerPage: 10,
-  rowHeight: 48, // Default row height
+  rowHeight: 40,
   buffer: 10,
   selectionType: 'none',
   selected: () => [],
@@ -127,6 +127,7 @@ const {
   hasSelection,
   toggleSelection,
   toggleSelectAll,
+  setSelection,
 } = useSelection(
   toRef(props, 'selectionType'),
   toRef(props, 'selected'),
@@ -137,6 +138,42 @@ const {
     emit('selection-change', newSelected)
   },
 )
+
+// 3.1 Selection Drag Logic
+const selectionDragActive = ref(false)
+const selectionDragMode = ref<'select' | 'deselect'>('select')
+
+function handleSelectionDragStart(item: T) {
+  if (props.selectionType === 'none') return
+
+  if (props.selectionType === 'single') {
+    toggleSelection(item)
+    return
+  }
+
+  selectionDragActive.value = true
+  const currentlySelected = selectedSet.value.has(getItemKey(item))
+  selectionDragMode.value = currentlySelected ? 'deselect' : 'select'
+  // Toggle the first item immediately
+  setSelection(item, selectionDragMode.value === 'select')
+}
+
+function handleSelectionDragHover(item: T) {
+  if (!selectionDragActive.value) return
+  setSelection(item, selectionDragMode.value === 'select')
+}
+
+function handleSelectionDragEnd() {
+  selectionDragActive.value = false
+}
+
+onMounted(() => {
+  window.addEventListener('mouseup', handleSelectionDragEnd)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('mouseup', handleSelectionDragEnd)
+})
 
 // 4. State & Persistence Logic
 const footerOperations = ref<Record<string, string>>({})
@@ -220,7 +257,7 @@ const transitionId = computed(() =>
 
 // Computed viewport style for strict fixed heights
 const viewportStyle = computed(() => {
-  const style: Record<string, string> = { overflowAnchor: 'none', contain: 'content' }
+  const style: Record<string, string> = { overflowAnchor: 'none' }
   // Only apply fixed height if we are NOT in fullscreen mode
   if (props.visibleRows && !isFullscreen.value) {
     const pxHeight = props.visibleRows * props.rowHeight
@@ -340,7 +377,7 @@ defineExpose({
     <TableToolbar
       :has-selection="hasSelection"
       :selected-count="selectedSet.size"
-      :data-count="data.length"
+      :data-count="processedData.length"
       :is-fullscreen="isFullscreen"
       :hide-variants="hideVariants"
       :table-id="tableId"
@@ -370,7 +407,7 @@ defineExpose({
     <!-- Table Content -->
     <div
       ref="scrollViewport"
-      class="overflow-auto custom-scrollbar relative"
+      class="overflow-auto custom-scrollbar relative alice-smooth-scroll"
       :class="[!pagination ? 'rounded-b-xl' : '', !visibleRows ? 'flex-1 min-h-0' : '']"
       :style="viewportStyle"
       @scroll="handleScroll"
@@ -456,6 +493,8 @@ defineExpose({
           :dragging-column-key="draggingColumnKey"
           :show-dividers="showDividers"
           @toggle-selection="toggleSelection as any"
+          @selection-drag-start="handleSelectionDragStart"
+          @selection-drag-hover="handleSelectionDragHover"
           @drag-over="onDragOver"
           @drop="onDrop"
         >

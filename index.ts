@@ -14,6 +14,7 @@ export { default as AliceToast } from './components/Toast/Toast.vue'
 export { default as AliceDialog } from './components/Dialog/Dialog.vue'
 export { default as AliceDrawer } from './components/Drawer/Drawer.vue'
 export { default as AliceBanner } from './components/Banner/Banner.vue'
+export { default as AliceLoading } from './components/Loading/Loading.vue'
 import { useToast as useToastHook } from './components/Toast/useToast'
 export const useAliceToast = useToastHook
 
@@ -29,9 +30,17 @@ export { default as AliceWelcome } from './components/Welcome/Welcome.vue'
 export { default as AliceUnauthorized } from './components/Unauthorized/Unauthorized.vue'
 
 // Components - Layout
+export { default as AliceView } from './components/View/View.vue'
+export { default as AliceContainer } from './components/Container/Container.vue'
 export { default as AliceFilterPanel } from './components/FilterPanel/FilterPanel.vue'
 export { default as AlicePageHeader } from './components/PageHeader/PageHeader.vue'
 export { default as AlicePanel } from './components/Panel/Panel.vue'
+export { default as AliceCard } from './components/Card/Card.vue'
+export { default as AliceDataList } from './components/DataList/DataList.vue'
+export { default as AliceNote } from './components/Note/Note.vue'
+export { default as AliceDivider } from './components/Divider/Divider.vue'
+export { default as AliceEmpty } from './components/Empty/Empty.vue'
+export { default as AliceIconInfo } from './components/IconInfo/IconInfo.vue'
 export { default as AliceUnderConstruction } from './components/UnderConstruction/UnderConstruction.vue'
 
 // Components - Advanced Input

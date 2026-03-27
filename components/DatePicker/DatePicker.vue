@@ -16,7 +16,9 @@ const props = withDefaults(
     label?: string
     placeholder?: string
     disabled?: boolean
-    error?: boolean
+    error?: boolean | string
+    errorMessage?: string
+    helperText?: string
     displayFormat?: string
   }>(),
   {
@@ -51,7 +53,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
 <template>
   <div class="flex flex-col gap-0 w-full relative group" ref="containerRef">
-    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="error">
+    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="!!error || !!errorMessage">
       {{ label }}
     </AliceLabel>
 
@@ -62,7 +64,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           ? 'border-blue-500 ring-2 ring-blue-500/20'
           : 'border-gray-200 dark:border-slate-700 hover:border-blue-500/50',
         disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
-        error ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500/20' : '',
+        (!!error || !!errorMessage) ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500/20 text-red-900 dark:text-red-400' : '',
       ]"
     >
       <!-- Typeable input container with mask overlay -->
@@ -138,6 +140,17 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <AliceCalendar :model-value="modelValue" @update:model-value="selectDate" />
       </div>
     </transition>
+
+    <!-- Feedback Messages -->
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 font-medium whitespace-pre-wrap">
+      {{ error }}
+    </p>
+    <p v-else-if="errorMessage" class="mt-1 text-xs text-red-500 font-medium whitespace-pre-wrap">
+      {{ errorMessage }}
+    </p>
+    <p v-else-if="helperText" class="mt-1 text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+      {{ helperText }}
+    </p>
   </div>
 </template>
 

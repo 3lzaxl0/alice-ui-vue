@@ -45,6 +45,9 @@ interface Props {
   loading?: boolean
   placeholder?: string
   disabled?: boolean
+  error?: boolean | string
+  errorMessage?: string
+  helperText?: string
 }
 
 defineOptions({
@@ -57,6 +60,7 @@ const props = withDefaults(defineProps<Props>(), {
   loading: false,
   placeholder: 'Buscar...',
   disabled: false,
+  error: false,
 })
 
 const emit = defineEmits<{
@@ -86,7 +90,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
 <template>
   <div class="flex flex-col gap-0 w-full relative group" ref="containerRef">
-    <AliceLabel v-if="label" :for="id" :disabled="disabled">
+    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="!!error || !!errorMessage">
       {{ label }}
     </AliceLabel>
 
@@ -115,7 +119,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         @focus="handleFocus"
         @keydown="handleKeydown"
         class="w-full h-alice-input-height px-3 text-sm bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white shadow-alice-input focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-gray-100 dark:disabled:bg-slate-900 disabled:text-gray-400 rounded-alice-md pl-10"
-        :class="[modelValue || searchQuery ? 'pr-10' : 'pr-3']"
+        :class="[
+          modelValue || searchQuery ? 'pr-10' : 'pr-3',
+          (!!error || !!errorMessage) ? 'border-red-500 dark:border-red-400 focus:ring-red-500/20 focus:border-red-500 dark:focus:border-red-400' : ''
+        ]"
       />
 
       <!-- Clear Button -->
@@ -202,5 +209,16 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         </div>
       </transition>
     </div>
+
+    <!-- Feedback Messages -->
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-[13px] text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+      {{ error }}
+    </p>
+    <p v-else-if="errorMessage" class="mt-1 text-[13px] text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+      {{ errorMessage }}
+    </p>
+    <p v-else-if="helperText" class="mt-1 text-[13px] text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+      {{ helperText }}
+    </p>
   </div>
 </template>

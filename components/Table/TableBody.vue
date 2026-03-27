@@ -33,6 +33,8 @@ defineProps<{
 
 const emit = defineEmits<{
   (e: 'toggle-selection', item: T): void
+  (e: 'selection-drag-start', item: T): void
+  (e: 'selection-drag-hover', item: T): void
   (e: 'drag-over', event: DragEvent, key: string): void
   (e: 'drop', event: DragEvent): void
 }>()
@@ -64,7 +66,11 @@ const emit = defineEmits<{
     </tr>
 
     <!-- Virtual Scroll: Top Spacer -->
-    <tr v-else-if="virtualState.paddingTop > 0" :style="{ height: virtualState.paddingTop + 'px' }">
+    <tr
+      v-if="!loading && isVirtual && virtualState.paddingTop > 0"
+      aria-hidden="true"
+      :style="{ height: virtualState.paddingTop + 'px' }"
+    >
       <td
         :colspan="visibleColumns.length + (selectionType !== 'none' ? 1 : 0)"
         class="p-0 border-0"
@@ -90,6 +96,8 @@ const emit = defineEmits<{
         :dragging-column-key="draggingColumnKey"
         :show-dividers="showDividers"
         @toggle-selection="emit('toggle-selection', $event)"
+        @selection-drag-start="emit('selection-drag-start', $event)"
+        @selection-drag-hover="emit('selection-drag-hover', $event)"
         @drag-over="(e, key) => emit('drag-over', e, key)"
         @drop="(e) => emit('drop', e)"
       >
@@ -102,7 +110,8 @@ const emit = defineEmits<{
 
     <!-- Virtual Scroll: Bottom Spacer -->
     <tr
-      v-if="!loading && virtualState.paddingBottom > 0"
+      v-if="!loading && isVirtual && virtualState.paddingBottom > 0"
+      aria-hidden="true"
       :style="{ height: virtualState.paddingBottom + 'px' }"
     >
       <td

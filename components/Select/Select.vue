@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted } from 'vue'
-import { ChevronDown, Check } from 'lucide-vue-next'
+import { ChevronDown, Check, X } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import { useSelect } from './useSelect'
 
@@ -20,12 +20,15 @@ const props = defineProps<{
   label?: string
   placeholder?: string
   disabled?: boolean
-  error?: boolean
+  error?: boolean | string
+  errorMessage?: string
+  helperText?: string
+  clearable?: boolean
 }>()
 
 const emit = defineEmits<{
-  (e: 'update:modelValue', value: string | number): void
-  (e: 'change', value: string | number): void
+  (e: 'update:modelValue', value: string | number | null): void
+  (e: 'change', value: string | number | null): void
 }>()
 
 const {
@@ -37,6 +40,7 @@ const {
   selectedOption,
   displayLabel,
   selectOption,
+  clearValue,
   toggleOpen,
   handleClickOutside,
   handleKeydown,
@@ -48,7 +52,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
 <template>
   <div class="flex flex-col gap-0 w-full relative group" ref="containerRef">
-    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="error">
+    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="!!error || !!errorMessage">
       {{ label }}
     </AliceLabel>
 
@@ -67,7 +71,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           ? 'border-blue-500 ring-2 ring-blue-500/20'
           : 'border-gray-200 dark:border-slate-700 hover:border-blue-500/50',
         disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
-        error ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500/20' : '',
+        (!!error || !!errorMessage) ? 'border-red-500 dark:border-red-400 focus-within:border-red-500 dark:focus-within:border-red-400 focus-within:ring-red-500/20' : '',
       ]"
     >
       <!-- Selected Value -->
@@ -78,12 +82,24 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         {{ displayLabel }}
       </span>
 
-      <!-- Icon -->
-      <ChevronDown
-        :size="16"
-        class="text-gray-400 transition-transform duration-200 shrink-0"
-        :class="{ 'rotate-180': isOpen }"
-      />
+      <div class="flex items-center gap-1 shrink-0">
+        <!-- Clear Button -->
+        <button
+          v-if="clearable && modelValue"
+          type="button"
+          class="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full text-gray-400 hover:text-red-500 transition-colors"
+          @click.stop="clearValue"
+        >
+          <X :size="14" />
+        </button>
+
+        <!-- Chevron Icon -->
+        <ChevronDown
+          :size="16"
+          class="text-gray-400 transition-transform duration-200"
+          :class="{ 'rotate-180': isOpen }"
+        />
+      </div>
     </div>
 
     <!-- Dropdown -->
@@ -124,5 +140,16 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         </div>
       </div>
     </transition>
+
+    <!-- Feedback Messages -->
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+      {{ error }}
+    </p>
+    <p v-else-if="errorMessage" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+      {{ errorMessage }}
+    </p>
+    <p v-else-if="helperText" class="mt-1 text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+      {{ helperText }}
+    </p>
   </div>
 </template>

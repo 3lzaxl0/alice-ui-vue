@@ -241,3 +241,22 @@
 .alice-columns-move {
   transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+
+/* Smooth scroll for table viewports */
+.alice-smooth-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* -------------------------------------------------------------------------- */
+/* View Transition: Theme Toggle                                              */
+/* -------------------------------------------------------------------------- */
+
+/* VERY IMPORTANT: Disable all standard CSS transitions while doing a View Transition */
+/* This kills the massive lag spike caused by 1000+ Tailwind elements animating at once */
+.theme-transitioning,
+.theme-transitioning *,
+.theme-transitioning *::before,
+.theme-transitioning *::after {
+  transition: none !important;
+}
