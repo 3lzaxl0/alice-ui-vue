@@ -1,6 +1,7 @@
 import { ref, computed, type Ref } from 'vue'
 import type { FilterValue, Column } from '../../../types'
 import { getLocalDateString, formatDate as sharedFormatDate } from '../../../utils/date'
+import { smartFuzzyMatch } from '../../../utils/fuzzy'
 
 export function useTableData<T>(
   columns: Ref<Column<T>[]>,
@@ -84,7 +85,7 @@ export function useTableData<T>(
             }
             case 'contains':
             default:
-              return itemStr.includes(filterStr)
+              return !!smartFuzzyMatch(String(filterVal), String(rowValue ?? ''))
           }
         })
       })

@@ -41,6 +41,7 @@ export { default as AliceNote } from './components/Note/Note.vue'
 export { default as AliceDivider } from './components/Divider/Divider.vue'
 export { default as AliceEmpty } from './components/Empty/Empty.vue'
 export { default as AliceIconInfo } from './components/IconInfo/IconInfo.vue'
+export { default as AliceGrid } from './components/Grid/Grid.vue'
 export { default as AliceUnderConstruction } from './components/UnderConstruction/UnderConstruction.vue'
 
 // Components - Advanced Input

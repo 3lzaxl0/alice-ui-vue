@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, type CSSProperties, nextTick, watch } from 'vue'
 import { ChevronDown, Check, X } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import { useSelect } from './useSelect'
@@ -46,8 +46,52 @@ const {
   handleKeydown,
 } = useSelect(props, emit)
 
-onMounted(() => document.addEventListener('click', handleClickOutside))
-onUnmounted(() => document.removeEventListener('click', handleClickOutside))
+// --- Teleport / Positioning Logic ---
+const dropdownStyle = ref<CSSProperties>({
+  position: 'fixed',
+  zIndex: 9999, // Super high to be above everything including Dialogs
+  pointerEvents: 'none',
+  opacity: 0,
+})
+
+function updateDropdownPosition() {
+  if (!isOpen.value || !buttonRef.value) return
+
+  const rect = buttonRef.value.getBoundingClientRect()
+  
+  dropdownStyle.value = {
+    position: 'fixed',
+    top: `${rect.bottom + 4}px`, // Slight gap
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+    zIndex: 9999,
+    opacity: 1,
+    pointerEvents: 'auto',
+  }
+}
+
+// Watch for open to trigger position update
+watch(isOpen, async (val) => {
+  if (val) {
+    await nextTick()
+    updateDropdownPosition()
+    window.addEventListener('scroll', updateDropdownPosition, true) // capture to track any scrolling ancestor
+    window.addEventListener('resize', updateDropdownPosition)
+  } else {
+    window.removeEventListener('scroll', updateDropdownPosition, true)
+    window.removeEventListener('resize', updateDropdownPosition)
+  }
+})
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('scroll', updateDropdownPosition, true)
+  window.removeEventListener('resize', updateDropdownPosition)
+})
 </script>
 
 <template>
@@ -102,44 +146,47 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
       </div>
     </div>
 
-    <!-- Dropdown -->
-    <transition name="alice-pop">
-      <div
-        v-if="isOpen"
-        :id="id ? `${id}-listbox` : undefined"
-        ref="listboxRef"
-        role="listbox"
-        class="absolute z-alice-modal top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
-      >
+    <!-- Dropdown (Teleported to body) -->
+    <Teleport to="body">
+      <transition name="alice-pop">
         <div
-          v-for="(option, index) in options"
-          :key="option.value"
-          role="option"
-          :aria-selected="modelValue === option.value"
-          @click="selectOption(option)"
-          class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2"
-          :class="[
-            modelValue === option.value
-              ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-600 dark:border-blue-400 font-medium'
-              : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
-            index === activeIndex
-              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
-              : '',
-          ]"
+          v-if="isOpen"
+          :id="id ? `${id}-listbox` : undefined"
+          ref="listboxRef"
+          role="listbox"
+          :style="dropdownStyle"
+          class="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
         >
-          <span class="truncate">{{ option.label }}</span>
-          <Check
-            v-if="modelValue === option.value"
-            :size="14"
-            class="text-blue-600 dark:text-blue-400"
-          />
-        </div>
+          <div
+            v-for="(option, index) in options"
+            :key="option.value"
+            role="option"
+            :aria-selected="modelValue === option.value"
+            @click="selectOption(option)"
+            class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2"
+            :class="[
+              modelValue === option.value
+                ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-600 dark:border-blue-400 font-medium'
+                : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
+              index === activeIndex
+                ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
+                : '',
+            ]"
+          >
+            <span class="truncate">{{ option.label }}</span>
+            <Check
+              v-if="modelValue === option.value"
+              :size="14"
+              class="text-blue-600 dark:text-blue-400"
+            />
+          </div>
 
-        <div v-if="options.length === 0" class="px-4 py-6 text-sm text-gray-400 text-center italic">
-          No hay opciones disponibles
+          <div v-if="options.length === 0" class="px-4 py-6 text-sm text-gray-400 text-center italic">
+            No hay opciones disponibles
+          </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </Teleport>
 
     <!-- Feedback Messages -->
     <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
