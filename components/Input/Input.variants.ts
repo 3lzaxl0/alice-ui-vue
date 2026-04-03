@@ -12,7 +12,7 @@ export const inputVariants = cva(
         true: 'pl-10',
         false: 'pl-3',
       },
-      isPassword: {
+      hasTrailing: {
         true: 'pr-10',
         false: 'pr-3',
       },
@@ -20,7 +20,7 @@ export const inputVariants = cva(
     defaultVariants: {
       error: false,
       hasIcon: false,
-      isPassword: false,
+      hasTrailing: false,
     },
   },
 )

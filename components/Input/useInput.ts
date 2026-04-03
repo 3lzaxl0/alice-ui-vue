@@ -6,6 +6,9 @@ export function useInput(
     modelValue: string | number
     onlyIntegers?: boolean
     disabled?: boolean
+    min?: string | number
+    max?: string | number
+    step?: string | number
   },
   emit: {
     (e: 'update:modelValue', value: string | number): void
@@ -52,6 +55,34 @@ export function useInput(
     emit('update:modelValue', '')
   }
 
+  /* -------------------------------------------------------------------------- */
+  /*                               NUMERIC STEPPER                              */
+  /* -------------------------------------------------------------------------- */
+  function updateNumericValue(delta: number) {
+    if (props.disabled) return
+
+    const current = typeof props.modelValue === 'number' ? props.modelValue : parseFloat(String(props.modelValue))
+    const base = isNaN(current) ? 0 : current
+    const step = typeof props.step === 'number' ? props.step : parseFloat(String(props.step || 1))
+    
+    let newValue = base + delta * step
+
+    // Check bounds
+    if (props.min !== undefined) {
+      const minVal = typeof props.min === 'number' ? props.min : parseFloat(String(props.min))
+      if (!isNaN(minVal) && newValue < minVal) newValue = minVal
+    }
+    if (props.max !== undefined) {
+      const maxVal = typeof props.max === 'number' ? props.max : parseFloat(String(props.max))
+      if (!isNaN(maxVal) && newValue > maxVal) newValue = maxVal
+    }
+
+    emit('update:modelValue', newValue)
+  }
+
+  const stepUp = () => updateNumericValue(1)
+  const stepDown = () => updateNumericValue(-1)
+
   return {
     showPassword,
     currentType,
@@ -59,5 +90,7 @@ export function useInput(
     handleInput,
     togglePassword,
     clearValue,
+    stepUp,
+    stepDown,
   }
 }

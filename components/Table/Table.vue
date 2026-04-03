@@ -167,14 +167,6 @@ function handleSelectionDragEnd() {
   selectionDragActive.value = false
 }
 
-onMounted(() => {
-  window.addEventListener('mouseup', handleSelectionDragEnd)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('mouseup', handleSelectionDragEnd)
-})
-
 // 4. State & Persistence Logic
 const footerOperations = ref<Record<string, string>>({})
 const {
@@ -255,12 +247,43 @@ const transitionId = computed(() =>
   props.tableId ? `alice-table-${props.tableId}` : 'alice-table-default',
 )
 
+/* -------------------------------------------------------------------------- */
+/*                                RESPONSIVENESS                              */
+/* -------------------------------------------------------------------------- */
+const isMobile = ref(false)
+
+const updateIsMobile = () => {
+  isMobile.value = window.innerWidth < 1024 // Follows lg breakpoint
+}
+
+onMounted(() => {
+  updateIsMobile()
+  window.addEventListener('resize', updateIsMobile)
+  window.addEventListener('mouseup', handleSelectionDragEnd)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateIsMobile)
+  window.removeEventListener('mouseup', handleSelectionDragEnd)
+})
+
+// Centralized logic for whether the table should have a fixed height
+// This is TRUE if:
+// 1. the user explicitly provided visibleRows
+// 2. the mode is auto but we are on mobile (and not in fullscreen)
+const isFixedMode = computed(() => {
+  if (isFullscreen.value) return false
+  if (props.visibleRows) return true
+  return props.mode === 'auto' && isMobile.value
+})
+
 // Computed viewport style for strict fixed heights
 const viewportStyle = computed(() => {
   const style: Record<string, string> = { overflowAnchor: 'none' }
-  // Only apply fixed height if we are NOT in fullscreen mode
-  if (props.visibleRows && !isFullscreen.value) {
-    const pxHeight = props.visibleRows * props.rowHeight
+
+  if (isFixedMode.value) {
+    const effectiveVisibleRows = props.visibleRows || 10
+    const pxHeight = effectiveVisibleRows * props.rowHeight
     style.height = `${pxHeight}px`
     style.minHeight = `${pxHeight}px`
     style.maxHeight = `${pxHeight}px`
@@ -370,7 +393,7 @@ defineExpose({
       isFullscreen
         ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden'
         : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
-      (mode === 'auto' && !visibleRows) || isFullscreen ? 'flex-1 min-h-0' : 'h-fit',
+      isFixedMode ? 'h-fit' : 'flex-1 min-h-0',
     ]"
   >
     <!-- Toolbar -->
@@ -408,7 +431,7 @@ defineExpose({
     <div
       ref="scrollViewport"
       class="overflow-auto custom-scrollbar relative alice-smooth-scroll"
-      :class="[!pagination ? 'rounded-b-xl' : '', !visibleRows ? 'flex-1 min-h-0' : '']"
+      :class="[!pagination ? 'rounded-b-xl' : '', !isFixedMode ? 'flex-1 min-h-0' : '']"
       :style="viewportStyle"
       @scroll="handleScroll"
     >

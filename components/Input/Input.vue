@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type Component } from 'vue'
-import { Eye, EyeOff, X } from 'lucide-vue-next'
+import { Eye, EyeOff, X, ChevronUp, ChevronDown } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import { inputVariants } from './Input.variants'
 import { useInput } from './useInput'
@@ -47,13 +47,24 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string | number): void
 }>()
 
-const { showPassword, currentType, isPassword, handleInput, togglePassword, clearValue } = useInput(props, emit)
+const {
+  showPassword,
+  currentType,
+  isPassword,
+  handleInput,
+  togglePassword,
+  clearValue,
+  stepUp,
+  stepDown,
+} = useInput(props, emit)
+
+const isNumber = computed(() => props.type === 'number')
 
 const inputClass = computed(() => {
   return inputVariants({
     error: !!props.error || !!props.errorMessage,
     hasIcon: !!props.icon,
-    isPassword: isPassword.value,
+    hasTrailing: isPassword.value || isNumber.value || (props.clearable && !!props.modelValue),
   })
 })
 </script>
@@ -93,44 +104,79 @@ const inputClass = computed(() => {
         @input="handleInput"
       />
 
-      <!-- Trailing Action (Password Toggle or Clear) -->
-      <div class="absolute inset-y-0 right-0 pr-3 flex items-center gap-2">
+      <!-- Trailing Action Slot -->
+      <div class="absolute inset-y-0 right-0 pr-1.5 flex items-center gap-1.5">
+        <!-- Clear Button -->
         <button
           v-if="clearable && modelValue && !disabled"
           type="button"
           @click="clearValue"
-          class="text-gray-400 hover:text-red-500 transition-colors cursor-pointer outline-none"
+          class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all rounded-md outline-none cursor-pointer"
           title="Limpiar"
         >
-          <X :size="16" />
+          <X :size="14" />
         </button>
 
+        <!-- Stepper (Numeric) -->
+        <div v-if="isNumber && !disabled" class="flex flex-col h-full py-1.5 justify-center">
+          <button
+            type="button"
+            @click="stepUp"
+            class="flex-1 px-1 flex items-center justify-center text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all rounded-t-md outline-none cursor-pointer"
+          >
+            <ChevronUp :size="12" stroke-width="3" />
+          </button>
+          <button
+            type="button"
+            @click="stepDown"
+            class="flex-1 px-1 flex items-center justify-center text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all rounded-b-md outline-none cursor-pointer"
+          >
+            <ChevronDown :size="12" stroke-width="3" />
+          </button>
+        </div>
+
+        <!-- Password Toggle -->
         <button
           v-if="isPassword"
           type="button"
           @click="togglePassword"
-          class="flex items-center text-gray-400 hover:text-blue-500 transition-colors cursor-pointer outline-none"
+          class="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all rounded-md outline-none cursor-pointer"
         >
-          <Eye v-if="!showPassword" :size="18" />
-          <EyeOff v-else :size="18" />
+          <Eye v-if="!showPassword" :size="16" />
+          <EyeOff v-else :size="16" />
         </button>
       </div>
     </div>
 
     <!-- Feedback Messages -->
-    <div v-if="error || errorMessage || helperText || (showCounter && maxlength)" class="flex items-start justify-between gap-4 mt-1">
+    <div
+      v-if="error || errorMessage || helperText || (showCounter && maxlength)"
+      class="flex items-start justify-between gap-4 mt-1"
+    >
       <div class="flex-1">
-        <p v-if="error && typeof error === 'string'" class="text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+        <p
+          v-if="error && typeof error === 'string'"
+          class="text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap"
+        >
           {{ error }}
         </p>
-        <p v-else-if="errorMessage" class="text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+        <p
+          v-else-if="errorMessage"
+          class="text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap"
+        >
           {{ errorMessage }}
         </p>
-        <p v-else-if="helperText" class="text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">
+        <p
+          v-else-if="helperText"
+          class="text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap"
+        >
           {{ helperText }}
         </p>
       </div>
-      <p v-if="showCounter && maxlength" class="text-xs text-gray-400 dark:text-gray-500 text-right whitespace-nowrap shrink-0">
+      <p
+        v-if="showCounter && maxlength"
+        class="text-xs text-gray-400 dark:text-gray-500 text-right whitespace-nowrap shrink-0"
+      >
         {{ String(modelValue ?? '').length }} / {{ maxlength }}
       </p>
     </div>
@@ -138,19 +184,32 @@ const inputClass = computed(() => {
 </template>
 
 <style scoped>
+/* Hide standard spin buttons (chrome, safari, edge, firefox) */
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 /* Fix Webkit autofill overriding Alice UI dark mode text and background */
 input:-webkit-autofill,
-input:-webkit-autofill:hover, 
-input:-webkit-autofill:focus, 
-input:-webkit-autofill:active{
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
   -webkit-text-fill-color: #111827; /* text-gray-900 */
   transition: background-color 5000s ease-in-out 0s;
 }
 
 :global(.dark) input:-webkit-autofill,
-:global(.dark) input:-webkit-autofill:hover, 
-:global(.dark) input:-webkit-autofill:focus, 
-:global(.dark) input:-webkit-autofill:active{
+:global(.dark) input:-webkit-autofill:hover,
+:global(.dark) input:-webkit-autofill:focus,
+:global(.dark) input:-webkit-autofill:active {
   -webkit-text-fill-color: #ffffff;
   transition: background-color 5000s ease-in-out 0s;
 }

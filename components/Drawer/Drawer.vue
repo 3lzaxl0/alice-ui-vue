@@ -11,6 +11,7 @@ interface Props {
   confirmVariant?: 'primary' | 'success' | 'warning' | 'error' | 'info'
   loading?: boolean
   width?: string
+  showCancel?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,6 +20,7 @@ const props = withDefaults(defineProps<Props>(), {
   confirmVariant: 'primary',
   loading: false,
   width: 'max-w-md',
+  showCancel: true,
 })
 
 const emit = defineEmits<{
@@ -92,7 +94,7 @@ onUnmounted(() => window.removeEventListener('keydown', handleEscape))
           class="px-6 py-4 border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-white/2 flex items-center justify-end gap-3 shrink-0"
         >
           <slot name="footer">
-            <AliceButton variant="ghost" @click="close" :disabled="loading">
+            <AliceButton v-if="showCancel" variant="ghost" @click="close" :disabled="loading">
               {{ cancelLabel }}
             </AliceButton>
             <AliceButton :variant="confirmVariant" @click="onConfirm" :loading="loading">

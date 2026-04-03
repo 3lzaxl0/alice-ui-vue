@@ -91,7 +91,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         // Design: ghost (minimal)
         design === 'ghost' && [
           'cursor-pointer rounded-md',
-          size === 'md' ? 'py-1.5 px-2' : 'py-0.5 px-1',
+          size === 'md' ? 'py-1.5 px-2' : 'py-1 px-2',
           isOpen ? 'bg-gray-100 dark:bg-white/10' : 'hover:bg-gray-50 dark:hover:bg-white/5',
           disabled ? 'opacity-50 cursor-not-allowed' : '',
         ],
@@ -110,7 +110,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
                 !selectedOption
                   ? 'text-gray-400 dark:text-gray-500'
                   : 'text-gray-600 dark:text-gray-300',
-                size === 'md' ? 'text-xs' : 'text-[11px]',
+                size === 'md' ? 'text-xs' : 'text-xs font-medium',
               ],
         ]"
       >

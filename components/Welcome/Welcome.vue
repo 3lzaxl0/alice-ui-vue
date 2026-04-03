@@ -41,13 +41,13 @@ defineProps<{
   <div class="flex flex-col gap-8 max-w-7xl mx-auto px-4 md:px-0">
     <!-- Hero Section -->
     <div
-      class="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 p-8 md:p-12 text-white shadow-lg rounded-3xl"
+      class="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 p-8 md:p-10 text-white shadow-lg rounded-3xl"
     >
       <div class="relative z-10">
-        <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-tight">
+        <h1 class="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
           Bienvenido, <span class="opacity-90">{{ userName }}</span>
         </h1>
-        <p class="text-blue-100 text-lg md:text-xl max-w-2xl font-light">
+        <p class="text-blue-100 text-lg md:text-xl font-light">
           Selecciona una operación para comenzar o utiliza el menú lateral para navegar por el
           sistema.
         </p>
@@ -91,7 +91,7 @@ defineProps<{
 
           <!-- Arrow Indicator (Visible on hover) -->
           <div
-            class="mt-auto pt-2 flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-[-10px] group-hover:translate-x-0"
+            class="mt-auto flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-[-10px] group-hover:translate-x-0"
           >
             <span :class="welcomeLinkVariants({ color: item.color as WelcomeColor })">
               Ir ahora &rarr;
