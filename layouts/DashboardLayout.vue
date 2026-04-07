@@ -87,7 +87,13 @@ function handleSwitchRole(code: string) {
       @logout="handleLogout"
       @switch-role="handleSwitchRole"
     >
-      <slot name="sidebar" />
+      <template #default>
+        <slot name="sidebar" />
+      </template>
+
+      <template #footer="{ expanded }">
+        <slot name="sidebar-footer" v-bind="{ expanded }" />
+      </template>
     </AliceSidebar>
 
     <!-- Main Content Area -->

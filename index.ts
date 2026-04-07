@@ -43,6 +43,7 @@ export { default as AliceFilterPanel } from './components/FilterPanel/FilterPane
 export { default as AlicePageHeader } from './components/PageHeader/PageHeader.vue'
 export { default as AlicePanel } from './components/Panel/Panel.vue'
 export { default as AliceCard } from './components/Card/Card.vue'
+export { default as AliceActivityItem } from './components/ActivityItem/ActivityItem.vue'
 export { default as AliceDataList } from './components/DataList/DataList.vue'
 export { default as AliceNote } from './components/Note/Note.vue'
 export { default as AliceDivider } from './components/Divider/Divider.vue'
