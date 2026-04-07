@@ -65,7 +65,13 @@ export function useInput(
     const base = isNaN(current) ? 0 : current
     const step = typeof props.step === 'number' ? props.step : parseFloat(String(props.step || 1))
     
+    const getDecimals = (val: number) => String(val).split('.')[1]?.length || 0
+    const maxDecimals = Math.max(getDecimals(base), getDecimals(step))
+    
     let newValue = base + delta * step
+    
+    // Fix floating point precision artifacts (e.g., 0.060000000000000005)
+    newValue = Number(newValue.toFixed(maxDecimals))
 
     // Check bounds
     if (props.min !== undefined) {

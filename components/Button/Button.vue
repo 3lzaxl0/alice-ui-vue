@@ -1,52 +1,65 @@
 <script setup lang="ts">
-import { computed, type Component } from 'vue'
-import { Loader2 } from 'lucide-vue-next'
-import { buttonVariants } from './Button.variants'
-import type { VariantProps } from 'class-variance-authority'
+import { computed, type Component } from "vue";
+import { Loader2 } from "lucide-vue-next";
+import { buttonVariants } from "./Button.variants";
+import type { VariantProps } from "class-variance-authority";
 
 defineOptions({
-  name: 'AliceButton',
-})
+  name: "AliceButton",
+});
 
-type ButtonVariantProps = VariantProps<typeof buttonVariants>
+type ButtonVariantProps = VariantProps<typeof buttonVariants>;
 
 interface Props {
-  variant?: ButtonVariantProps['variant']
-  design?: ButtonVariantProps['design']
-  size?: ButtonVariantProps['size']
-  rounded?: boolean
-  loading?: boolean
-  disabled?: boolean
-  type?: 'button' | 'submit' | 'reset'
-  icon?: Component | object // Component
-  iconSize?: number
+  variant?: ButtonVariantProps["variant"];
+  design?: ButtonVariantProps["design"];
+  size?: ButtonVariantProps["size"];
+  radius?: ButtonVariantProps["radius"];
+  /** @deprecated use radius instead */
+  rounded?: boolean;
+  expanded?: boolean;
+  loading?: boolean;
+  disabled?: boolean;
+  type?: "button" | "submit" | "reset";
+  icon?: Component | object; // Component
+  iconSize?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
-  variant: 'primary',
-  design: 'solid',
-  size: 'md',
+  variant: "primary",
+  design: "solid",
+  size: "md",
+  radius: undefined,
   rounded: false,
+  expanded: false,
   loading: false,
   disabled: false,
-  type: 'button',
+  type: "button",
   iconSize: 20,
-})
+});
 
 const computedClass = computed(() => {
-  return buttonVariants({
-    variant: props.variant,
-    design: props.design,
-    size: props.size,
-    rounded: props.rounded,
-  })
-})
+  return [
+    buttonVariants({
+      variant: props.variant,
+      design: props.design,
+      size: props.size,
+      radius: props.radius,
+      // Fallback for deprecated rounded prop if radius is not set
+      rounded: props.radius === undefined ? props.rounded : undefined,
+    }),
+    props.expanded ? "w-full h-full" : "",
+  ];
+});
 </script>
 
 <template>
   <button :type="type" :class="computedClass" :disabled="disabled || loading">
     <!-- Loading Spinner -->
-    <div v-if="loading" class="absolute inset-0 flex items-center justify-center">
+    <div
+      v-if="loading"
+      class="absolute inset-0 flex items-center justify-center"
+    >
       <Loader2 class="animate-spin" :size="20" />
     </div>
 

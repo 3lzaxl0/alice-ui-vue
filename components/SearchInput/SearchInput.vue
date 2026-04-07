@@ -43,6 +43,7 @@ interface Props {
   modelValue?: Result | null
   results?: Result[]
   loading?: boolean
+  localSearch?: boolean
   placeholder?: string
   disabled?: boolean
   error?: boolean | string
@@ -58,6 +59,7 @@ const props = withDefaults(defineProps<Props>(), {
   modelValue: null,
   results: () => [],
   loading: false,
+  localSearch: true,
   placeholder: 'Buscar...',
   disabled: false,
   error: false,

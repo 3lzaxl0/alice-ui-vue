@@ -1,32 +1,31 @@
-# Clean Architecture — `pd_campo_web`
+# Clean Architecture Guide (Alice-UI Based)
 
-> **Propósito de este documento**: Guía canónica de la arquitectura Clean Architecture aplicada en esta aplicación Vue 3. Sirve tanto como referencia para el equipo como **prompt de contexto** para que la IA entienda los patrones establecidos y los reproduzca correctamente.
+> **Propósito de este documento**: Guía estándar de arquitectura Clean Architecture aplicada a proyectos que utilizan el design system **Alice-UI**. Sirve como referencia para el equipo y como **contexto de prompt** para asistentes de IA, garantizando consistencia en todos los módulos del sistema.
 
 ---
 
 ## 1. Visión General
 
-La aplicación sigue **Clean Architecture** dentro de un monorepositorio Front-End. La idea central es que **las reglas de negocio (domain) no dependen de nada externo** — ni de Vue, ni de GraphQL, ni de componentes UI.
+La arquitectura busca separar las reglas de negocio de los detalles de implementación (Framework, API, UI). Las dependencias siempre apuntan hacia adentro, hacia el **dominio**.
 
 ```
 src/
-├── core/             ← Contratos reutilizables en toda la app
-├── features/         ← Módulos de negocio
-│   ├── auth/
-│   └── main/
-│       ├── layouts/
-│       ├── constants/
-│       └── registro/          ← Namespace de tipo de registro
-│           └── registro_campo/ ← Feature concreta
+├── core/             ← Contratos y utilidades base (reutilizables)
+├── features/         ← Módulos funcionales (módulos de negocio)
+│   └── {feature_name}/
+│       ├── data/             ← Implementación (API, Repositories)
+│       ├── di/               ← Inyección de Dependencias
+│       ├── domain/           ← Reglas de Negocio (Puro TS)
+│       └── presentation/     ← UI (Vue Components, Composables)
 └── shared/
-    └── alice-ui/     ← Design System / Componentes UI compartidos
+    └── alice-ui/     ← Design System y componentes compartidos
 ```
 
 ---
 
-## 2. El Contrato Raíz: `UseCase`
+## 2. El Contrato Base: `UseCase`
 
-Todo caso de uso en la aplicación implementa esta interfaz ubicada en `src/core/domain/use-case.ts`:
+Todos los casos de uso deben seguir el contrato definido en `core/domain/use-case.ts`:
 
 ```typescript
 export interface UseCase<Input, Output> {
@@ -34,392 +33,112 @@ export interface UseCase<Input, Output> {
 }
 ```
 
-**Regla**: Cualquier clase que orqueste una operación de negocio **debe** implementar `UseCase<Input, Output>`. Esto garantiza que todos los casos de uso sean intercambiables, testeables, y que el DI container los pueda tratar uniformemente.
-
 ---
 
-## 3. Estructura de un Feature Completo
+## 3. Estructura de un Feature
 
-Un feature vive en `src/features/main/<namespace>/<nombre_feature>/` y tiene **4 capas**:
+Cada feature en `src/features/` debe seguir esta estructura interna:
 
 ```
-registro_campo/
+{feature_name}/
 ├── data/
 │   ├── datasources/
-│   │   └── registro.remote.datasource.ts
+│   │   └── {entity}.remote.datasource.ts
 │   └── repositories/
-│       └── registro.repository.impl.ts
+│       └── {entity}.repository.impl.ts
 ├── di/
-│   └── registro.di.ts
+│   └── {feature}.di.ts
 ├── domain/
 │   ├── entities/
-│   │   ├── registro.model.ts
-│   │   └── programacion.model.ts
+│   │   └── {entity}.model.ts
 │   ├── repositories/
-│   │   └── registro.repository.ts
+│   │   └── {entity}.repository.ts
 │   └── usecases/
-│       ├── get-partes-abiertos.usecase.ts
-│       ├── get-programas-abiertos.usecase.ts
-│       ├── generar-partes-programacion.usecase.ts
-│       └── anular-pd-cabs.usecase.ts
+│       └── {action}-{entity}.usecase.ts
 └── presentation/
-    ├── components/
-    │   ├── RegistroDialogAnular.vue
-    │   ├── RegistroDialogDetalle.vue
-    │   ├── RegistroDialogNuevo.vue
-    │   └── RegistroDialogProgramacion.vue
-    ├── composables/
-    │   ├── useRegistro.ts
-    │   ├── useRegistroDialogNuevo.ts
-    │   └── useRegistroDialogProgramacion.ts
-    ├── config/
-    │   └── columns.ts
-    └── views/
-        └── RegistroView.vue
-```
-
-### Por qué este namespace (`registro/registro_campo`)?
-
-El directorio `registro/` es el **namespace** para todos los tipos de registro de campo. Actualmente existe solo `registro_campo`, pero la estructura permite añadir futuros tipos sin conflicto:
-
-```
-registro/
-├── registro_campo/   ← tipo: Parte Diario de Campo (implementado)
-├── registro_riego/   ← tipo futuro
-└── registro_cosecha/ ← tipo futuro
+    ├── components/    ← Componentes específicos del feature
+    ├── composables/   ← Lógica de estado y orquestación
+    ├── config/        ← Configuración de UI (columnas, filtros)
+    └── views/         ← Páginas principales (enrutadas)
 ```
 
 ---
 
-## 4. Las Cuatro Capas
+## 4. Definición de Capas
 
-### 4.1 Capa de Dominio (`domain/`)
+### 4.1 Dominio (`domain/`)
+Es el corazón del feature. No depende de nada externo.
 
-**Regla crítica**: Esta capa NO IMPORTA nada de Vue, de la API, ni de alice-ui. Solo TypeScript puro.
+- **Entities**: Interfaces que definen los objetos de negocio.
+- **Repositories (Interfaces)**: Contratos que definen qué datos se necesitan.
+- **UseCases**: Clases que ejecutan una acción específica del negocio. Reciben el repositorio por constructor.
 
-#### Entidades (`domain/entities/`)
+**Regla**: El código aquí debe ser TypeScript puro (sin imports de Vue o librerías de terceros).
 
-DTOs del negocio que la presentación consume. No tienen lógica.
+### 4.2 Datos (`data/`)
+Implementa los contratos del dominio.
 
-```typescript
-// registro.model.ts
-export interface RegistroCabecera {
-  idPdCab: number
-  usrCreacion: string
-  fechaNotificacion: string
-  elemPep: string
-  descripcionCampo: string
-  codLabor: string
-  descripcionLabor: string
-  nroAplicacion: number
-}
+- **DataSources**: Llamadas directas a la infraestructura (GraphQL, REST, LocalStorage).
+- **Repository Implementation**: Orquesta los DataSources y mapea DTOs a entidades de dominio.
 
-export interface RegistroFilter {
-  fechaNotificacion: string
-  idUser: string
-  codUsr: string
-}
-```
+**Regla**: Los tipos de datos de la API (RemoteDTOs) se transforman en entidades de dominio antes de salir del repositorio.
 
-#### Repositorio (interfaz) (`domain/repositories/`)
-
-Define **qué** operaciones existen, sin decir **cómo** se ejecutan:
+### 4.3 Inyección de Dependencias (`di/`)
+Único lugar donde se permite el uso de la palabra clave `new` para instanciar clases de la arquitectura.
 
 ```typescript
-export interface RegistroRepository {
-  getPartesAbiertos(filter: RegistroFilter): Promise<RegistroCabecera[]>
-  getProgramasAbiertos(filter: ProgramacionFilter): Promise<ProgramacionAbierta[]>
-  generarPartesDesdeProgramacion(input: GenerarParteInput): Promise<boolean>
-  anularPdCabs(ids: number[], usrAnulacion: string): Promise<boolean>
-}
+// {feature}.di.ts example
+const dataSource = new EntityRemoteDataSource()
+const repository = new EntityRepositoryImpl(dataSource)
+
+export const actionUseCase = new ActionUseCase(repository)
 ```
 
-#### Casos de Uso (`domain/usecases/`)
+### 4.4 Presentación (`presentation/`)
+Capa de interacción con el usuario.
 
-Cada operación de negocio es una clase. Recibe el repositorio por constructor (inversión de dependencias):
-
-```typescript
-export class AnularPdCabsUseCase implements UseCase<AnularPdCabsInput, boolean> {
-  constructor(private readonly repository: RegistroRepository) {}
-
-  execute(input: AnularPdCabsInput): Promise<boolean> {
-    return this.repository.anularPdCabs(input.ids, input.usrAnulacion)
-  }
-}
-```
-
-**Patrón de nombrado**: `<Verbo><Sustantivo>UseCase` en PascalCase, archivo en `kebab-case.usecase.ts`.
+- **Composables**: Manejan el estado reactivo (`ref`, `computed`) e invocan a los UseCases del contenedor DI.
+- **Views/Components**: Utilizan los componentes de **Alice-UI** (`AliceTable`, `AliceDialog`, etc.) y delegar lógica a los composables.
 
 ---
 
-### 4.2 Capa de Datos (`data/`)
+## 5. Sub-Features de Presentación
 
-Implementa las interfaces del dominio. Aquí sí se tocan APIs, GraphQL, localStorage, etc.
-
-#### DataSource Remoto (`data/datasources/`)
-
-Hace las llamadas HTTP/GraphQL y devuelve DTOs crudos (los "Remote" types):
-
-```typescript
-const ANULAR_PD_CABS_MUTATION = `
-  mutation AnularPdCabs($ids: [Int!]!, $usrAnulacion: String!) {
-    anularPdCabs(ids: $ids, usrAnulacion: $usrAnulacion)
-  }
-`
-
-export class RegistroRemoteDataSource {
-  async anularPdCabs(ids: number[], usrAnulacion: string): Promise<boolean> {
-    const data = await graphqlQuery<{ anularPdCabs: boolean }>(
-      ANULAR_PD_CABS_MUTATION,
-      { ids, usrAnulacion },
-    )
-    return !!data.anularPdCabs
-  }
-}
-```
-
-**Regla**: Los tipos `Remote*` se declaran aquí y NO salen de esta capa. Solo el mapeo los convierte a entidades de dominio.
-
-#### Implementación del Repositorio (`data/repositories/`)
-
-Conecta el DataSource con el dominio, haciendo el mapeo de DTOs:
-
-```typescript
-export class RegistroRepositoryImpl implements RegistroRepository {
-  constructor(private readonly remoteDataSource: RegistroRemoteDataSource) {}
-
-  async getPartesAbiertos(filter: RegistroFilter): Promise<RegistroCabecera[]> {
-    const remote = await this.remoteDataSource.getPartesAbiertos(...)
-    return remote.map(this.mapRegistroToDomain) // ← El mapeo ocurre aquí
-  }
-
-  private mapRegistroToDomain(remote: RemoteRegistroCabecera): RegistroCabecera {
-    return { idPdCab: remote.idPdCab, ... }
-  }
-}
-```
-
----
-
-### 4.3 Capa de Inyección de Dependencias (`di/`)
-
-Este archivo es el único lugar donde se construye el grafo de objetos. Nadie más hace `new Repository()` o `new UseCase()`.
-
-```typescript
-// registro.di.ts
-const dataSource = new RegistroRemoteDataSource()
-const repository = new RegistroRepositoryImpl(dataSource)
-
-export const getPartesAbiertosUseCase = new GetPartesAbiertosUseCase(repository)
-export const getProgramasAbiertosUseCase = new GetProgramasAbiertosUseCase(repository)
-export const generarPartesUseCase = new GenerarPartesProgramacionUseCase(repository)
-export const anularPdCabsUseCase = new AnularPdCabsUseCase(repository)
-```
-
-**Regla**: Los composables importan los use cases ya instanciados (`import { anularPdCabsUseCase } from '../../di/registro.di'`). **Nunca** hacen `new` directamente.
-
----
-
-### 4.4 Capa de Presentación (`presentation/`)
-
-ToDo lo que toca Vue, Tailwind, o alice-ui vive aquí.
-
-#### `views/` — Vistas (páginas enrutadas)
-
-Ensamblan todo. Solo deberían delegar lógica a composables:
-
-```
-RegistroView.vue ← Registrado en main.routes.ts como '/registro'
-```
-
-#### `composables/` — Lógica de UI (estado + llamadas a DI)
-
-Contienen el estado reactivo (`ref`, `computed`) y llaman a los use cases del DI:
-
-```typescript
-// useRegistro.ts
-import { getPartesAbiertosUseCase, anularPdCabsUseCase } from '../../di/registro.di'
-
-export function useRegistro() {
-  const registros = ref<RegistroCabecera[]>([])
-  const isLoading = ref(false)
-  // ... estado de diálogos, selección, etc.
-
-  const fetchRegistros = async () => {
-    registros.value = await getPartesAbiertosUseCase.execute({ ... })
-  }
-
-  return { registros, isLoading, fetchRegistros, ... }
-}
-```
-
-**Convenio**: Un composable por "contexto de UI" (uno para la vista principal, uno por diálogo complejo).
-
-#### `components/` — Dialogs y componentes reutilizables del feature
-
-Dialogs y sub-componentes. No contienen lógica pesada (esa va en composables):
-
-```
-RegistroDialogAnular.vue      ← Confirmación de anulación
-RegistroDialogDetalle.vue     ← Vista fullscreen de detalle (en desarrollo)
-RegistroDialogNuevo.vue       ← Formulario de nuevo registro manual
-RegistroDialogProgramacion.vue ← Tabla de programaciones para utilizar
-```
-
-#### `config/` — Configuración de UI
-
-Configuración que es UI-específica y no pertenece a ninguna otra capa:
-
-```typescript
-// columns.ts — Definición de columnas para AliceTable
-export function buildRegistroColumns(): Column<RegistroCabecera>[] { ... }
-export function buildProgramacionColumns(): Column<ProgramacionAbierta>[] { ... }
-```
-
-**Regla**: Aquí va todo lo que es "configuración de cómo se ve", no lógica de negocio.
-
----
-
-## 5. Diagrama de Dependencias
-
-```
-Presentation (Vue)
-   │
-   ├── imports use cases from ──→ di/ (DI Container)
-   │                                    │
-   │                                    └── creates ──→ data/ (Repository Impl)
-   │                                                         │
-   │                                                         └── calls ──→ data/ (DataSource)
-   │
-   └── uses types from ──→ domain/ (Entities)
-                              ↑
-                         data/ repositorio impl también satisface estas interfaces
-```
-
-**El dominio no sabe que Vue existe. Vue no sabe cómo funciona GraphQL.**
-
----
-
-## 6. Sub-Features de Presentación
-
-Un sub-feature **de presentación** es un módulo complejo dentro de `presentation/` que tiene su propia lógica interna pero **comparte el dominio y el DI** del feature padre.
-
-### ¿Cuándo crear uno?
-
-Cuando una sección del feature tiene complejidad suficiente como para tener:
-- Su propio composable
-- Múltiples componentes relacionados
-- Lógica de estado propia (selección, pasos, formularios dinámicos)
-
-### Ejemplo: Sub-feature `detalle/`
-
-El detalle de un `RegistroCabecera` requiere su propio carrusel, formularios dinámicos y barra de acciones. Es demasiado para un solo componente, pero **no necesita su propio DataSource ni repositorio** porque consume datos ya cargados del feature padre.
+Para componentes de alta complejidad (ej: un detalle con múltiples pestañas y formularios), se permite crear una estructura dentro de `presentation/`.
 
 ```
 presentation/
-├── views/
-│   └── RegistroView.vue
-├── components/          ← Dialogs simples de la vista principal
-├── composables/         ← Composables de la vista principal
-├── config/              ← Columnas y configuración de UI
-└── detalle/             ← Sub-feature de presentación
-    ├── DetalleContent.vue         ← Orquestador principal
-    ├── DetalleSummaryBar.vue      ← Barra de resumen (3 cols)
-    ├── DetalleCarousel.vue        ← Carrusel de ítems de detalle
-    ├── DetalleForm.vue            ← Router de formularios por tipo
+└── {sub_feature}/
+    ├── components/
     ├── forms/
-    │   └── DefaultForm.vue        ← Formulario base/placeholder
-    └── useDetalle.ts              ← Composable del sub-feature
+    └── use{SubFeature}.ts
 ```
 
-### Reglas de los sub-features de presentación
-
-1. **Pertenecen a `presentation/`** — No tienen `data/`, `domain/`, ni `di/` propios.
-2. **Consumen el DI del padre** — Pueden importar use cases de `../../di/registro.di`.
-3. **Se comunican con el padre vía props/emits** — El padre (ej. `RegistroDialogDetalle.vue`) pasa el `RegistroCabecera` como prop.
-4. **Pueden tener composables propios** — `useDetalle.ts` maneja el estado interno.
-5. **Promoverse a feature completo** — Si en el futuro necesita su propia API, se extrae de `presentation/` a una estructura `data/domain/di/presentation/` propia.
-
-### Criterio de promoción a feature completo
-
-| Condición | Sub-feature en `presentation/` | Feature completo |
-|---|---|---|
-| Tiene su propio endpoint de API | ✗ | ✓ |
-| Solo consume datos del padre | ✓ | ✗ |
-| Tiene entidades de dominio propias | ✗ | ✓ |
-| Es reutilizado desde otros features | ✗ | ✓ |
-| Solo tiene lógica de UI propia | ✓ | ✗ |
+**Criterios de uso**:
+- Si el sub-feature **comparte** el repositorio y entidades del padre, se queda en `presentation/`.
+- Si el sub-feature requiere **su propio repositorio o API**, se promueve a un feature independiente.
 
 ---
 
-## 7. Añadir un Nuevo Feature — Checklist
-
-Para añadir un feature nuevo (ej. `registro_riego`), seguir este orden:
-
-```
-1. domain/entities/          ← Definir interfaces de negocio
-2. domain/repositories/      ← Definir la interfaz del repositorio
-3. domain/usecases/          ← Implementar los casos de uso
-4. data/datasources/         ← Implementar queries/mutations GraphQL
-5. data/repositories/        ← Implementar el repositorio con mapeos
-6. di/                       ← Ensamblar el grafo de dependencias
-7. presentation/config/      ← Definir columnas, configuración de UI
-8. presentation/composables/ ← Implementar lógica de UI
-9. presentation/components/  ← Construir dialogs y componentes
-10. presentation/views/      ← Construir la vista principal
-11. main.routes.ts           ← Registrar la ruta
-```
-
----
-
-## 8. Convenciones de Nombrado
+## 6. Convenciones de Nombrado
 
 | Elemento | Convención | Ejemplo |
 |---|---|---|
-| Feature folder | `snake_case` | `registro_campo/` |
-| Vue Component | `PascalCase` | `RegistroDialogAnular.vue` |
-| Composable | `camelCase` con prefijo `use` | `useRegistro.ts` |
-| UseCase class | `PascalCase` + sufijo `UseCase` | `AnularPdCabsUseCase` |
-| UseCase file | `kebab-case` + `.usecase.ts` | `anular-pd-cabs.usecase.ts` |
-| Repository interface | `PascalCase` + sufijo `Repository` | `RegistroRepository` |
-| Repository impl | mismo + sufijo `Impl` | `RegistroRepositoryImpl` |
-| DataSource | `PascalCase` + sufijo `RemoteDataSource` | `RegistroRemoteDataSource` |
-| Remote DTO type | prefijo `Remote` + nombre | `RemoteRegistroCabecera` |
-| DI file | `<feature>.di.ts` | `registro.di.ts` |
-| Columns config | `build<Entity>Columns` function | `buildRegistroColumns()` |
+| Directorio de Feature | `snake_case` | `gestión_actas/` |
+| Componente Vue | `PascalCase` con prefijo `Alice` o Feature | `AliceButton.vue`, `ActaDialog.vue` |
+| Composable | `camelCase` con prefijo `use` | `useActas.ts` |
+| Clase UseCase | `PascalCase` + `UseCase` | `GetActasUseCase` |
+| Archivo UseCase | `kebab-case.usecase.ts` | `get-actas.usecase.ts` |
+| Repository Impl | `{Name}RepositoryImpl` | `ActasRepositoryImpl.ts` |
+| DataSource | `{Name}RemoteDataSource` | `ActasRemoteDataSource.ts` |
 
 ---
 
-## 9. Alice-UI y la Presentación
+## 7. Reglas de Oro (Arquitectura Alice)
 
-`@shared/alice-ui` es el Design System interno. La capa de presentación lo consume pero **nunca lo extiende desde dentro del feature**. Si un componente nuevo es reutilizable globalmente, se crea en `alice-ui/`.
-
-### Componentes disponibles key
-
-| Componente | Uso |
-|---|---|
-| `AliceDashboardLayout` | Layout principal con sidebar |
-| `AliceTable` | Tablas con filtros, selección, paginación |
-| `AliceDialog` | Modal base |
-| `AlicePanel` | Contenedor con header coloreado |
-| `AliceContainer` | Card simple con border/shadow configurable |
-| `AliceGrid` | Grid CSS responsive |
-| `AliceButton` | Botón con variants/designs/icons |
-| `AliceToast` / `useAliceToast` | Notificaciones |
-| `AliceEntityCard` | Card de entidad con metadata/badges |
-
-### Pending: `AliceCarousel`
-
-Un componente de carrusel horizontal está planificado para soportar el sub-feature `detalle/`. Debe vivir en `alice-ui/components/Carousel/` y exportarse desde `alice-ui/index.ts`.
-
----
-
-## 10. Reglas Absolutas
-
-1. **El dominio nunca importa Vue** — ni `ref`, ni `computed`, ni componentes.
-2. **Los composables nunca hacen `new`** — solo importan del DI.
-3. **El DI es el único lugar con `new`** — un archivo por feature.
-4. **Los Remote DTOs no salen del DataSource** — el mapeo es responsabilidad del `RepositoryImpl`.
-5. **La config de UI (columns, etc.) va en `presentation/config/`** — no en `di/`.
-6. **Los sub-features viven en `presentation/<nombre>/`** — solo si no necesitan `data/domain/di` propios.
-7. **Un feature nuevo no reutiliza el `di/` de otro** — cada feature tiene su propio grafo de dependencias.
+1. **Inversión de Dependencias**: Los componentes y composables dependen de interfaces (o instancias inyectadas), no de implementaciones concretas.
+2. **No instanciación en UI**: Nunca hagas `new UseCase()` dentro de un componente o composable. Usa siempre el contenedor DI.
+3. **Pureza del Dominio**: Si ves un `import { ref } from 'vue'` en la carpeta `domain/`, es un error de arquitectura.
+4. **Mapeo de Datos**: La UI solo conoce entidades de dominio. Toda transformación de datos de API ocurre en la capa `data/`.
+5. **Configuración de UI**: Las definiciones de columnas (`AliceTable`) o esquemas de validación van en `presentation/config/`.
+6. **Alice-UI es agnóstico**: Los componentes de `shared/alice-ui` no deben importar nada de los `features/`. Se comunican mediante props y slots.

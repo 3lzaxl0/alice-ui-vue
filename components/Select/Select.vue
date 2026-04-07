@@ -59,16 +59,33 @@ function updateDropdownPosition() {
   if (!isOpen.value || !buttonRef.value) return
 
   const rect = buttonRef.value.getBoundingClientRect()
-  
-  dropdownStyle.value = {
+  const spaceBelow = window.innerHeight - rect.bottom
+  const spaceAbove = rect.top
+  const estimatedDropdownHeight = 240 // max-h-60 = 240px
+
+  const style: CSSProperties = {
     position: 'fixed',
-    top: `${rect.bottom + 4}px`, // Slight gap
     left: `${rect.left}px`,
     width: `${rect.width}px`,
     zIndex: 9999,
     opacity: 1,
     pointerEvents: 'auto',
   }
+
+  // Si no hay suficiente espacio abajo y hay más espacio arriba, abre hacia arriba
+  if (spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow) {
+    style.bottom = `${window.innerHeight - rect.top + 4}px`
+    style.transformOrigin = 'bottom'
+    // Eliminar 'top' si existiera para que 'bottom' tome control
+    style.top = undefined
+  } else {
+    style.top = `${rect.bottom + 4}px`
+    style.transformOrigin = 'top'
+    style.bottom = undefined
+  }
+
+  // Asignamos al style state ref
+  dropdownStyle.value = style
 }
 
 // Watch for open to trigger position update
@@ -159,7 +176,7 @@ onUnmounted(() => {
           ref="listboxRef"
           role="listbox"
           :style="dropdownStyle"
-          class="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
+          class="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md custom-scrollbar"
         >
           <div
             v-for="(option, index) in options"

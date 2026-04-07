@@ -12,6 +12,8 @@ export function useSearchInput(
   props: {
     modelValue?: Result | null
     results: Result[]
+    loading?: boolean
+    localSearch?: boolean
     disabled: boolean
   },
   emit: {
@@ -94,7 +96,24 @@ export function useSearchInput(
   // --- Accessibility / Keyboard Handling ---
 
   const displayedResults = computed(() => {
-    return props.results || []
+    const list = props.results || []
+    
+    if (!props.localSearch) return list
+    if (!searchQuery.value) return list
+    
+    // Do not filter out if they just opened the menu and their query matches the currently selected label perfectly
+    if (props.modelValue && props.modelValue.label === searchQuery.value && !isOpen.value) {
+      return list
+    }
+
+    const q = searchQuery.value.toLowerCase()
+    
+    return list.filter(r => {
+      const matchLabel = r.label.toLowerCase().includes(q)
+      const matchDesc = r.description ? r.description.toLowerCase().includes(q) : false
+      const matchValue = String(r.value).toLowerCase().includes(q)
+      return matchLabel || matchDesc || matchValue
+    })
   })
 
   function scrollActiveIntoView() {
