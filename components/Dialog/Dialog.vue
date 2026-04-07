@@ -107,7 +107,7 @@ const headerFooterPadding = computed(() => {
           >
             <!-- Header -->
             <div
-              class="flex items-start justify-between border-b border-gray-100 dark:border-slate-700"
+              class="flex items-center justify-between border-b border-gray-100 dark:border-slate-700"
               :class="headerFooterPadding"
             >
               <div class="flex flex-col gap-1.5 pr-4">

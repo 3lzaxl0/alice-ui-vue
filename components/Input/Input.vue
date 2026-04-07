@@ -19,6 +19,7 @@ interface Props {
   disabled?: boolean
   icon?: Component | object // Component
   autocomplete?: string
+  name?: string
   error?: boolean | string
   errorMessage?: string
   helperText?: string
@@ -92,7 +93,7 @@ const inputClass = computed(() => {
         :placeholder="placeholder"
         :required="required"
         :disabled="disabled"
-        :name="id"
+        :name="name || id"
         :autocomplete="autocomplete"
         :maxlength="maxlength"
         :inputmode="inputmode"

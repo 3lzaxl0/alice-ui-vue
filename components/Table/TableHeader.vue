@@ -225,6 +225,8 @@ function getOptionsForColumn(col: Column<T>) {
                   @click.stop
                 >
                   <TableFilter
+                    :id="`filter-${String(col.key)}`"
+                    :name="`filter-${String(col.key)}`"
                     :type="col.type || 'text'"
                     :options="getOptionsForColumn(col)"
                     :model-value="activeFilters[String(col.key)] || { value: null }"

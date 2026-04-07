@@ -20,6 +20,7 @@ const props = withDefaults(
     errorMessage?: string
     helperText?: string
     displayFormat?: string
+    name?: string
   }>(),
   {
     displayFormat: 'DD/MM/YYYY',
@@ -81,6 +82,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <input
           ref="inputRef"
           :id="id"
+          :name="name || id"
           type="text"
           :value="inputText"
           :disabled="disabled"

@@ -7,6 +7,7 @@ interface Props {
   indeterminate?: boolean
   disabled?: boolean
   id?: string
+  name?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -38,6 +39,7 @@ function toggle() {
   <div class="relative inline-flex items-center cursor-pointer select-none" @click.stop="toggle">
     <input
       :id="id"
+      :name="name || id"
       type="checkbox"
       class="sr-only peer"
       :checked="isChecked"

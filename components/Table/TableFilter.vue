@@ -16,6 +16,8 @@ interface Props {
   type: FilterType
   options?: FilterOption[] // For 'select' type
   modelValue?: FilterValue
+  id?: string
+  name?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -162,6 +164,8 @@ function clearFilter() {
       <div v-if="type !== 'select'" class="flex flex-col gap-1">
         <AliceSelect
           label="Operador"
+          :id="id ? `${id}-operator` : undefined"
+          :name="name ? `${name}-operator` : (id ? `${id}-operator` : undefined)"
           :model-value="internalOperator"
           @update:model-value="(val) => (internalOperator = val as string)"
           :options="operators"
@@ -173,7 +177,8 @@ function clearFilter() {
       <!-- Type: Text/Number -->
       <div v-if="['text', 'number'].includes(type)">
         <AliceInput
-          id="filter-value"
+          :id="id ? `${id}-value` : 'filter-value'"
+          :name="name ? `${name}-value` : (id ? `${id}-value` : 'filter-value')"
           :model-value="inputValue"
           @update:model-value="(val: string | number) => (internalValue = val)"
           :type="type === 'number' ? 'number' : 'text'"
@@ -185,7 +190,8 @@ function clearFilter() {
       <!-- Type: Date -->
       <div v-else-if="type === 'date'">
         <AliceDatePicker
-          id="filter-date"
+          :id="id ? `${id}-date` : 'filter-date'"
+          :name="name ? `${name}-date` : (id ? `${id}-date` : 'filter-date')"
           :model-value="internalValue as string"
           @update:model-value="(val: string | null) => (internalValue = val)"
           placeholder="Seleccionar fecha"
@@ -205,6 +211,8 @@ function clearFilter() {
           :class="{ 'bg-blue-50/50 dark:bg-blue-900/20': selectedOptions.includes(opt.value) }"
         >
           <AliceCheckbox
+            :id="id ? `${id}-opt-${String(opt.value)}` : undefined"
+            :name="name ? `${name}-opt-${String(opt.value)}` : (id ? `${id}-opt-${String(opt.value)}` : undefined)"
             :model-value="selectedOptions.includes(opt.value)"
             class="pointer-events-none"
           />

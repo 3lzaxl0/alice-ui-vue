@@ -157,13 +157,14 @@ function handleRoleChange(value: string | number) {
   <!-- Mobile Overlay -->
   <div
     v-if="isMobileOpen"
-    class="fixed inset-0 bg-black/50 z-40 lg:hidden backdrop-blur-sm transition-opacity"
+    class="fixed inset-0 bg-black/50 z-1400 lg:hidden backdrop-blur-sm transition-opacity"
     @click="closeMobile"
   ></div>
 
   <aside
-    class="fixed inset-y-0 left-0 z-50 flex flex-col h-screen transition-all duration-300 ease-in-out lg:translate-x-0"
+    class="fixed inset-y-0 left-0 flex flex-col h-screen transition-all duration-300 ease-in-out lg:translate-x-0"
     :class="[
+      isMobileOpen ? 'z-alice-sidebar-mobile' : 'z-30',
       // Mobile: Drawer transform + styles (needs background)
       isMobileOpen
         ? 'translate-x-0 shadow-2xl bg-white dark:bg-slate-900 lg:bg-transparent lg:dark:bg-transparent lg:shadow-none'

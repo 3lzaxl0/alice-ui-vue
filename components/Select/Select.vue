@@ -24,6 +24,7 @@ const props = defineProps<{
   errorMessage?: string
   helperText?: string
   clearable?: boolean
+  name?: string
 }>()
 
 const emit = defineEmits<{
@@ -100,13 +101,16 @@ onUnmounted(() => {
       {{ label }}
     </AliceLabel>
 
-    <div
+    <button
+      type="button"
+      :id="id"
+      :name="name || id"
       ref="buttonRef"
       role="combobox"
       :aria-expanded="isOpen"
       aria-haspopup="listbox"
       :aria-controls="isOpen && id ? `${id}-listbox` : undefined"
-      :tabindex="disabled ? -1 : 0"
+      :disabled="disabled"
       @click="toggleOpen"
       @keydown="handleKeydown"
       class="h-alice-input-height px-3 bg-white dark:bg-white/5 border cursor-pointer flex items-center justify-between gap-2 transition-all duration-300 rounded-alice-md relative w-full outline-none"
@@ -120,7 +124,7 @@ onUnmounted(() => {
     >
       <!-- Selected Value -->
       <span
-        class="text-sm truncate select-none"
+        class="text-sm truncate select-none text-left"
         :class="[!selectedOption ? 'text-gray-400' : 'text-gray-900 dark:text-white font-medium']"
       >
         {{ displayLabel }}
@@ -144,7 +148,7 @@ onUnmounted(() => {
           :class="{ 'rotate-180': isOpen }"
         />
       </div>
-    </div>
+    </button>
 
     <!-- Dropdown (Teleported to body) -->
     <Teleport to="body">

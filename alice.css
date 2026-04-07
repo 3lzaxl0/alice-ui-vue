@@ -14,9 +14,11 @@
   --animate-alice-scale: alice-scale 0.15s ease-out;
 
   /* Z-Index Tokens */
-  --z-index-alice-modal: 100;
-  --z-index-alice-popover: 60;
-  --z-index-alice-toast: 110;
+  --z-index-alice-modal: 1000;
+  --z-index-alice-popover: 1100;
+  --z-index-alice-sidebar: 30;
+  --z-index-alice-sidebar-mobile: 1450;
+  --z-index-alice-toast: 1500;
 
   /* Sizing Tokens */
   --spacing-alice-input-height: 42px;
