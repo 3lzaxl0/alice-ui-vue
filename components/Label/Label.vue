@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { labelVariants } from './Label.variants'
+import AliceText from '../Text/Text.vue'
 
 defineOptions({
   name: 'AliceLabel',
@@ -18,7 +18,14 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <label :for="props.for" :class="labelVariants({ error: props.error, disabled: props.disabled })">
+  <AliceText
+    tag="label"
+    variant="label"
+    :color="props.error ? 'error' : 'muted'"
+    class="block mb-2 pl-1 transition-colors"
+    :class="[props.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-default']"
+    :for="props.for"
+  >
     <slot />
-  </label>
+  </AliceText>
 </template>

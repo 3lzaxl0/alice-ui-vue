@@ -1,16 +1,16 @@
 import { cva } from "class-variance-authority";
 
 export const statVariants = cva(
-  "flex-1 flex flex-col justify-center px-6 py-4",
+  "!border-l-4 h-full",
   {
     variants: {
       variant: {
-        primary: "bg-blue-50/50 dark:bg-blue-500/10",
-        success: "bg-emerald-50/50 dark:bg-emerald-500/10",
-        warning: "bg-amber-50/50 dark:bg-amber-500/10",
-        error: "bg-red-50/50 dark:bg-red-500/10",
-        info: "bg-cyan-50/50 dark:bg-cyan-500/10",
-        neutral: "bg-gray-50/50 dark:bg-slate-800/40",
+        primary: "!border-indigo-500",
+        success: "!border-emerald-500",
+        warning: "!border-amber-500",
+        error: "!border-rose-500",
+        info: "!border-cyan-500",
+        neutral: "!border-slate-300 dark:!border-slate-700",
       },
     },
     defaultVariants: {
@@ -19,17 +19,17 @@ export const statVariants = cva(
   }
 );
 
-export const statTitleVariants = cva(
-  "text-[10px] font-black uppercase tracking-widest mb-1",
+export const statIconVariants = cva(
+  "p-2 rounded-xl transition-colors",
   {
     variants: {
       variant: {
-        primary: "text-blue-500/70",
-        success: "text-emerald-500/70",
-        warning: "text-amber-500/70",
-        error: "text-red-500/70",
-        info: "text-cyan-500/70",
-        neutral: "text-gray-500/70 dark:text-gray-400/70",
+        primary: "!bg-indigo-50 dark:!bg-indigo-500/10 !text-indigo-600",
+        success: "!bg-emerald-50 dark:!bg-emerald-500/10 !text-emerald-600",
+        warning: "!bg-amber-50 dark:!bg-amber-500/10 !text-amber-600",
+        error: "!bg-rose-50 dark:!bg-rose-500/10 !text-rose-600",
+        info: "!bg-cyan-50 dark:!bg-cyan-500/10 !text-cyan-600",
+        neutral: "!bg-slate-50 dark:!bg-slate-500/10 !text-slate-600",
       },
     },
     defaultVariants: {
@@ -37,3 +37,4 @@ export const statTitleVariants = cva(
     },
   }
 );
+

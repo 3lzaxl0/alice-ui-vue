@@ -2,6 +2,7 @@
 import { computed, type Component } from 'vue'
 import { Eye, EyeOff, X, ChevronUp, ChevronDown } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
+import AliceText from '../Text/Text.vue'
 import { inputVariants } from './Input.variants'
 import { useInput } from './useInput'
 
@@ -155,31 +156,40 @@ const inputClass = computed(() => {
       class="flex items-start justify-between gap-4 mt-1"
     >
       <div class="flex-1">
-        <p
+        <AliceText
           v-if="error && typeof error === 'string'"
-          class="text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap"
+          tag="p"
+          variant="error"
+          class="whitespace-pre-wrap"
         >
           {{ error }}
-        </p>
-        <p
+        </AliceText>
+        <AliceText
           v-else-if="errorMessage"
-          class="text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap"
+          tag="p"
+          variant="error"
+          class="whitespace-pre-wrap"
         >
           {{ errorMessage }}
-        </p>
-        <p
+        </AliceText>
+        <AliceText
           v-else-if="helperText"
-          class="text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap"
+          tag="p"
+          variant="caption"
+          class="whitespace-pre-wrap"
         >
           {{ helperText }}
-        </p>
+        </AliceText>
       </div>
-      <p
+      <AliceText
         v-if="showCounter && maxlength"
-        class="text-xs text-gray-400 dark:text-gray-500 text-right whitespace-nowrap shrink-0"
+        tag="p"
+        variant="caption"
+        align="right"
+        class="whitespace-nowrap shrink-0 opacity-80"
       >
         {{ String(modelValue ?? '').length }} / {{ maxlength }}
-      </p>
+      </AliceText>
     </div>
   </div>
 </template>

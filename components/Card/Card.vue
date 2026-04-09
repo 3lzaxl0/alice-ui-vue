@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import AliceLoading from '../Loading/Loading.vue'
+import AliceText from '../Text/Text.vue'
 
 defineOptions({ name: 'AliceCard' })
 
@@ -11,6 +13,8 @@ const props = withDefaults(
     shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | '2xl'
     alignTitle?: 'left' | 'center' | 'right'
     headerVerticalAlign?: 'start' | 'center'
+    loading?: boolean
+    loadingText?: string
   }>(),
   {
     title: '',
@@ -19,6 +23,8 @@ const props = withDefaults(
     shadow: 'sm',
     alignTitle: 'left',
     headerVerticalAlign: undefined,
+    loading: false,
+    loadingText: 'Sincronizando...',
   },
 )
 
@@ -67,9 +73,11 @@ const headerVerticalAlignClass = computed(() => {
 
 <template>
   <div
-    class="border border-gray-100 dark:border-white/10 flex flex-col transition-shadow bg-white dark:bg-slate-900 overflow-hidden"
+    class="relative border border-gray-100 dark:border-white/10 flex flex-col transition-shadow bg-white dark:bg-slate-900 overflow-hidden"
     :class="[radiusClass, shadowClass]"
   >
+    <AliceLoading :active="loading" :text="loadingText" />
+
     <!-- Header -->
     <div
       v-if="title || $slots.header || $slots.action"
@@ -78,12 +86,12 @@ const headerVerticalAlignClass = computed(() => {
     >
       <div class="flex-1 w-full" :class="titleAlignClass">
         <slot name="header">
-          <span v-if="title" class="text-base font-bold text-gray-800 dark:text-gray-200">
+          <AliceText v-if="title" variant="title">
             {{ title }}
-          </span>
-          <p v-if="subtitle" class="text-xs text-gray-500 mt-1">
+          </AliceText>
+          <AliceText v-if="subtitle" tag="p" variant="caption" class="mt-1">
             {{ subtitle }}
-          </p>
+          </AliceText>
         </slot>
       </div>
       <slot name="action" />

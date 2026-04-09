@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { type Component, computed } from 'vue'
 import AliceBadge from '../Badge/Badge.vue'
-
+import AliceText from '../Text/Text.vue'
 defineOptions({ name: 'AliceActivityItem' })
 
 const props = withDefaults(
@@ -26,12 +26,15 @@ const props = withDefaults(
     interactive?: boolean
     /** Loading state */
     loading?: boolean
+    /** Whether to show a divider at the bottom (except for the last item) */
+    divider?: boolean
   }>(),
   {
     badgeVariant: 'default',
     variant: 'default',
     interactive: false,
-    loading: false
+    loading: false,
+    divider: false
   }
 )
 
@@ -60,7 +63,8 @@ const amountColorClass = computed(() => amountVariantClasses[props.variant])
     class="py-4 flex items-center justify-between group transition-colors px-2 rounded-alice-lg"
     :class="[
       interactive ? 'cursor-pointer hover:bg-slate-50/80 dark:hover:bg-white/5 active:scale-[0.98]' : '',
-      loading ? 'opacity-50 pointer-events-none' : ''
+      loading ? 'opacity-50 pointer-events-none' : '',
+      divider ? 'border-b border-gray-100 dark:border-white/5 last:border-b-0' : ''
     ]"
   >
     <div class="flex items-center gap-4 min-w-0">
@@ -77,13 +81,13 @@ const amountColorClass = computed(() => amountVariantClasses[props.variant])
 
       <!-- Text Content -->
       <div class="min-w-0 flex flex-col justify-center">
-        <p class="font-bold text-slate-900 dark:text-white truncate leading-tight">
+        <AliceText tag="p" weight="bold" class="truncate leading-tight">
           <slot name="title">{{ title }}</slot>
-        </p>
+        </AliceText>
         <div class="flex items-center gap-2 mt-0.5">
-          <span v-if="subtitle || $slots.subtitle" class="text-[10px] font-black uppercase text-slate-400 dark:text-slate-500 tracking-wider truncate">
+          <AliceText v-if="subtitle || $slots.subtitle" tag="span" variant="label" class="!text-[10px] truncate">
             <slot name="subtitle">{{ subtitle }}</slot>
-          </span>
+          </AliceText>
           <AliceBadge 
             v-if="badgeLabel" 
             :variant="badgeVariant" 
@@ -98,13 +102,15 @@ const amountColorClass = computed(() => amountVariantClasses[props.variant])
     <!-- Trailing Content -->
     <div class="flex items-center gap-3 shrink-0">
       <slot name="trailing">
-        <span 
+        <AliceText 
           v-if="amount !== undefined"
-          class="font-black text-sm tabular-nums"
+          tag="span"
+          weight="black"
+          class="text-sm tabular-nums"
           :class="[amountClass || amountColorClass]"
         >
           {{ amount }}
-        </span>
+        </AliceText>
       </slot>
     </div>
   </div>
