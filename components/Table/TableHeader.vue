@@ -1,8 +1,8 @@
 <script setup lang="ts" generic="T">
 import { ArrowUp, ArrowDown, Filter } from 'lucide-vue-next'
-import { onMounted, onUnmounted, ref, watch } from 'vue'
 import AliceCheckbox from '../../components/Checkbox/Checkbox.vue'
 import AliceButton from '../../components/Button/Button.vue'
+import AlicePopover from '../../components/Popover/Popover.vue'
 import TableFilter from './TableFilter.vue'
 import { tableVariants } from './Table.variants'
 import type { Column, FilterValue } from '../../types'
@@ -43,65 +43,6 @@ const emit = defineEmits<{
   (e: 'drop', event: DragEvent): void
 }>()
 
-const filterPosition = ref({ top: 0, left: 0 })
-const filterTriggerRefs = ref<Record<string, HTMLElement>>({})
-
-const updateFilterPosition = () => {
-  if (!props.openFilterColumn) return
-  const trigger = filterTriggerRefs.value[props.openFilterColumn]
-  if (!trigger) return
-
-  const rect = trigger.getBoundingClientRect()
-  const filterWidth = 288 // Corresponds to w-72 (desktop)
-
-  const colIndex = props.visibleColumns.findIndex((c) => String(c.key) === props.openFilterColumn)
-
-  let left = 0
-  if (colIndex === 0) {
-    left = rect.left
-  } else {
-    left = rect.right - filterWidth
-  }
-
-  // Screen boundary checks
-  if (left + filterWidth > window.innerWidth - 10) left = window.innerWidth - filterWidth - 10
-  if (left < 10) left = 10
-
-  filterPosition.value = {
-    top: rect.bottom + 8,
-    left,
-  }
-}
-
-watch(
-  () => props.openFilterColumn,
-  (newVal) => {
-    if (newVal) {
-      updateFilterPosition()
-    }
-  },
-)
-
-const handleClickOutside = (event: MouseEvent) => {
-  if (props.openFilterColumn) {
-    const target = event.target as HTMLElement
-    if (!target.closest('.alice-filter-anchor') && !target.closest('.alice-table-filter-popover')) {
-      emit('filter-close')
-    }
-  }
-}
-
-onMounted(() => {
-  document.addEventListener('click', handleClickOutside)
-  window.addEventListener('scroll', updateFilterPosition, true)
-  window.addEventListener('resize', updateFilterPosition)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-  window.removeEventListener('scroll', updateFilterPosition, true)
-  window.removeEventListener('resize', updateFilterPosition)
-})
 
 function getOptionsForColumn(col: Column<T>) {
   if (col.filterOptions && col.filterOptions.length > 0) {
@@ -136,133 +77,71 @@ function getOptionsForColumn(col: Column<T>) {
   <thead :class="tableVariants.header">
     <transition-group name="alice-columns" tag="tr">
       <!-- Selection Header -->
-      <th
-        v-if="selectionType !== 'none'"
-        key="selection-header"
-        :class="tableVariants.selectionCell"
-        class="bg-gray-50 dark:bg-slate-950"
-      >
-        <AliceCheckbox
-          v-if="selectionType === 'multiple'"
-          :model-value="isAllSelected"
-          :indeterminate="isIndeterminate"
-          @update:model-value="emit('toggle-select-all', $event)"
-        />
+      <th v-if="selectionType !== 'none'" key="selection-header" :class="tableVariants.selectionCell"
+        class="bg-gray-50 dark:bg-slate-950">
+        <AliceCheckbox v-if="selectionType === 'multiple'" :model-value="isAllSelected" :indeterminate="isIndeterminate"
+          @update:model-value="emit('toggle-select-all', $event)" />
       </th>
 
-      <th
-        v-for="col in visibleColumns"
-        :key="String(col.key)"
-        :class="
-          tableVariants.headerCell({
-            sortable: !!col.sortable,
-            frozen: !!col.frozen,
-            frozenRight: !!col.frozenRight,
-            dragging: draggingColumnKey === String(col.key),
-            divided: showDividers,
-          })
-        "
-        :style="{
+      <th v-for="col in visibleColumns" :key="String(col.key)" :class="tableVariants.headerCell({
+        sortable: !!col.sortable,
+        frozen: !!col.frozen,
+        frozenRight: !!col.frozenRight,
+        dragging: draggingColumnKey === String(col.key),
+        divided: showDividers,
+      })
+        " :style="{
           width: columnWidths[String(col.key)] || col.width,
           minWidth: col.minWidth,
           maxWidth: col.maxWidth,
           left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
           right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
-        }"
-        :draggable="openFilterColumn !== String(col.key)"
-        @dragstart="emit('drag-start', $event, String(col.key))"
-        @dragover="emit('drag-over', $event, String(col.key))"
-        @dragend="emit('drag-end', $event)"
-        @drop="emit('drop', $event)"
-        @click="emit('sort', String(col.key))"
-      >
+        }" :draggable="openFilterColumn !== String(col.key)" @dragstart="emit('drag-start', $event, String(col.key))"
+        @dragover="emit('drag-over', $event, String(col.key))" @dragend="emit('drag-end', $event)"
+        @drop="emit('drop', $event)" @click="emit('sort', String(col.key))">
         <div class="flex items-center gap-2">
 
           <!-- Filter Button -->
-          <div
-            v-if="col.filterable"
-            class="relative alice-filter-anchor"
-            :ref="
-              (el) => {
-                if (el) filterTriggerRefs[String(col.key)] = el as HTMLElement
-              }
-            "
-          >
-            <AliceButton
-              variant="primary"
-              design="ghost-subtle"
-              size="icon-sm"
-              @click.stop="emit('filter-toggle', String(col.key))"
-              class="hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200"
-            >
-              <Filter
-                :size="14"
-                :fill="activeFilters[String(col.key)] ? 'currentColor' : 'none'"
-                :class="activeFilters[String(col.key)] ? 'text-blue-600 dark:text-blue-400' : ''"
-              />
-            </AliceButton>
+            <AlicePopover :model-value="openFilterColumn === String(col.key)"
+              @update:model-value="(val: boolean) => !val && emit('filter-close')" 
+              teleport placement="bottom-right" :offset="8"
+              content-class="cursor-default alice-table-filter-popover">
+              <template #trigger>
+                <div class="relative">
+                  <AliceButton variant="primary" design="ghost-subtle" size="icon-sm"
+                    @click.stop="emit('filter-toggle', String(col.key))"
+                    class="hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200">
+                    <Filter :size="14" :fill="activeFilters[String(col.key)] ? 'currentColor' : 'none'"
+                      :class="activeFilters[String(col.key)] ? 'text-blue-600 dark:text-blue-400' : ''" />
+                  </AliceButton>
 
-            <!-- Indicator Dot -->
-            <div
-              v-if="activeFilters[String(col.key)]"
-              class="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-blue-500 rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none"
-            />
-
-            <Teleport to="body">
-              <transition name="alice-pop">
-                <div
-                  v-if="openFilterColumn === String(col.key)"
-                  class="fixed z-alice-popover cursor-default alice-table-filter-popover"
-                  :class="
-                    visibleColumns.findIndex((c) => String(c.key) === props.openFilterColumn) === 0
-                      ? 'origin-top-left'
-                      : 'origin-top-right'
-                  "
-                  :style="{
-                    top: filterPosition.top + 'px',
-                    left: filterPosition.left + 'px',
-                  }"
-                  @click.stop
-                >
-                  <TableFilter
-                    :id="`filter-${String(col.key)}`"
-                    :name="`filter-${String(col.key)}`"
-                    :type="col.type || 'text'"
-                    :options="getOptionsForColumn(col)"
-                    :model-value="activeFilters[String(col.key)] || { value: null }"
-                    @update:model-value="
-                      (val: FilterValue) => emit('filter-apply', String(col.key), val)
-                    "
-                    @close="emit('filter-close')"
-                  />
+                  <!-- Indicator Dot -->
+                  <div v-if="activeFilters[String(col.key)]"
+                    class="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-blue-500 rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none" />
                 </div>
-              </transition>
-            </Teleport>
-          </div>
+              </template>
+
+              <TableFilter :id="`filter-${String(col.key)}`" :name="`filter-${String(col.key)}`"
+                :type="col.type || 'text'" :options="getOptionsForColumn(col)"
+                :model-value="activeFilters[String(col.key)] || { value: null }" @update:model-value="
+                  (val: FilterValue) => emit('filter-apply', String(col.key), val)
+                " @close="emit('filter-close')" />
+            </AlicePopover>
 
           <!-- Header Title -->
-          <span
-            class="font-bold"
-            :class="[
-              col.align === 'right' ? 'ml-auto' : '',
-              col.align === 'center' ? 'mx-auto' : '',
-            ]"
-          >
+          <span class="font-bold" :class="[
+            col.align === 'right' ? 'ml-auto' : '',
+            col.align === 'center' ? 'mx-auto' : '',
+          ]">
             {{ col.header }}
           </span>
 
           <!-- Sort Indicators -->
           <div v-if="col.sortable" class="flex flex-col text-gray-400">
-            <ArrowUp
-              v-if="currentSortColumn === String(col.key) && currentSortDirection === 'asc'"
-              :size="14"
-              class="text-blue-600"
-            />
-            <ArrowDown
-              v-else-if="currentSortColumn === String(col.key) && currentSortDirection === 'desc'"
-              :size="14"
-              class="text-blue-600"
-            />
+            <ArrowUp v-if="currentSortColumn === String(col.key) && currentSortDirection === 'asc'" :size="14"
+              class="text-blue-600" />
+            <ArrowDown v-else-if="currentSortColumn === String(col.key) && currentSortDirection === 'desc'" :size="14"
+              class="text-blue-600" />
             <div v-else class="h-3.5 w-3.5 relative opacity-0 group-hover:opacity-50">
               <ArrowUp :size="14" class="absolute inset-0" />
             </div>
@@ -273,9 +152,7 @@ function getOptionsForColumn(col: Column<T>) {
         <!-- Resize Handle -->
         <div
           class="absolute right-0 top-0 h-full w-1.5 cursor-col-resize hover:bg-blue-400 opacity-0 hover:opacity-100 active:opacity-100 active:bg-blue-600 transition-colors z-30"
-          @click.stop
-          @mousedown.stop.prevent="emit('resize-start', $event, String(col.key))"
-        ></div>
+          @click.stop @mousedown.stop.prevent="emit('resize-start', $event, String(col.key))"></div>
       </th>
     </transition-group>
   </thead>

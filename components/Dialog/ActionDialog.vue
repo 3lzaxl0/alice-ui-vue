@@ -49,6 +49,8 @@ const emit = defineEmits<{
 }>()
 
 const value = ref('')
+const errorMessage = ref('')
+const inputId = `action-dialog-${Math.random().toString(36).slice(2, 9)}`
 
 // Limpiar el valor cuando se abre el diálogo
 watch(
@@ -56,13 +58,14 @@ watch(
   (newVal) => {
     if (newVal) {
       value.value = ''
+      errorMessage.value = ''
     }
   }
 )
 
 function handleConfirm() {
-  // Opcional: Validar si es requerido antes de emitir
   if (props.required && !value.value.trim()) {
+    errorMessage.value = 'Este campo es obligatorio para continuar.'
     return
   }
   emit('confirm', value.value)
@@ -91,13 +94,15 @@ function handleConfirm() {
 
       <!-- Campo de Observación Integrado -->
       <AliceInput
-        id="action-dialog-input"
+        :id="inputId"
         v-model="value"
         :label="label"
         :placeholder="placeholder"
         :maxlength="maxlength"
         show-counter
         :required="required"
+        :error-message="errorMessage"
+        @update:model-value="errorMessage = ''"
       />
     </div>
   </AliceDialog>

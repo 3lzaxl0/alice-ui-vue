@@ -33,6 +33,7 @@ interface Props {
   max?: string | number
   onlyIntegers?: boolean
   clearable?: boolean
+  variant?: 'default' | 'success' | 'warning'
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -64,6 +65,7 @@ const isNumber = computed(() => props.type === 'number')
 
 const inputClass = computed(() => {
   return inputVariants({
+    variant: props.variant,
     error: !!props.error || !!props.errorMessage,
     hasIcon: !!props.icon,
     hasTrailing: isPassword.value || isNumber.value || (props.clearable && !!props.modelValue),

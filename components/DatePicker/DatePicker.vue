@@ -73,7 +73,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <!-- Mask Overlay -->
         <div
           v-if="!disabled"
-          class="absolute inset-0 flex items-center text-sm pointer-events-none text-gray-300 dark:text-gray-600 font-mono tracking-widest whitespace-pre"
+          class="absolute inset-0 flex items-center text-sm pointer-events-none text-gray-300 dark:text-gray-600 font-mono whitespace-pre"
         >
           {{ maskOverlay }}
         </div>
@@ -88,7 +88,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           :disabled="disabled"
           autocomplete="off"
           inputmode="numeric"
-          class="w-full bg-transparent text-sm outline-none text-gray-900 dark:text-white font-mono tracking-widest relative z-10"
+          class="w-full bg-transparent text-sm outline-none text-gray-900 dark:text-white font-mono relative z-10"
           @input="handleInput"
           @keydown="handleKeydown"
           @blur="handleBlur"

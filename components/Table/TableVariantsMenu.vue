@@ -40,7 +40,7 @@ const handleSaveVariant = () => {
 </script>
 
 <template>
-  <AlicePopover ref="popoverRef" placement="bottom-right" :close-onClick="false" mobile-fullscreen>
+  <AlicePopover ref="popoverRef" placement="bottom-right" :close-onClick="false" mobile-fullscreen teleport>
     <template #trigger>
       <AliceButton
         variant="primary" design="ghost-subtle"

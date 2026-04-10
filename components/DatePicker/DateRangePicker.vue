@@ -68,7 +68,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
     >
       <!-- ReadOnly Text Display -->
       <div
-        class="flex-1 text-sm font-mono tracking-widest truncate"
+        class="flex-1 text-sm font-mono truncate"
         :class="[
           !displayText ? 'text-gray-400 dark:text-gray-500' : 'text-gray-900 dark:text-white',
         ]"

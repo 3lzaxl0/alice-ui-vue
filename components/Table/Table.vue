@@ -484,7 +484,7 @@ defineExpose({
           :drop-indicator="dropIndicator"
           :show-dividers="showDividers"
           @toggle-select-all="toggleSelectAll"
-          @sort="(key) => handleSort(key, true)"
+          @sort="(key: string) => handleSort(key, true)"
           @filter-toggle="toggleFilter"
           @filter-apply="applyFilter"
           @filter-clear="clearFilter"

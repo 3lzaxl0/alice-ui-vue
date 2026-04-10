@@ -8,7 +8,7 @@ export const textVariants = cva('', {
       h3: 'text-xl lg:text-2xl font-bold leading-snug',
       title: 'text-base font-bold',
       subtitle: 'text-sm lg:text-base font-medium',
-      label: 'text-xs font-black uppercase tracking-widest',
+      label: 'text-xs font-bold uppercase tracking-widest',
       body: 'text-base leading-relaxed',
       description: 'text-sm leading-relaxed',
       caption: 'text-xs',
