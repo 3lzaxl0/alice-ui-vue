@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, type Component } from "vue";
-import { statVariants, statIconVariants } from "./Stat.variants";
+import { statVariants, statIconVariants, statValueVariants } from "./Stat.variants";
 import AliceCard from "../Card/Card.vue";
 import AliceText from "../Text/Text.vue";
 
@@ -28,6 +28,20 @@ const computedContainerClass = computed(() => {
 const computedIconClass = computed(() => {
   return statIconVariants({ variant: props.variant });
 });
+
+const computedValueClass = computed(() => {
+  return statValueVariants({ variant: props.variant });
+});
+
+const displayValue = computed(() => {
+  if (typeof props.value === 'number') {
+    return isNaN(props.value) ? 0 : props.value
+  }
+  if (!props.value || props.value === 'NaN') {
+    return 0
+  }
+  return props.value
+});
 </script>
 
 <template>
@@ -39,8 +53,8 @@ const computedIconClass = computed(() => {
       </div>
     </div>
 
-    <AliceText variant="h2" tag="span" :class="['leading-tight', valueClass]">
-      {{ value }}
+    <AliceText variant="h2" tag="span" :class="[computedValueClass, valueClass]">
+      {{ displayValue }}
       <AliceText v-if="$slots.suffix" tag="span" variant="caption" weight="bold" class="opacity-60 ml-0.5">
         <slot name="suffix" />
       </AliceText>

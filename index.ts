@@ -58,6 +58,8 @@ export { default as AliceUnderConstruction } from "./components/UnderConstructio
 export { default as AliceThemeProvider } from "./components/ThemeProvider/ThemeProvider.vue";
 export { default as AliceThemeToggle } from "./components/ThemeToggle/ThemeToggle.vue";
 export { default as AliceColorPicker } from "./components/ColorPicker/ColorPicker.vue";
+export { default as AliceSegmentedControl } from "./components/SegmentedControl/SegmentedControl.vue";
+export { default as AliceImageUpload } from "./components/ImageUpload/ImageUpload.vue";
 
 // Components - Advanced Input
 export { default as AliceSearchInput } from "./components/SearchInput/SearchInput.vue";

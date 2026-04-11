@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed, inject } from 'vue'
-import { Palette, RotateCcw, Hash, Check } from 'lucide-vue-next'
+import { RotateCcw, Hash, Check } from 'lucide-vue-next'
 import { useTheme } from '../../composables/useTheme'
 import AlicePopover from '../Popover/Popover.vue'
 import AliceButton from '../Button/Button.vue'
@@ -53,10 +53,18 @@ const { primaryColor, setPrimaryColor, resetPrimaryColor } = useTheme()
 const injectedExpanded = inject('alice-sidebar-expanded', { value: false })
 const isExpanded = computed(() => props.expanded ?? injectedExpanded.value)
 
-const internalHex = ref(primaryColor.value)
+const internalHex = ref(primaryColor.value.replace('#', ''))
 watch(primaryColor, (newV) => {
-  internalHex.value = newV
+  internalHex.value = newV.replace('#', '')
 })
+
+const handleHexUpdate = (val: string | number) => {
+  const cleanHex = String(val).replace('#', '')
+  internalHex.value = cleanHex
+  if (cleanHex.length === 3 || cleanHex.length === 6) {
+    setPrimaryColor(`#${cleanHex}`)
+  }
+}
 
 const presets: ColorPreset[] = [
   // Vibrant Group
@@ -69,8 +77,8 @@ const presets: ColorPreset[] = [
   { hex: '#475569', name: 'Slate', type: 'vibrant' },
   // Pastel Group
   { hex: '#93c5fd', name: 'Sky', type: 'pastel' },
-  { hex: '#a7f3d0', name: 'Mint', type: 'pastel' },
-  { hex: '#fde68a', name: 'Peach', type: 'pastel' },
+  { hex: '#4ade80', name: 'Mint', type: 'pastel' },
+  { hex: '#fcd34d', name: 'Peach', type: 'pastel' },
   { hex: '#fecdd3', name: 'Soft Pink', type: 'pastel' },
   { hex: '#c7d2fe', name: 'Lavender', type: 'pastel' },
   { hex: '#ddd6fe', name: 'Soft Purple', type: 'pastel' },
@@ -91,18 +99,19 @@ defineOptions({
 </script>
 
 <template>
-  <AlicePopover 
-    placement="bottom-right" 
-    teleport 
+  <AlicePopover
+    placement="bottom-right"
+    teleport
     mobile-fullscreen
+    :close-on-click="false"
     @update:modelValue="(val) => emit('open-change', val)"
   >
     <template #trigger="{ open }">
       <button :class="colorPickerVariants({ variant, active: open })" title="Personalizar Color Primario">
         <div class="flex items-center gap-2 transition-transform duration-300 ease-out group-hover:scale-[1.03] origin-left">
           <!-- Color Dot Indicator -->
-          <div 
-            class="shrink-0 flex items-center justify-center w-6 h-6 rounded-lg border border-white/20 shadow-sm overflow-hidden transition-all duration-500" 
+          <div
+            class="shrink-0 flex items-center justify-center w-6 h-6 rounded-lg border border-white/20 shadow-sm overflow-hidden transition-all duration-500"
             :style="colorIndicatorStyle"
           >
           </div>
@@ -121,7 +130,7 @@ defineOptions({
         </div>
 
         <!-- Nothing-style Dot Decoration -->
-        <div 
+        <div
           v-if="variant === 'sidebar'"
           class="ml-auto w-1 h-1 rounded-full bg-gray-300 dark:bg-gray-600 transition-colors"
           :class="[
@@ -132,19 +141,18 @@ defineOptions({
       </button>
     </template>
 
-    <div class="p-5 flex flex-col gap-6 w-72 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-alice-lg border border-gray-100 dark:border-white/5 shadow-alice-panel overflow-hidden relative select-none">
+    <div class="p-4 flex flex-col gap-6 w-72 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-alice-lg border border-gray-100 dark:border-white/5 shadow-alice-panel overflow-hidden relative select-none">
       <!-- Background Matrix -->
-      <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]" 
+      <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
            style="background-image: radial-gradient(#000 1px, transparent 0); background-size: 8px 8px;"></div>
 
-      <div class="flex items-center justify-between relative z-10">
-        <h3 class="text-[10px] font-bold uppercase tracking-[0.3em] text-gray-400">Paleta de Colores</h3>
-        <AliceButton 
-          variant="primary" design="ghost-subtle" 
-          size="icon-sm" @click="resetPrimaryColor"
-          title="Restablecer"
+      <div class="flex items-center justify-end relative z-10">
+        <AliceButton
+          variant="primary" design="ghost-subtle"
+          expanded @click="resetPrimaryColor"
+          :icon="RotateCcw"
         >
-          <RotateCcw :size="14" />
+          Reestablecer
         </AliceButton>
       </div>
 
@@ -152,19 +160,18 @@ defineOptions({
       <div class="flex flex-col gap-4 relative z-10">
         <!-- Vibrants -->
         <div class="space-y-2">
-          <span class="text-[9px] uppercase tracking-widest text-gray-400/70 font-bold ml-1">Vibrantes</span>
           <div class="grid grid-cols-7 gap-2">
-            <button 
-              v-for="color in vibrants" 
+            <button
+              v-for="color in vibrants"
               :key="color.hex"
               @click="setPrimaryColor(color.hex)"
               class="relative w-7 h-7 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 group/color"
               :style="{ backgroundColor: color.hex }"
             >
-              <Check 
-                v-if="primaryColor.toLowerCase() === color.hex.toLowerCase()" 
-                class="absolute inset-0 m-auto text-white mix-blend-difference" 
-                :size="14" 
+              <Check
+                v-if="primaryColor.toLowerCase() === color.hex.toLowerCase()"
+                class="absolute inset-0 m-auto text-white mix-blend-difference"
+                :size="14"
               />
               <!-- Hover Tooltip/Ring -->
               <div class="absolute -inset-1 rounded-full border border-primary-500/0 group-hover/color:border-primary-500/50 transition-colors"></div>
@@ -174,19 +181,18 @@ defineOptions({
 
         <!-- Pastels -->
         <div class="space-y-2">
-          <span class="text-[9px] uppercase tracking-widest text-gray-400/70 font-bold ml-1">Pasteles</span>
           <div class="grid grid-cols-7 gap-2">
-            <button 
-              v-for="color in pastels" 
+            <button
+              v-for="color in pastels"
               :key="color.hex"
               @click="setPrimaryColor(color.hex)"
               class="relative w-7 h-7 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 group/color"
               :style="{ backgroundColor: color.hex }"
             >
-              <Check 
-                v-if="primaryColor.toLowerCase() === color.hex.toLowerCase()" 
-                class="absolute inset-0 m-auto text-white mix-blend-difference" 
-                :size="14" 
+              <Check
+                v-if="primaryColor.toLowerCase() === color.hex.toLowerCase()"
+                class="absolute inset-0 m-auto text-white mix-blend-difference"
+                :size="14"
               />
               <div class="absolute -inset-1 rounded-full border border-primary-500/0 group-hover/color:border-primary-500/30 transition-colors"></div>
             </button>
@@ -196,16 +202,15 @@ defineOptions({
 
       <!-- Hex Input & Preview -->
       <div class="relative z-10 flex flex-col gap-3 pt-2 border-t border-gray-100 dark:border-white/5">
-        <AliceInput 
+        <AliceInput
           id="color-hex-input"
-          label="CÓDIGO HEXADECIMAL"
           v-model="internalHex"
-          @update:modelValue="(val) => setPrimaryColor(String(val))"
-          placeholder="#000000"
+          @update:modelValue="handleHexUpdate"
+          placeholder="000000"
           :icon="Hash"
           size="sm"
         />
-        
+
         <!-- Preview Bar -->
         <div class="h-1 w-full rounded-full bg-gray-100 dark:bg-white/5 overflow-hidden">
            <div class="h-full transition-all duration-500" :style="{ width: '100%', backgroundColor: primaryColor }"></div>
