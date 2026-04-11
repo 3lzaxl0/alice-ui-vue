@@ -5,12 +5,12 @@ export const statVariants = cva(
   {
     variants: {
       variant: {
-        primary: "!border-indigo-500",
-        success: "!border-emerald-500",
-        warning: "!border-amber-500",
-        error: "!border-rose-500",
-        info: "!border-cyan-500",
-        neutral: "!border-slate-300 dark:!border-slate-700",
+        primary: "!border-primary-500",
+        success: "!border-success-500",
+        warning: "!border-warning-500",
+        error: "!border-error-500",
+        info: "!border-info-500",
+        neutral: "!border-gray-300 dark:!border-slate-700",
       },
     },
     defaultVariants: {
@@ -24,12 +24,12 @@ export const statIconVariants = cva(
   {
     variants: {
       variant: {
-        primary: "!bg-indigo-50 dark:!bg-indigo-500/10 !text-indigo-600",
-        success: "!bg-emerald-50 dark:!bg-emerald-500/10 !text-emerald-600",
-        warning: "!bg-amber-50 dark:!bg-amber-500/10 !text-amber-600",
-        error: "!bg-rose-50 dark:!bg-rose-500/10 !text-rose-600",
-        info: "!bg-cyan-50 dark:!bg-cyan-500/10 !text-cyan-600",
-        neutral: "!bg-slate-50 dark:!bg-slate-500/10 !text-slate-600",
+        primary: "!bg-primary-50 dark:!bg-primary-500/10 !text-primary-600",
+        success: "!bg-success-50 dark:!bg-success-500/10 !text-success-600",
+        warning: "!bg-warning-50 dark:!bg-warning-500/10 !text-warning-600",
+        error: "!bg-error-50 dark:!bg-error-500/10 !text-error-600",
+        info: "!bg-info-50 dark:!bg-info-500/10 !text-info-600",
+        neutral: "!bg-gray-50 dark:!bg-slate-500/10 !text-gray-600",
       },
     },
     defaultVariants: {

@@ -101,7 +101,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
       <div
         class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400"
       >
-        <Loader2 v-if="loading" :size="18" class="animate-spin text-blue-500" />
+        <Loader2 v-if="loading" :size="18" class="animate-spin text-primary-500" />
         <Search v-else :size="18" />
       </div>
 
@@ -120,10 +120,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         @input="handleInput"
         @focus="handleFocus"
         @keydown="handleKeydown"
-        class="w-full h-alice-input-height px-3 text-sm bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white shadow-alice-input focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none disabled:bg-gray-100 dark:disabled:bg-slate-900 disabled:text-gray-400 rounded-alice-md pl-10"
+        class="w-full h-alice-input-height px-3 text-sm bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white shadow-alice-input focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none disabled:bg-gray-100 dark:disabled:bg-slate-900 disabled:text-gray-400 rounded-alice-md pl-10"
         :class="[
           modelValue || searchQuery ? 'pr-10' : 'pr-3',
-          (!!error || !!errorMessage) ? 'border-red-500 dark:border-red-400 focus:ring-red-500/20 focus:border-red-500 dark:focus:border-red-400' : ''
+          (!!error || !!errorMessage) ? 'border-error-500 dark:border-error-400 focus:ring-error-500/20 focus:border-error-500 dark:focus:border-error-400' : ''
         ]"
       />
 
@@ -164,7 +164,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
               class="px-3 py-2 text-sm cursor-pointer border-b border-gray-50 dark:border-slate-800 last:border-0 transition-colors flex flex-col gap-0.5"
               :class="[
                 index === activeIndex
-                  ? 'bg-blue-50 dark:bg-blue-900/30 ring-inset ring-2 ring-blue-500/50'
+                  ? 'bg-primary-50 dark:bg-primary-900/30 ring-inset ring-2 ring-primary-500/50'
                   : 'hover:bg-gray-50 dark:hover:bg-slate-700/50',
               ]"
             >
@@ -179,7 +179,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
                   <span v-if="typeof chunk === 'string'">{{ chunk }}</span>
                   <span
                     v-else
-                    class="text-blue-500 dark:text-blue-400 font-bold underline decoration-blue-500/30 underline-offset-2"
+                    class="text-primary-500 dark:text-primary-400 font-bold underline decoration-primary-500/30 underline-offset-2"
                     >{{ chunk.char }}</span
                   >
                 </template>
@@ -193,7 +193,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
                   :key="idx"
                 >
                   <span v-if="typeof chunk === 'string'">{{ chunk }}</span>
-                  <span v-else class="text-blue-400/80 dark:text-blue-300 font-semibold">{{
+                  <span v-else class="text-primary-400/80 dark:text-primary-300 font-semibold">{{
                     chunk.char
                   }}</span>
                 </template>
@@ -213,10 +213,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
     </div>
 
     <!-- Feedback Messages -->
-    <p v-if="error && typeof error === 'string'" class="mt-1 text-[13px] text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-[13px] text-error-500 dark:text-error-400 font-medium whitespace-pre-wrap">
       {{ error }}
     </p>
-    <p v-else-if="errorMessage" class="mt-1 text-[13px] text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+    <p v-else-if="errorMessage" class="mt-1 text-[13px] text-error-500 dark:text-error-400 font-medium whitespace-pre-wrap">
       {{ errorMessage }}
     </p>
     <p v-else-if="helperText" class="mt-1 text-[13px] text-slate-500 dark:text-slate-400 whitespace-pre-wrap">

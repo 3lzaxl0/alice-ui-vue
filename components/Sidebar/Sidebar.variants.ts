@@ -5,7 +5,7 @@ export const sidebarItemVariants = cva(
   {
     variants: {
       active: {
-        true: 'bg-blue-600 text-white shadow-md shadow-blue-600/20 font-medium',
+        true: 'bg-primary-600 text-white shadow-md shadow-primary-600/20 font-medium',
         false: 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white',
       },
       variant: {
@@ -31,14 +31,14 @@ export const sidebarItemVariants = cva(
         design: 'filled',
         active: false,
         class:
-          'bg-red-500 text-white hover:bg-red-600 hover:text-white dark:text-white dark:hover:text-white',
+          'bg-error-500 text-white hover:bg-error-600 hover:text-white dark:text-white dark:hover:text-white',
       },
       {
         variant: 'error',
         design: 'ghost',
         active: false,
         class:
-          'text-red-500 hover:text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-500/10',
+          'text-error-500 hover:text-error-600 hover:bg-error-50 dark:text-error-400 dark:hover:text-error-300 dark:hover:bg-error-500/10',
       },
     ],
     defaultVariants: {

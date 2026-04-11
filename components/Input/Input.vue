@@ -83,7 +83,7 @@ const inputClass = computed(() => {
       <!-- Leading Icon -->
       <div
         v-if="icon"
-        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-blue-500 transition-colors"
+        class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 group-focus-within:text-primary-500 transition-colors"
       >
         <component :is="icon" :size="18" />
       </div>
@@ -115,7 +115,7 @@ const inputClass = computed(() => {
           v-if="clearable && modelValue && !disabled"
           type="button"
           @click="clearValue"
-          class="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all rounded-md outline-none cursor-pointer"
+          class="p-1.5 text-gray-400 hover:text-error-500 hover:bg-error-50 dark:hover:bg-error-500/10 transition-all rounded-md outline-none cursor-pointer"
           title="Limpiar"
         >
           <X :size="14" />
@@ -126,14 +126,14 @@ const inputClass = computed(() => {
           <button
             type="button"
             @click="stepUp"
-            class="flex-1 px-1 flex items-center justify-center text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all rounded-t-md outline-none cursor-pointer"
+            class="flex-1 px-1 flex items-center justify-center text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all rounded-t-md outline-none cursor-pointer"
           >
             <ChevronUp :size="12" stroke-width="3" />
           </button>
           <button
             type="button"
             @click="stepDown"
-            class="flex-1 px-1 flex items-center justify-center text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all rounded-b-md outline-none cursor-pointer"
+            class="flex-1 px-1 flex items-center justify-center text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all rounded-b-md outline-none cursor-pointer"
           >
             <ChevronDown :size="12" stroke-width="3" />
           </button>
@@ -144,7 +144,7 @@ const inputClass = computed(() => {
           v-if="isPassword"
           type="button"
           @click="togglePassword"
-          class="p-1.5 text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-all rounded-md outline-none cursor-pointer"
+          class="p-1.5 text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-500/10 transition-all rounded-md outline-none cursor-pointer"
         >
           <Eye v-if="!showPassword" :size="16" />
           <EyeOff v-else :size="16" />

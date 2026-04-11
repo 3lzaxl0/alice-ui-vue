@@ -62,10 +62,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
       class="h-alice-input-height px-3 bg-white dark:bg-white/5 border flex items-center gap-2 transition-all duration-300 rounded-alice-md relative w-full group/input"
       :class="[
         isOpen
-          ? 'border-blue-500 ring-2 ring-blue-500/20'
-          : 'border-gray-200 dark:border-slate-700 hover:border-blue-500/50',
+          ? 'border-primary-500 ring-2 ring-primary-500/20'
+          : 'border-gray-200 dark:border-slate-700 hover:border-primary-500/50',
         disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
-        (!!error || !!errorMessage) ? 'border-red-500 focus-within:border-red-500 focus-within:ring-red-500/20 text-red-900 dark:text-red-400' : '',
+        (!!error || !!errorMessage) ? 'border-error-500 focus-within:border-error-500 focus-within:ring-error-500/20 text-error-900 dark:text-error-400' : '',
       ]"
     >
       <!-- Typeable input container with mask overlay -->
@@ -106,7 +106,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           size="icon-sm"
           :icon-size="14"
           @click="clearDate"
-          class="hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400"
+          class="hover:text-error-500 hover:bg-error-50 dark:hover:bg-error-900/20 text-gray-400"
           tabindex="-1"
           :icon="X"
         />
@@ -120,9 +120,9 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           size="icon-sm"
           :icon-size="16"
           @click.stop="toggleCalendar"
-          class="text-gray-400 hover:text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+          class="text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20"
           :class="{
-            'text-blue-500 bg-blue-50 dark:bg-blue-900/20': isOpen,
+            'text-primary-500 bg-primary-50 dark:bg-primary-900/20': isOpen,
             'cursor-not-allowed opacity-50': disabled,
           }"
           :disabled="disabled"
@@ -144,10 +144,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
     </transition>
 
     <!-- Feedback Messages -->
-    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 font-medium whitespace-pre-wrap">
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-error-500 font-medium whitespace-pre-wrap">
       {{ error }}
     </p>
-    <p v-else-if="errorMessage" class="mt-1 text-xs text-red-500 font-medium whitespace-pre-wrap">
+    <p v-else-if="errorMessage" class="mt-1 text-xs text-error-500 font-medium whitespace-pre-wrap">
       {{ errorMessage }}
     </p>
     <p v-else-if="helperText" class="mt-1 text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">

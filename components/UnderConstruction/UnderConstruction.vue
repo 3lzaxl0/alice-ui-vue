@@ -15,7 +15,7 @@ withDefaults(defineProps<Props>(), {
 <template>
   <div class="flex flex-col items-center justify-center h-[60vh] text-center p-8">
     <div
-      class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-full mb-6 text-blue-600 dark:text-blue-400"
+      class="bg-primary-50 dark:bg-primary-900/20 p-6 rounded-full mb-6 text-primary-600 dark:text-primary-400"
     >
       <slot name="icon">
         <Construction :size="64" />

@@ -23,60 +23,60 @@ export const bannerVariants = cva(
         variant: 'primary',
         type: 'soft',
         class:
-          'bg-blue-50/50 dark:bg-blue-900/10 border-blue-100/50 dark:border-blue-800/30 text-blue-700 dark:text-blue-300',
+          'bg-primary-50/50 dark:bg-primary-900/10 border-primary-100/50 dark:border-primary-800/30 text-primary-700 dark:text-primary-300',
       },
       {
         variant: 'primary',
         type: 'filled',
-        class: 'bg-blue-600 text-white border-blue-600 shadow-md',
+        class: 'bg-primary-600 text-white border-primary-600 shadow-md',
       },
       // Success
       {
         variant: 'success',
         type: 'soft',
         class:
-          'bg-emerald-50/50 dark:bg-emerald-900/10 border-emerald-100/50 dark:border-emerald-800/30 text-emerald-700 dark:text-emerald-300',
+          'bg-success-50/50 dark:bg-success-900/10 border-success-100/50 dark:border-success-800/30 text-success-700 dark:text-success-300',
       },
       {
         variant: 'success',
         type: 'filled',
-        class: 'bg-emerald-600 text-white border-emerald-600 shadow-md',
+        class: 'bg-success-600 text-white border-success-600 shadow-md',
       },
       // Warning
       {
         variant: 'warning',
         type: 'soft',
         class:
-          'bg-amber-50/50 dark:bg-amber-900/10 border-amber-100/50 dark:border-amber-800/30 text-amber-700 dark:text-amber-300',
+          'bg-warning-50/50 dark:bg-warning-900/10 border-warning-100/50 dark:border-warning-800/30 text-warning-700 dark:text-warning-300',
       },
       {
         variant: 'warning',
         type: 'filled',
-        class: 'bg-amber-500 text-white border-amber-500 shadow-md',
+        class: 'bg-warning-500 text-white border-warning-500 shadow-md',
       },
       // Error
       {
         variant: 'error',
         type: 'soft',
         class:
-          'bg-rose-50/50 dark:bg-rose-900/10 border-rose-100/50 dark:border-rose-800/30 text-rose-700 dark:text-rose-300',
+          'bg-error-50/50 dark:bg-error-900/10 border-error-100/50 dark:border-error-800/30 text-error-700 dark:text-error-300',
       },
       {
         variant: 'error',
         type: 'filled',
-        class: 'bg-rose-600 text-white border-rose-600 shadow-md',
+        class: 'bg-error-600 text-white border-error-600 shadow-md',
       },
       // Info
       {
         variant: 'info',
         type: 'soft',
         class:
-          'bg-indigo-50/50 dark:bg-indigo-900/10 border-indigo-100/50 dark:border-indigo-800/30 text-indigo-700 dark:text-indigo-300',
+          'bg-info-50/50 dark:bg-info-900/10 border-info-100/50 dark:border-info-800/30 text-info-700 dark:text-info-300',
       },
       {
         variant: 'info',
         type: 'filled',
-        class: 'bg-indigo-600 text-white border-indigo-600 shadow-md',
+        class: 'bg-info-600 text-white border-info-600 shadow-md',
       },
       // Gray
       {
@@ -116,11 +116,11 @@ export const bannerIconVariants = cva(
       },
     },
     compoundVariants: [
-      { variant: 'primary', type: 'filled', class: 'text-blue-600 dark:text-blue-500' },
-      { variant: 'success', type: 'filled', class: 'text-emerald-600 dark:text-emerald-500' },
-      { variant: 'warning', type: 'filled', class: 'text-amber-500 dark:text-amber-500' },
-      { variant: 'error', type: 'filled', class: 'text-rose-600 dark:text-rose-500' },
-      { variant: 'info', type: 'filled', class: 'text-indigo-600 dark:text-indigo-500' },
+      { variant: 'primary', type: 'filled', class: 'text-primary-600 dark:text-primary-500' },
+      { variant: 'success', type: 'filled', class: 'text-success-600 dark:text-success-500' },
+      { variant: 'warning', type: 'filled', class: 'text-warning-500 dark:text-warning-500' },
+      { variant: 'error', type: 'filled', class: 'text-error-600 dark:text-error-500' },
+      { variant: 'info', type: 'filled', class: 'text-info-600 dark:text-info-500' },
       { variant: 'gray', type: 'filled', class: 'text-gray-700 dark:text-gray-300' },
     ],
     defaultVariants: {

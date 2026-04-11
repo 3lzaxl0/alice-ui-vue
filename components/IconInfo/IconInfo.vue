@@ -23,24 +23,24 @@ const variantClasses = {
     value: 'text-gray-700 dark:text-gray-200',
   },
   info: {
-    bg: 'bg-blue-50 dark:bg-blue-900/20',
-    text: 'text-blue-500',
-    value: 'text-blue-600 dark:text-blue-400',
+    bg: 'bg-info-50 dark:bg-info-900/20',
+    text: 'text-info-500',
+    value: 'text-info-600 dark:text-info-400',
   },
   success: {
-    bg: 'bg-emerald-50 dark:bg-emerald-900/20',
-    text: 'text-emerald-500',
-    value: 'text-emerald-600 dark:text-emerald-400',
+    bg: 'bg-success-50 dark:bg-success-900/20',
+    text: 'text-success-500',
+    value: 'text-success-600 dark:text-success-400',
   },
   warning: {
-    bg: 'bg-amber-50 dark:bg-amber-900/20',
-    text: 'text-amber-500',
-    value: 'text-amber-600 dark:text-amber-400',
+    bg: 'bg-warning-50 dark:bg-warning-900/20',
+    text: 'text-warning-500',
+    value: 'text-warning-600 dark:text-warning-400',
   },
   error: {
-    bg: 'bg-rose-50 dark:bg-rose-900/20',
-    text: 'text-rose-500',
-    value: 'text-rose-600 dark:text-rose-400',
+    bg: 'bg-error-50 dark:bg-error-900/20',
+    text: 'text-error-500',
+    value: 'text-error-600 dark:text-error-400',
   },
 }
 </script>

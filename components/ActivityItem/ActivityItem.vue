@@ -39,18 +39,18 @@ const props = withDefaults(
 )
 
 const variantClasses = {
-  success: 'bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600',
-  error: 'bg-rose-50 dark:bg-rose-500/10 text-rose-600',
-  info: 'bg-blue-50 dark:bg-blue-500/10 text-blue-600',
-  warning: 'bg-amber-50 dark:bg-amber-500/10 text-amber-600',
+  success: 'bg-success-50 dark:bg-success-500/10 text-success-600',
+  error: 'bg-error-50 dark:bg-error-500/10 text-error-600',
+  info: 'bg-info-50 dark:bg-info-500/10 text-info-600',
+  warning: 'bg-warning-50 dark:bg-warning-500/10 text-warning-600',
   default: 'bg-slate-50 dark:bg-slate-800/50 text-slate-500'
 }
 
 const amountVariantClasses = {
-  success: 'text-emerald-600',
-  error: 'text-rose-600',
-  info: 'text-blue-600',
-  warning: 'text-amber-600',
+  success: 'text-success-600',
+  error: 'text-error-600',
+  info: 'text-info-600',
+  warning: 'text-warning-600',
   default: 'text-slate-900 dark:text-white'
 }
 
@@ -85,15 +85,15 @@ const amountColorClass = computed(() => amountVariantClasses[props.variant])
           <slot name="title">{{ title }}</slot>
         </AliceText>
         <div class="flex items-center gap-2 mt-0.5">
-          <AliceText v-if="subtitle || $slots.subtitle" tag="span" variant="label" class="!text-[10px] truncate">
+          <AliceText v-if="subtitle || $slots.subtitle" tag="span" variant="label" class="text-[10px]! truncate">
             <slot name="subtitle">{{ subtitle }}</slot>
           </AliceText>
-          <AliceBadge 
-            v-if="badgeLabel" 
-            :variant="badgeVariant" 
-            type="soft" 
-            :label="badgeLabel" 
-            class="text-[8px] h-4" 
+          <AliceBadge
+            v-if="badgeLabel"
+            :variant="badgeVariant"
+            type="soft"
+            :label="badgeLabel"
+            class="text-[8px] h-4"
           />
         </div>
       </div>
@@ -102,7 +102,7 @@ const amountColorClass = computed(() => amountVariantClasses[props.variant])
     <!-- Trailing Content -->
     <div class="flex items-center gap-3 shrink-0">
       <slot name="trailing">
-        <AliceText 
+        <AliceText
           v-if="amount !== undefined"
           tag="span"
           weight="black"

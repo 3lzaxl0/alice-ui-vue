@@ -218,10 +218,10 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
             <AlicePopover placement="bottom-right">
               <template #trigger>
                 <div
-                  class="inline-flex items-center gap-2 cursor-pointer group/tags py-1.5 px-3 rounded-full bg-blue-50/50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800/50 hover:bg-blue-100 dark:hover:bg-blue-900/20 hover:border-blue-300 dark:hover:border-blue-700 hover:shadow-sm hover:scale-[1.02] transition-all duration-200 active:scale-95"
+                  class="inline-flex items-center gap-2 cursor-pointer group/tags py-1.5 px-3 rounded-full bg-primary-50/50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-800/50 hover:bg-primary-100 dark:hover:bg-primary-900/20 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-sm hover:scale-[1.02] transition-all duration-200 active:scale-95"
                 >
                   <div
-                    class="flex items-center gap-1.5 text-blue-700 dark:text-blue-400 font-extrabold"
+                    class="flex items-center gap-1.5 text-primary-700 dark:text-primary-400 font-extrabold"
                   >
                     <Package :size="14" class="group-hover/tags:rotate-12 transition-transform" />
                     <span class="tabular-nums text-sm">
@@ -232,7 +232,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                       }}
                     </span>
                   </div>
-                  <div class="flex items-center gap-1 text-blue-500 dark:text-blue-400/70">
+                  <div class="flex items-center gap-1 text-primary-500 dark:text-primary-400/70">
                     <Eye
                       :size="14"
                       class="opacity-70 group-hover/tags:opacity-100 transition-opacity"

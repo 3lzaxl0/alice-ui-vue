@@ -21,16 +21,16 @@ const props = withDefaults(defineProps<Props>(), {
 const variantClasses = computed(() => {
   switch (props.variant) {
     case 'info':
-      return 'bg-blue-50 dark:bg-blue-900/10 border-blue-400 text-blue-900 dark:text-blue-200'
+      return 'bg-info-50 dark:bg-info-900/10 border-info-400 text-info-900 dark:text-info-200'
     case 'success':
-      return 'bg-green-50 dark:bg-green-900/10 border-green-400 text-green-900 dark:text-green-200'
+      return 'bg-success-50 dark:bg-success-900/10 border-success-400 text-success-900 dark:text-success-200'
     case 'danger':
-      return 'bg-red-50 dark:bg-red-900/10 border-red-400 text-red-900 dark:text-red-200'
+      return 'bg-error-50 dark:bg-error-900/10 border-error-400 text-error-900 dark:text-error-200'
     case 'neutral':
       return 'bg-slate-50 dark:bg-slate-900/10 border-slate-400 text-slate-900 dark:text-slate-200'
     case 'warning':
     default:
-      return 'bg-amber-50 dark:bg-amber-900/10 border-amber-400 text-amber-900 dark:text-amber-200'
+      return 'bg-warning-50 dark:bg-warning-900/10 border-warning-400 text-warning-900 dark:text-warning-200'
   }
 })
 </script>

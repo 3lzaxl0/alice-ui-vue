@@ -71,7 +71,7 @@ const interactiveClasses = computed(() => {
   }
   
   if (props.active) {
-    classes.push('border-blue-500! dark:border-blue-400! shadow-md shadow-blue-500/20 ring-2 ring-blue-500/30')
+    classes.push('border-primary-500! dark:border-primary-400! shadow-md shadow-primary-500/20 ring-2 ring-primary-500/30')
   } else if (props.selectable) {
     classes.push('hover:shadow-md hover:border-gray-300 dark:hover:border-slate-600')
   }
@@ -82,10 +82,10 @@ const interactiveClasses = computed(() => {
 // Clases computadas para el fondo del overlay
 const overlayBgClass = computed(() => {
   const map: Record<string, string> = {
-    error: 'bg-red-50/70 dark:bg-red-950/60',
-    warning: 'bg-amber-50/70 dark:bg-amber-950/60',
-    info: 'bg-blue-50/70 dark:bg-blue-950/60',
-    success: 'bg-emerald-50/70 dark:bg-emerald-950/60',
+    error: 'bg-error-50/70 dark:bg-error-950/60',
+    warning: 'bg-warning-50/70 dark:bg-warning-950/60',
+    info: 'bg-primary-50/70 dark:bg-primary-950/60',
+    success: 'bg-success-50/70 dark:bg-success-950/60',
     default: 'bg-gray-50/70 dark:bg-slate-900/60',
   }
   return map[props.overlayVariant || 'default']

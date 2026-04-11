@@ -25,16 +25,16 @@ const emit = defineEmits<{
     >
       <!-- Background Accents (Subtle) -->
       <div
-        class="absolute -top-24 -right-24 w-48 h-48 bg-rose-500/5 dark:bg-rose-500/10 rounded-full blur-3xl"
+        class="absolute -top-24 -right-24 w-48 h-48 bg-error-500/5 dark:bg-error-500/10 rounded-full blur-3xl"
       ></div>
       <div
-        class="absolute -bottom-24 -left-24 w-48 h-48 bg-blue-500/5 dark:bg-blue-500/10 rounded-full blur-3xl"
+        class="absolute -bottom-24 -left-24 w-48 h-48 bg-primary-500/5 dark:bg-primary-500/10 rounded-full blur-3xl"
       ></div>
 
       <div class="relative z-10 flex flex-col items-center">
         <!-- Icon with Animation -->
         <div
-          class="w-20 h-20 mb-8 rounded-full bg-rose-50 dark:bg-rose-900/40 flex items-center justify-center text-rose-500 shadow-alice-sm animate-pulse-subtle border border-rose-100 dark:border-rose-800/50"
+          class="w-20 h-20 mb-8 rounded-full bg-error-50 dark:bg-error-900/40 flex items-center justify-center text-error-500 shadow-alice-sm animate-pulse-subtle border border-error-100 dark:border-error-800/50"
         >
           <ShieldAlert :size="40" stroke-width="2.5" />
         </div>

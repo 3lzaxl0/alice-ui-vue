@@ -13,14 +13,11 @@ defineOptions({
 
 // Define accepted colors for type safety
 type WelcomeColor =
-  | 'emerald'
-  | 'cyan'
-  | 'indigo'
-  | 'amber'
-  | 'blue'
-  | 'violet'
-  | 'rose'
-  | 'teal'
+  | 'success'
+  | 'primary'
+  | 'warning'
+  | 'info'
+  | 'error'
   | 'default'
 
 export interface WelcomeItem {
@@ -41,13 +38,13 @@ defineProps<{
   <div class="flex flex-col gap-8 max-w-7xl mx-auto px-4 md:px-0">
     <!-- Hero Section -->
     <div
-      class="relative overflow-hidden bg-linear-to-r from-blue-600 to-indigo-700 p-8 md:p-10 text-white shadow-lg rounded-3xl"
+      class="relative overflow-hidden bg-linear-to-r from-primary-600 to-primary-700 p-8 md:p-10 text-white shadow-lg rounded-3xl"
     >
       <div class="relative z-10">
         <h1 class="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
           Bienvenido, <span class="opacity-90">{{ userName }}</span>
         </h1>
-        <p class="text-blue-100 text-lg md:text-xl font-light">
+        <p class="text-primary-100 text-lg md:text-xl font-light">
           Selecciona una operación para comenzar o utiliza el menú lateral para navegar por el
           sistema.
         </p>

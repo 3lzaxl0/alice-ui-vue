@@ -228,7 +228,7 @@ onUnmounted(() => {
       <button
         type="button"
         @click="clear"
-        class="text-[10px] font-bold text-red-600 uppercase tracking-tighter flex items-center gap-1 py-1.5 px-3 rounded-full bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/50 hover:bg-red-100 dark:hover:bg-red-900/30 transition-all touch-manipulation"
+        class="text-[10px] font-bold text-error-600 uppercase tracking-tighter flex items-center gap-1 py-1.5 px-3 rounded-full bg-error-50 dark:bg-error-900/20 border border-error-100 dark:border-error-800/50 hover:bg-error-100 dark:hover:bg-error-900/30 transition-all touch-manipulation"
         :class="{ 'ml-auto': !label, 'opacity-50 pointer-events-none grayscale': isEmpty }"
       >
         <Eraser :size="12" />
@@ -238,7 +238,7 @@ onUnmounted(() => {
 
     <!-- Canvas Container (Forced white background for visibility) -->
     <div
-      class="relative w-full h-40 border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white transition-all shadow-md ring-blue-500/10 focus-within:ring-4 focus-within:border-blue-400"
+      class="relative w-full h-40 border-2 border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white transition-all shadow-md ring-primary-500/10 focus-within:ring-4 focus-within:border-primary-400"
     >
       <canvas
         ref="canvas"

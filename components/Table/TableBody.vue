@@ -49,7 +49,7 @@ const emit = defineEmits<{
         class="px-6 py-12 text-center text-gray-400"
       >
         <div class="flex flex-col items-center gap-2">
-          <Loader2 class="animate-spin text-blue-500" :size="24" />
+          <Loader2 class="animate-spin text-primary-500" :size="24" />
           <span>Cargando datos...</span>
         </div>
       </td>

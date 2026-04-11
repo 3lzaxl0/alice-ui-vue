@@ -112,12 +112,12 @@ function getOptionsForColumn(col: Column<T>) {
                     @click.stop="emit('filter-toggle', String(col.key))"
                     class="hover:bg-gray-200 dark:hover:bg-slate-600 transition-all duration-200">
                     <Filter :size="14" :fill="activeFilters[String(col.key)] ? 'currentColor' : 'none'"
-                      :class="activeFilters[String(col.key)] ? 'text-blue-600 dark:text-blue-400' : ''" />
+                      :class="activeFilters[String(col.key)] ? 'text-primary-600 dark:text-primary-400' : ''" />
                   </AliceButton>
 
                   <!-- Indicator Dot -->
                   <div v-if="activeFilters[String(col.key)]"
-                    class="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-blue-500 rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none" />
+                    class="absolute top-0.5 right-0.5 w-1.5 h-1.5 bg-primary-500 rounded-full ring-2 ring-white dark:ring-slate-900 pointer-events-none" />
                 </div>
               </template>
 
@@ -139,9 +139,9 @@ function getOptionsForColumn(col: Column<T>) {
           <!-- Sort Indicators -->
           <div v-if="col.sortable" class="flex flex-col text-gray-400">
             <ArrowUp v-if="currentSortColumn === String(col.key) && currentSortDirection === 'asc'" :size="14"
-              class="text-blue-600" />
+              class="text-primary-600" />
             <ArrowDown v-else-if="currentSortColumn === String(col.key) && currentSortDirection === 'desc'" :size="14"
-              class="text-blue-600" />
+              class="text-primary-600" />
             <div v-else class="h-3.5 w-3.5 relative opacity-0 group-hover:opacity-50">
               <ArrowUp :size="14" class="absolute inset-0" />
             </div>
@@ -151,7 +151,7 @@ function getOptionsForColumn(col: Column<T>) {
 
         <!-- Resize Handle -->
         <div
-          class="absolute right-0 top-0 h-full w-1.5 cursor-col-resize hover:bg-blue-400 opacity-0 hover:opacity-100 active:opacity-100 active:bg-blue-600 transition-colors z-30"
+          class="absolute right-0 top-0 h-full w-1.5 cursor-col-resize hover:bg-primary-400 opacity-0 hover:opacity-100 active:opacity-100 active:bg-primary-600 transition-colors z-30"
           @click.stop @mousedown.stop.prevent="emit('resize-start', $event, String(col.key))"></div>
       </th>
     </transition-group>

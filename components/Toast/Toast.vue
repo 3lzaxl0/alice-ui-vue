@@ -14,12 +14,12 @@ const icons = {
 
 const colors = {
   success:
-    'bg-green-50 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800',
+    'bg-success-50 text-success-800 border-success-200 dark:bg-success-900/20 dark:text-success-300 dark:border-success-800',
   warning:
-    'bg-yellow-50 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800',
+    'bg-warning-50 text-warning-800 border-warning-200 dark:bg-warning-900/20 dark:text-warning-300 dark:border-warning-800',
   error:
-    'bg-red-50 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800',
-  info: 'bg-blue-50 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800',
+    'bg-error-50 text-error-800 border-error-200 dark:bg-error-900/20 dark:text-error-300 dark:border-error-800',
+  info: 'bg-info-50 text-info-800 border-info-200 dark:bg-info-900/20 dark:text-info-300 dark:border-info-800',
   date: 'bg-gray-50 text-gray-800 border-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700',
 }
 

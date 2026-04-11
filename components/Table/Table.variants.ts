@@ -1,10 +1,10 @@
 import { cva } from 'class-variance-authority'
 
-const selectedBg = '!bg-blue-100/40 dark:!bg-blue-950'
+const selectedBg = '!bg-primary-100/40 dark:!bg-primary-950'
 const baseBg = 'bg-white dark:bg-slate-950'
 const stripeBg = 'bg-slate-50 dark:bg-slate-900'
-const hoverClasses = 'hover:bg-blue-50 dark:hover:bg-slate-800'
-const groupHoverClasses = 'group-hover:bg-blue-50 dark:group-hover:bg-slate-800'
+const hoverClasses = 'hover:bg-primary-50 dark:hover:bg-slate-800'
+const groupHoverClasses = 'group-hover:bg-primary-50 dark:group-hover:bg-slate-800'
 
 export const tableVariants = {
   header: `sticky top-0 z-50 text-xs uppercase text-gray-500 dark:text-gray-400 font-semibold tracking-wider ${baseBg}`,
@@ -87,7 +87,7 @@ export const tableVariants = {
           false: '',
         },
         dragging: {
-          true: 'alice-column-moving animate-alice-pulse-subtle bg-blue-50/20 dark:bg-blue-900/10 border-x border-blue-200/30 dark:border-blue-700/30 grayscale-[0.1]',
+          true: 'alice-column-moving animate-alice-pulse-subtle bg-primary-50/20 dark:bg-primary-900/10 border-x border-primary-200/30 dark:border-primary-700/30 grayscale-[0.1]',
           false: '',
         },
         divided: {

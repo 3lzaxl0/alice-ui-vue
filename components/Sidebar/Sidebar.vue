@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, computed, provide } from 'vue'
-import { PanelLeftOpen, PanelLeftClose, Menu, Sun, Moon, LogOut, UserCircle } from 'lucide-vue-next'
+import { PanelLeftOpen, PanelLeftClose, Menu, LogOut, UserCircle } from 'lucide-vue-next'
 import SidebarItem from './SidebarItem.vue'
 import DropdownMenu from '../DropdownMenu/DropdownMenu.vue'
+import AliceThemeToggle from '../ThemeToggle/ThemeToggle.vue'
+import AliceColorPicker from '../ColorPicker/ColorPicker.vue'
 
 defineOptions({
   name: 'AliceSidebar',
@@ -35,39 +37,6 @@ const props = withDefaults(
   },
 )
 
-// Internal Theme State
-const isDark = ref(localStorage.getItem('theme') === 'dark')
-
-function toggleTheme() {
-  const isDarkTheme = !isDark.value
-
-  // VERY IMPORTANT: Disable all standard CSS transitions while changing the theme
-  // This prevents the massive lag spike caused by 1000+ elements transitioning simultaneously
-  document.documentElement.classList.add('theme-transitioning')
-
-  // Apply the theme immediately (instant toggle)
-  isDark.value = isDarkTheme
-  const html = document.documentElement
-  if (isDark.value) {
-    html.classList.add('dark')
-    localStorage.setItem('theme', 'dark')
-  } else {
-    html.classList.remove('dark')
-    localStorage.setItem('theme', 'light')
-  }
-
-  // Wait for the browser to paint the new instant DOM state, then release the transition lock
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      document.documentElement.classList.remove('theme-transitioning')
-    })
-  })
-}
-
-// Initialize theme
-if (isDark.value) {
-  document.documentElement.classList.add('dark')
-}
 
 // Emits
 const emit = defineEmits<{
@@ -78,6 +47,7 @@ const emit = defineEmits<{
 const isHovered = ref(false)
 const isPinned = ref(localStorage.getItem('alice-sidebar-pinned') === 'true')
 const isMobileOpen = ref(false)
+const isCustomizing = ref(false)
 
 function togglePin() {
   isPinned.value = !isPinned.value
@@ -86,7 +56,7 @@ function togglePin() {
 
 // Expanded logic:
 const expanded = computed(() => {
-  return isHovered.value || isPinned.value || isMobileOpen.value
+  return isHovered.value || isPinned.value || isMobileOpen.value || isCustomizing.value
 })
 
 // Provide expanded state to all sidebar items
@@ -147,7 +117,7 @@ function handleRoleChange(value: string | number) {
     </div>
     <!-- Optional: Logo or other mobile actions -->
     <div
-      class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 text-white text-xs font-bold shadow-lg shadow-blue-600/20 select-none"
+      class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-linear-to-br from-primary-500 to-primary-600 text-white text-xs font-bold shadow-lg shadow-primary-600/20 select-none"
     >
       <template v-if="userName">{{ userInitials }}</template>
       <UserCircle v-else :size="20" />
@@ -180,7 +150,7 @@ function handleRoleChange(value: string | number) {
     <div class="h-20 flex items-center px-5 shrink-0 relative">
       <!-- User Avatar (Initials) -->
       <div
-        class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-indigo-600 text-white text-xs font-bold shadow-lg shadow-blue-600/20 select-none"
+        class="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl bg-linear-to-br from-primary-500 to-primary-600 text-white text-xs font-bold shadow-lg shadow-primary-600/20 select-none"
       >
         <template v-if="userName">{{ userInitials }}</template>
         <UserCircle v-else :size="20" />
@@ -245,14 +215,13 @@ function handleRoleChange(value: string | number) {
     <div class="p-3 flex flex-col gap-2">
       <slot name="footer" :expanded="expanded"></slot>
 
-      <!-- Internal Footer Actions -->
-      <SidebarItem
-        v-if="props.showThemeToggle"
-        :label="isDark ? 'Modo Claro' : 'Modo Oscuro'"
-        :icon="isDark ? Sun : Moon"
-        is-button
-        @click="toggleTheme"
-      />
+      <!-- Theme & Color Customization -->
+      <div class="flex flex-col gap-0.5 mb-1">
+         <AliceColorPicker 
+            @open-change="(val) => isCustomizing = val" 
+         />
+         <AliceThemeToggle />
+      </div>
 
       <SidebarItem
         v-if="props.showLogout"

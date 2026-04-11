@@ -43,31 +43,31 @@ export const buttonVariants = cva(
         variant: "primary",
         design: "solid",
         class:
-          "bg-blue-600 text-white shadow-sm hover:shadow-md hover:bg-blue-500 active:bg-blue-800 focus:ring-blue-500/50 dark:bg-blue-500 dark:hover:bg-blue-400 dark:active:bg-blue-600 dark:text-white",
+          "bg-primary-600 text-white shadow-sm hover:shadow-md hover:bg-primary-500 active:bg-primary-800 focus:ring-primary-500/50 dark:bg-primary-500 dark:hover:bg-primary-400 dark:active:bg-primary-600 dark:text-white",
       },
       {
         variant: "success",
         design: "solid",
         class:
-          "bg-emerald-600 text-white shadow-sm hover:shadow-md hover:bg-emerald-500 active:bg-emerald-800 focus:ring-emerald-500/50 dark:bg-emerald-500 dark:hover:bg-emerald-400 dark:active:bg-emerald-600 dark:text-white",
+          "bg-success-600 text-white shadow-sm hover:shadow-md hover:bg-success-500 active:bg-success-800 focus:ring-success-500/50 dark:bg-success-500 dark:hover:bg-success-400 dark:active:bg-success-600 dark:text-white",
       },
       {
         variant: "warning",
         design: "solid",
         class:
-          "bg-amber-500 text-white shadow-sm hover:shadow-md hover:bg-amber-500 active:bg-amber-700 focus:ring-amber-500/50 dark:bg-amber-400 dark:hover:bg-amber-300 dark:active:bg-amber-500 dark:text-white",
+          "bg-warning-500 text-white shadow-sm hover:shadow-md hover:bg-warning-500 active:bg-warning-700 focus:ring-warning-500/50 dark:bg-warning-400 dark:hover:bg-warning-300 dark:active:bg-warning-500 dark:text-white",
       },
       {
         variant: "error",
         design: "solid",
         class:
-          "bg-red-600 text-white shadow-sm hover:shadow-md hover:bg-red-500 active:bg-red-800 focus:ring-red-500/50 dark:bg-red-500 dark:hover:bg-red-400 dark:active:bg-red-600 dark:text-white",
+          "bg-error-600 text-white shadow-sm hover:shadow-md hover:bg-error-500 active:bg-error-800 focus:ring-error-500/50 dark:bg-error-500 dark:hover:bg-error-400 dark:active:bg-error-600 dark:text-white",
       },
       {
         variant: "info",
         design: "solid",
         class:
-          "bg-cyan-600 text-white shadow-sm hover:shadow-md hover:bg-cyan-500 active:bg-cyan-800 focus:ring-cyan-500/50 dark:bg-cyan-500 dark:hover:bg-cyan-400 dark:active:bg-cyan-600 dark:text-white",
+          "bg-info-600 text-white shadow-sm hover:shadow-md hover:bg-info-500 active:bg-info-800 focus:ring-info-500/50 dark:bg-info-500 dark:hover:bg-info-400 dark:active:bg-info-600 dark:text-white",
       },
 
       // --- GHOST DESIGNS ---
@@ -75,31 +75,31 @@ export const buttonVariants = cva(
         variant: "primary",
         design: "ghost",
         class:
-          "text-blue-600 hover:bg-blue-50 active:bg-blue-100 dark:text-blue-400 dark:hover:bg-blue-900/40 dark:active:bg-blue-900/60",
+          "text-primary-600 hover:bg-primary-50 active:bg-primary-100 dark:text-primary-400 dark:hover:bg-primary-900/40 dark:active:bg-primary-900/60",
       },
       {
         variant: "success",
         design: "ghost",
         class:
-          "text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 dark:text-emerald-400 dark:hover:bg-emerald-900/40 dark:active:bg-emerald-900/60",
+          "text-success-600 hover:bg-success-50 active:bg-success-100 dark:text-success-400 dark:hover:bg-success-900/40 dark:active:bg-success-900/60",
       },
       {
         variant: "warning",
         design: "ghost",
         class:
-          "text-amber-600 hover:bg-amber-50 active:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/40 dark:active:bg-amber-900/60",
+          "text-warning-600 hover:bg-warning-50 active:bg-warning-100 dark:text-warning-400 dark:hover:bg-warning-900/40 dark:active:bg-warning-900/60",
       },
       {
         variant: "error",
         design: "ghost",
         class:
-          "text-red-600 hover:bg-red-50 active:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/40 dark:active:bg-red-900/60",
+          "text-error-600 hover:bg-error-50 active:bg-error-100 dark:text-error-400 dark:hover:bg-error-900/40 dark:active:bg-error-900/60",
       },
       {
         variant: "info",
         design: "ghost",
         class:
-          "text-cyan-600 hover:bg-cyan-50 active:bg-cyan-100 dark:text-cyan-400 dark:hover:bg-cyan-900/40 dark:active:bg-cyan-900/60",
+          "text-info-600 hover:bg-info-50 active:bg-info-100 dark:text-info-400 dark:hover:bg-info-900/40 dark:active:bg-info-900/60",
       },
 
       // --- OUTLINE DESIGNS ---
@@ -107,31 +107,31 @@ export const buttonVariants = cva(
         variant: "primary",
         design: "outline",
         class:
-          "border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white active:bg-blue-700 dark:border-blue-500 dark:text-blue-400 dark:hover:bg-blue-500 dark:hover:text-white",
+          "border-2 border-primary-600 text-primary-600 hover:bg-primary-600 hover:text-white active:bg-primary-700 dark:border-primary-500 dark:text-primary-400 dark:hover:bg-primary-500 dark:hover:text-white",
       },
       {
         variant: "success",
         design: "outline",
         class:
-          "border-2 border-emerald-600 text-emerald-600 hover:bg-emerald-600 hover:text-white active:bg-emerald-700 dark:border-emerald-500 dark:text-emerald-400 dark:hover:bg-emerald-500 dark:hover:text-white",
+          "border-2 border-success-600 text-success-600 hover:bg-success-600 hover:text-white active:bg-success-700 dark:border-success-500 dark:text-success-400 dark:hover:bg-success-500 dark:hover:text-white",
       },
       {
         variant: "warning",
         design: "outline",
         class:
-          "border-2 border-amber-500 text-amber-600 hover:bg-amber-500 hover:text-white active:bg-amber-600 dark:border-amber-400 dark:text-amber-400 dark:hover:bg-amber-400 dark:hover:text-white",
+          "border-2 border-warning-500 text-warning-600 hover:bg-warning-500 hover:text-white active:bg-warning-600 dark:border-warning-400 dark:text-warning-400 dark:hover:bg-warning-400 dark:hover:text-white",
       },
       {
         variant: "error",
         design: "outline",
         class:
-          "border-2 border-red-600 text-red-600 hover:bg-red-600 hover:text-white active:bg-red-700 dark:border-red-500 dark:text-red-400 dark:hover:bg-red-500 dark:hover:text-white",
+          "border-2 border-error-600 text-error-600 hover:bg-error-600 hover:text-white active:bg-error-700 dark:border-error-500 dark:text-error-400 dark:hover:bg-error-500 dark:hover:text-white",
       },
       {
         variant: "info",
         design: "outline",
         class:
-          "border-2 border-cyan-600 text-cyan-600 hover:bg-cyan-600 hover:text-white active:bg-cyan-700 dark:border-cyan-500 dark:text-cyan-400 dark:hover:bg-cyan-500 dark:hover:text-white",
+          "border-2 border-info-600 text-info-600 hover:bg-info-600 hover:text-white active:bg-info-700 dark:border-info-500 dark:text-info-400 dark:hover:bg-info-500 dark:hover:text-white",
       },
 
       // --- GHOST VARIANT (Neutral/Gray) ---
@@ -146,31 +146,31 @@ export const buttonVariants = cva(
         variant: "primary",
         design: "ghost-subtle",
         class:
-          "text-gray-400 dark:text-gray-500 hover:text-blue-600 hover:bg-blue-50 active:bg-blue-100 dark:hover:bg-blue-900/20 dark:active:bg-blue-900/40 dark:hover:text-blue-400 transition-colors",
+          "text-gray-400 dark:text-gray-500 hover:text-primary-600 hover:bg-primary-50 active:bg-primary-100 dark:hover:bg-primary-900/20 dark:active:bg-primary-900/40 dark:hover:text-primary-400 transition-colors",
       },
       {
         variant: "success",
         design: "ghost-subtle",
         class:
-          "text-gray-400 dark:text-gray-500 hover:text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 dark:hover:bg-emerald-900/20 dark:active:bg-emerald-900/40 dark:hover:text-emerald-400 transition-colors",
+          "text-gray-400 dark:text-gray-500 hover:text-success-600 hover:bg-success-50 active:bg-success-100 dark:hover:bg-success-900/20 dark:active:bg-success-900/40 dark:hover:text-success-400 transition-colors",
       },
       {
         variant: "warning",
         design: "ghost-subtle",
         class:
-          "text-gray-400 dark:text-gray-500 hover:text-amber-600 hover:bg-amber-50 active:bg-amber-100 dark:hover:bg-amber-900/20 dark:active:bg-amber-900/40 dark:hover:text-amber-400 transition-colors",
+          "text-gray-400 dark:text-gray-500 hover:text-warning-600 hover:bg-warning-50 active:bg-warning-100 dark:hover:bg-warning-900/20 dark:active:bg-warning-900/40 dark:hover:text-warning-400 transition-colors",
       },
       {
         variant: "error",
         design: "ghost-subtle",
         class:
-          "text-gray-400 dark:text-gray-500 hover:text-red-600 hover:bg-red-50 active:bg-red-100 dark:hover:bg-red-900/20 dark:active:bg-red-900/40 dark:hover:text-red-400 transition-colors",
+          "text-gray-400 dark:text-gray-500 hover:text-error-600 hover:bg-error-50 active:bg-error-100 dark:hover:bg-error-900/20 dark:active:bg-error-900/40 dark:hover:text-error-400 transition-colors",
       },
       {
         variant: "info",
         design: "ghost-subtle",
         class:
-          "text-gray-400 dark:text-gray-500 hover:text-cyan-600 hover:bg-cyan-50 active:bg-cyan-100 dark:hover:bg-cyan-900/20 dark:active:bg-cyan-900/40 dark:hover:text-cyan-400 transition-colors",
+          "text-gray-400 dark:text-gray-500 hover:text-info-600 hover:bg-info-50 active:bg-info-100 dark:hover:bg-info-900/20 dark:active:bg-info-900/40 dark:hover:text-info-400 transition-colors",
       },
       {
         variant: "ghost",

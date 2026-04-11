@@ -76,7 +76,7 @@ const {
                 isRangeStart(dayObj.dateStr) ||
                 isRangeEnd(dayObj.dateStr))
             "
-            class="absolute inset-y-0 w-full bg-blue-50 dark:bg-blue-900/20 -z-10"
+            class="absolute inset-y-0 w-full bg-primary-50 dark:bg-primary-900/20 -z-10"
             :class="{
               'rounded-l-full': isRangeStart(dayObj.dateStr),
               'rounded-r-full': isRangeEnd(dayObj.dateStr),
@@ -94,12 +94,12 @@ const {
                 ? 'text-gray-300 dark:text-slate-600 cursor-default'
                 : 'text-gray-700 dark:text-gray-200 cursor-pointer',
               dayObj.isCurrentMonth && isSelected(dayObj.dateStr)
-                ? 'bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700 ring-2 ring-blue-500/20'
+                ? 'bg-primary-600 text-white font-bold shadow-md hover:bg-primary-700 ring-2 ring-primary-500/20'
                 : dayObj.isCurrentMonth
-                  ? 'hover:border-blue-500/30'
+                  ? 'hover:border-primary-500/30'
                   : '',
               dayObj.isCurrentMonth && isToday(dayObj.dateStr) && !isSelected(dayObj.dateStr)
-                ? 'ring-1 ring-blue-500 text-blue-600 font-bold'
+                ? 'ring-1 ring-primary-500 text-primary-600 font-bold'
                 : '',
             ]"
           >
@@ -150,7 +150,7 @@ const {
                 isRangeStart(dayObj.dateStr) ||
                 isRangeEnd(dayObj.dateStr))
             "
-            class="absolute inset-y-0 w-full bg-blue-50 dark:bg-blue-900/20 -z-10"
+            class="absolute inset-y-0 w-full bg-primary-50 dark:bg-primary-900/20 -z-10"
             :class="{
               'rounded-l-full': isRangeStart(dayObj.dateStr),
               'rounded-r-full': isRangeEnd(dayObj.dateStr),
@@ -168,12 +168,12 @@ const {
                 ? 'text-gray-300 dark:text-slate-600 cursor-default'
                 : 'text-gray-700 dark:text-gray-200 cursor-pointer',
               dayObj.isCurrentMonth && isSelected(dayObj.dateStr)
-                ? 'bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700 ring-2 ring-blue-500/20'
+                ? 'bg-primary-600 text-white font-bold shadow-md hover:bg-primary-700 ring-2 ring-primary-500/20'
                 : dayObj.isCurrentMonth
-                  ? 'hover:border-blue-500/30'
+                  ? 'hover:border-primary-500/30'
                   : '',
               dayObj.isCurrentMonth && isToday(dayObj.dateStr) && !isSelected(dayObj.dateStr)
-                ? 'ring-1 ring-blue-500 text-blue-600 font-bold'
+                ? 'ring-1 ring-primary-500 text-primary-600 font-bold'
                 : '',
             ]"
           >

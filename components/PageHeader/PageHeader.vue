@@ -11,7 +11,7 @@ defineProps<{
 <template>
   <div class="px-6 py-6 pb-2 shrink-0">
     <div class="flex items-center gap-3">
-      <component :is="icon" v-if="icon" :size="28" class="text-blue-600 dark:text-blue-400" />
+      <component :is="icon" v-if="icon" :size="28" class="text-primary-600 dark:text-primary-400" />
       <div>
         <h1
           class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none mb-1"

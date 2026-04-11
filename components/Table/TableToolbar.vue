@@ -43,7 +43,7 @@ const mobileMenuOpen = ref(false)
 <template>
   <div
     class="flex border-b border-gray-100 dark:border-slate-700 shrink-0 relative rounded-t-xl"
-    :class="[hasSelection ? 'bg-blue-50/80 dark:bg-blue-900/40' : 'bg-white dark:bg-transparent']"
+    :class="[hasSelection ? 'bg-primary-50/80 dark:bg-primary-900/40' : 'bg-white dark:bg-transparent']"
   >
     <transition name="alice-zoom" mode="out-in">
       <!-- Selection Mode Toolbar -->
@@ -52,19 +52,19 @@ const mobileMenuOpen = ref(false)
         key="selection"
         class="flex w-full items-center justify-between px-4 py-3 min-h-[60px]"
       >
-        <div class="text-sm font-bold text-blue-700 dark:text-blue-300">
+        <div class="text-sm font-bold text-primary-700 dark:text-primary-300">
           {{ selectedCount }} seleccionados
         </div>
 
         <div class="flex items-center gap-2 min-h-9">
           <slot name="selection-actions" />
 
-          <div class="w-px h-5 bg-blue-200/50 dark:bg-blue-800/50 mx-1"></div>
+          <div class="w-px h-5 bg-primary-200/50 dark:bg-primary-800/50 mx-1"></div>
 
           <AliceButton
             variant="primary" design="ghost-subtle"
             size="icon"
-            class="hover:text-blue-600 hover:bg-white/50 dark:hover:bg-black/20"
+            class="hover:text-primary-600 hover:bg-white/50 dark:hover:bg-black/20"
             @click="emit('toggle-fullscreen')"
             :title="isFullscreen ? 'Restaurar' : 'Maximizar'"
             :icon="isFullscreen ? Minimize2 : Maximize2"
@@ -136,7 +136,7 @@ const mobileMenuOpen = ref(false)
           <AliceButton
             variant="primary" design="ghost-subtle"
             size="icon"
-            class="hover:text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20"
+            class="hover:text-success-600 hover:bg-success-50 dark:hover:bg-success-900/20"
             @click="emit('export')"
             title="Exportar a Excel"
             :icon="Download"
@@ -147,7 +147,7 @@ const mobileMenuOpen = ref(false)
           <AliceButton
             variant="primary" design="ghost-subtle"
             size="icon"
-            class="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+            class="hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20"
             @click="emit('toggle-fullscreen')"
             :title="isFullscreen ? 'Restaurar' : 'Maximizar'"
             :icon="isFullscreen ? Minimize2 : Maximize2"

@@ -133,10 +133,10 @@ onUnmounted(() => {
       class="h-alice-input-height px-3 bg-white dark:bg-white/5 border cursor-pointer flex items-center justify-between gap-2 transition-all duration-300 rounded-alice-md relative w-full outline-none"
       :class="[
         isOpen
-          ? 'border-blue-500 ring-2 ring-blue-500/20'
-          : 'border-gray-200 dark:border-slate-700 hover:border-blue-500/50',
+          ? 'border-primary-500 ring-2 ring-primary-500/20'
+          : 'border-gray-200 dark:border-slate-700 hover:border-primary-500/50',
         disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
-        (!!error || !!errorMessage) ? 'border-red-500 dark:border-red-400 focus-within:border-red-500 dark:focus-within:border-red-400 focus-within:ring-red-500/20' : '',
+        (!!error || !!errorMessage) ? 'border-error-500 dark:border-error-400 focus-within:border-error-500 dark:focus-within:border-error-400 focus-within:ring-error-500/20' : '',
       ]"
     >
       <!-- Selected Value -->
@@ -152,7 +152,7 @@ onUnmounted(() => {
         <button
           v-if="clearable && modelValue"
           type="button"
-          class="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full text-gray-400 hover:text-red-500 transition-colors"
+          class="p-1 hover:bg-gray-100 dark:hover:bg-white/10 rounded-full text-gray-400 hover:text-error-500 transition-colors"
           @click.stop="clearValue"
         >
           <X :size="14" />
@@ -187,10 +187,10 @@ onUnmounted(() => {
             class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2"
             :class="[
               modelValue === option.value
-                ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-600 dark:border-blue-400 font-medium'
+                ? 'bg-primary-50/80 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-600 dark:border-primary-400 font-medium'
                 : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
               index === activeIndex
-                ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
+                ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-primary-500/50'
                 : '',
             ]"
           >
@@ -198,7 +198,7 @@ onUnmounted(() => {
             <Check
               v-if="modelValue === option.value"
               :size="14"
-              class="text-blue-600 dark:text-blue-400"
+              class="text-primary-600 dark:text-primary-400"
             />
           </div>
 
@@ -210,10 +210,10 @@ onUnmounted(() => {
     </Teleport>
 
     <!-- Feedback Messages -->
-    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-error-500 dark:text-error-400 font-medium whitespace-pre-wrap">
       {{ error }}
     </p>
-    <p v-else-if="errorMessage" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+    <p v-else-if="errorMessage" class="mt-1 text-xs text-error-500 dark:text-error-400 font-medium whitespace-pre-wrap">
       {{ errorMessage }}
     </p>
     <p v-else-if="helperText" class="mt-1 text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">

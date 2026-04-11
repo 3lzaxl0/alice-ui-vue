@@ -17,10 +17,11 @@ export const textVariants = cva('', {
     color: {
       default: 'text-slate-800 dark:text-white', // Default for headings
       muted: 'text-slate-500 dark:text-slate-400', // Default for descriptions/captions
-      success: 'text-emerald-600 dark:text-emerald-400',
-      warning: 'text-amber-600 dark:text-amber-400',
-      error: 'text-red-500 dark:text-red-400',
-      primary: 'text-indigo-600 dark:text-indigo-400',
+      success: 'text-success-600 dark:text-success-400',
+      warning: 'text-warning-600 dark:text-warning-400',
+      error: 'text-error-600 dark:text-error-400',
+      primary: 'text-primary-600 dark:text-primary-400',
+      info: 'text-info-600 dark:text-info-400',
       white: 'text-white',
       inherit: 'text-inherit',
     },

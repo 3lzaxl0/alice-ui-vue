@@ -5,12 +5,12 @@ export const inputVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500',
-        success: 'border-emerald-500 dark:border-emerald-400 focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500',
-        warning: 'border-amber-500 dark:border-amber-400 focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500',
+        default: 'border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
+        success: 'border-success-500 dark:border-success-400 focus:ring-2 focus:ring-success-500/20 focus:border-success-500',
+        warning: 'border-warning-500 dark:border-warning-400 focus:ring-2 focus:ring-warning-500/20 focus:border-warning-500',
       },
       error: {
-        true: 'border-rose-500 dark:border-rose-400 focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 !border-rose-500 dark:!border-rose-400',
+        true: 'border-error-500 dark:border-error-400 focus:ring-2 focus:ring-error-500/20 focus:border-error-500 !border-error-500 dark:!border-error-400',
         false: '',
       },
       hasIcon: {

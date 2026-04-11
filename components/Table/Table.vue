@@ -439,7 +439,7 @@ defineExpose({
       <transition name="alice-fade">
         <div
           v-if="dropIndicatorOffset !== null"
-          class="absolute top-0 w-0.5 bg-blue-500 z-alice-popover pointer-events-none shadow-[0_0_15px_rgba(59,130,246,0.5)] transition-all duration-300 ease-out"
+          class="absolute top-0 w-0.5 bg-primary-500 z-alice-popover pointer-events-none shadow-[0_0_15px_rgba(var(--color-primary-500-rgb),0.5)] transition-all duration-300 ease-out"
           :style="{
             left: dropIndicatorOffset + 'px',
             height: dropIndicatorHeight + 'px',
@@ -447,21 +447,21 @@ defineExpose({
         >
           <!-- Top Ornament -->
           <div
-            class="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(59,130,246,0.8)] z-10"
+            class="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(var(--color-primary-500-rgb),0.8)] z-10"
           >
-            <div class="absolute inset-0 animate-ping rounded-full bg-blue-400 opacity-20"></div>
+            <div class="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"></div>
           </div>
 
           <!-- Decorative Line Gradient -->
           <div
-            class="absolute inset-0 bg-linear-to-b from-blue-400 via-blue-500 to-blue-400 opacity-80"
+            class="absolute inset-0 bg-linear-to-b from-primary-400 via-primary-500 to-primary-400 opacity-80"
           ></div>
 
           <!-- Bottom Ornament -->
           <div
-            class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-blue-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(59,130,246,0.8)] z-10"
+            class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(var(--color-primary-500-rgb),0.8)] z-10"
           >
-            <div class="absolute inset-0 animate-ping rounded-full bg-blue-400 opacity-20"></div>
+            <div class="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"></div>
           </div>
         </div>
       </transition>

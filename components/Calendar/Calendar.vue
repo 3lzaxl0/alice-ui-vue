@@ -66,7 +66,7 @@ const {
     <!-- Days Grid -->
     <div
       ref="gridRef"
-      class="grid grid-cols-7 gap-1 outline-none focus:ring-2 focus:ring-blue-500/20 rounded-md p-1"
+      class="grid grid-cols-7 gap-1 outline-none focus:ring-2 focus:ring-primary-500/20 rounded-md p-1"
       tabindex="0"
       role="grid"
       @keydown="handleKeydown"
@@ -85,13 +85,13 @@ const {
             ? 'text-gray-300 dark:text-slate-600'
             : 'text-gray-700 dark:text-gray-200',
           modelValue === dayObj.dateStr
-            ? 'bg-blue-600 text-white font-bold shadow-md hover:bg-blue-700 ring-2 ring-blue-500/20'
+            ? 'bg-primary-600 text-white font-bold shadow-md hover:bg-primary-700 ring-2 ring-primary-500/20'
             : 'hover:bg-gray-100 dark:hover:bg-slate-700',
           isToday(dayObj.dateStr) && modelValue !== dayObj.dateStr
-            ? 'ring-1 ring-blue-500 text-blue-600 font-bold'
+            ? 'ring-1 ring-primary-500 text-primary-600 font-bold'
             : '',
           activeDateStr === dayObj.dateStr && modelValue !== dayObj.dateStr
-            ? 'bg-gray-200 dark:bg-slate-600 ring-2 ring-inset ring-blue-500/30'
+            ? 'bg-gray-200 dark:bg-slate-600 ring-2 ring-inset ring-primary-500/30'
             : '',
         ]"
       >
@@ -104,7 +104,7 @@ const {
       <button
         type="button"
         @click.stop="goToday"
-        class="w-full py-1.5 text-xs font-bold text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition-all active:scale-[0.98] cursor-pointer"
+        class="w-full py-1.5 text-xs font-bold text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-lg transition-all active:scale-[0.98] cursor-pointer"
       >
         Hoy
       </button>

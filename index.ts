@@ -55,6 +55,9 @@ export { default as AliceStatBar } from "./components/StatBar/StatBar.vue";
 export { default as AliceStat } from "./components/Stat/Stat.vue";
 export { default as AliceCarousel } from "./components/Carousel/Carousel.vue";
 export { default as AliceUnderConstruction } from "./components/UnderConstruction/UnderConstruction.vue";
+export { default as AliceThemeProvider } from "./components/ThemeProvider/ThemeProvider.vue";
+export { default as AliceThemeToggle } from "./components/ThemeToggle/ThemeToggle.vue";
+export { default as AliceColorPicker } from "./components/ColorPicker/ColorPicker.vue";
 
 // Components - Advanced Input
 export { default as AliceSearchInput } from "./components/SearchInput/SearchInput.vue";
@@ -72,3 +75,9 @@ export {
   formatDate,
   toGraphQLDateTime,
 } from "./utils/date";
+export {
+  injectThemeScale,
+  hexToHsl,
+  generateScale,
+} from "./utils/theme";
+export { useTheme } from "./composables/useTheme";

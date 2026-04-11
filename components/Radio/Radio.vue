@@ -49,15 +49,15 @@ function toggle() {
       class="flex items-center justify-center transition-all duration-200 border rounded-full w-5 h-5 shadow-alice-sm"
       :class="[
         isChecked
-          ? 'bg-white dark:bg-white/5 border-blue-600 border-[6px]'
-          : 'bg-white dark:bg-white/5 border-gray-300 dark:border-white/10 group-hover:border-blue-500',
+          ? 'bg-white dark:bg-white/5 border-primary-600 border-[6px]'
+          : 'bg-white dark:bg-white/5 border-gray-300 dark:border-white/10 group-hover:border-primary-500',
         disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer',
       ]"
     ></div>
 
     <!-- Focus Ring -->
     <div
-      class="absolute -inset-1 rounded-full ring-2 ring-blue-500/20 opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none"
+      class="absolute -inset-1 rounded-full ring-2 ring-primary-500/20 opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none"
     ></div>
   </div>
 </template>

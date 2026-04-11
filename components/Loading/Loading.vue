@@ -11,7 +11,7 @@ const props = withDefaults(
     text?: string
     blur?: boolean
     transparent?: boolean
-    variant?: 'primary' | 'secondary' | 'emerald' | 'amber' | 'red' | 'indigo' | 'white'
+    variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'white'
   }>(),
   {
     active: false,
@@ -27,10 +27,10 @@ const variantClass = computed(() => {
   const map: Record<string, string> = {
     primary: 'text-primary-500',
     secondary: 'text-gray-500',
-    emerald: 'text-emerald-500',
-    amber: 'text-amber-500',
-    red: 'text-red-500',
-    indigo: 'text-indigo-500',
+    success: 'text-success-500',
+    warning: 'text-warning-500',
+    error: 'text-error-500',
+    info: 'text-info-500',
     white: 'text-white',
   }
   return map[props.variant] || 'text-primary-500'

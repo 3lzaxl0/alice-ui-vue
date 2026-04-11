@@ -67,10 +67,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
       tabindex="0"
       @click="toggleOpen"
       @keydown="handleKeydown"
-      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 cursor-pointer flex items-center justify-between gap-2 hover:border-blue-500/50 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all duration-300 rounded-alice-md relative pr-9 outline-none"
+      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 cursor-pointer flex items-center justify-between gap-2 hover:border-primary-500/50 focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/20 transition-all duration-300 rounded-alice-md relative pr-9 outline-none"
       :class="[
-        isOpen ? 'border-blue-500 ring-2 ring-blue-500/20' : '',
-        (!!error || !!errorMessage) ? 'border-red-500 dark:border-red-400 focus-within:ring-red-500/20 focus-within:border-red-500 dark:focus-within:border-red-400' : ''
+        isOpen ? 'border-primary-500 ring-2 ring-primary-500/20' : '',
+        (!!error || !!errorMessage) ? 'border-error-500 dark:border-error-400 focus-within:ring-error-500/20 focus-within:border-error-500 dark:focus-within:border-error-400' : ''
       ]"
       :title="modelValue.length > 1 ? fullSelectionLabel : undefined"
     >
@@ -93,7 +93,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <button
           v-if="modelValue.length > 0"
           @click="clearAll"
-          class="p-1 hover:bg-red-50 dark:hover:bg-red-900/20 text-gray-400 hover:text-red-600 dark:hover:text-red-400 rounded-lg transition-colors flex items-center justify-center"
+          class="p-1 hover:bg-error-50 dark:hover:bg-error-900/20 text-gray-400 hover:text-error-600 dark:hover:text-error-400 rounded-lg transition-colors flex items-center justify-center"
           title="Limpiar todo"
         >
           <X :size="14" />
@@ -140,10 +140,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2 outline-none"
           :class="[
             modelValue.includes(option.value)
-              ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-600 dark:border-blue-400 font-medium'
+              ? 'bg-primary-50/80 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-600 dark:border-primary-400 font-medium'
               : 'bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
             index === activeIndex
-              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
+              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-primary-500/50'
               : '',
           ]"
         >
@@ -163,10 +163,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
     </transition>
 
     <!-- Feedback Messages -->
-    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+    <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-error-500 dark:text-error-400 font-medium whitespace-pre-wrap">
       {{ error }}
     </p>
-    <p v-else-if="errorMessage" class="mt-1 text-xs text-red-500 dark:text-red-400 font-medium whitespace-pre-wrap">
+    <p v-else-if="errorMessage" class="mt-1 text-xs text-error-500 dark:text-error-400 font-medium whitespace-pre-wrap">
       {{ errorMessage }}
     </p>
     <p v-else-if="helperText" class="mt-1 text-xs text-slate-500 dark:text-slate-400 whitespace-pre-wrap">

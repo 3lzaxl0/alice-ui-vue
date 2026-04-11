@@ -83,8 +83,8 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           'bg-white dark:bg-white/5 border cursor-pointer rounded-alice-md',
           size === 'md' ? 'h-alice-input-height px-3' : 'h-7 px-2',
           isOpen
-            ? 'border-blue-500 ring-2 ring-blue-500/20'
-            : 'border-gray-200 dark:border-slate-700 hover:border-blue-500/50',
+            ? 'border-primary-500 ring-2 ring-primary-500/20'
+            : 'border-gray-200 dark:border-slate-700 hover:border-primary-500/50',
           disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
         ],
 
@@ -148,10 +148,10 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           :class="[
             size === 'md' ? 'py-2.5 text-sm' : 'py-2 text-xs',
             modelValue === option.value
-              ? 'bg-blue-50/80 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 font-medium'
+              ? 'bg-primary-50/80 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-medium'
               : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200',
             index === activeIndex
-              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-blue-500/50'
+              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-primary-500/50'
               : '',
           ]"
         >
@@ -159,7 +159,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           <Check
             v-if="modelValue === option.value"
             :size="14"
-            class="text-blue-600 dark:text-blue-400 shrink-0"
+            class="text-primary-600 dark:text-primary-400 shrink-0"
           />
         </div>
 

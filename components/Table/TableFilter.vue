@@ -208,7 +208,7 @@ function clearFilter() {
           :key="String(opt.value)"
           @click="toggleOption(opt.value)"
           class="flex items-center gap-3 p-2 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors"
-          :class="{ 'bg-blue-50/50 dark:bg-blue-900/20': selectedOptions.includes(opt.value) }"
+          :class="{ 'bg-primary-50/50 dark:bg-primary-900/20': selectedOptions.includes(opt.value) }"
         >
           <AliceCheckbox
             :id="id ? `${id}-opt-${String(opt.value)}` : undefined"

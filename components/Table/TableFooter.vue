@@ -140,8 +140,8 @@ function computeAggregate(col: Column<T>): string {
               <!-- Operation badge -->
               <span class="text-[9px] leading-none font-bold px-1.5 py-0.5 rounded border transition-colors whitespace-nowrap"
                 :class="openMenu === String(col.key)
-                  ? 'border-blue-400 dark:border-blue-500 bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-300'
-                  : 'border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-400 dark:text-gray-500 group-hover/footer:border-blue-300 group-hover/footer:text-blue-500'
+                  ? 'border-primary-400 dark:border-primary-500 bg-primary-100 dark:bg-primary-900/60 text-primary-600 dark:text-primary-300'
+                  : 'border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-800 text-gray-400 dark:text-gray-500 group-hover/footer:border-primary-300 group-hover/footer:text-primary-500'
                 ">
                 {{ SHORT_LABELS[getActiveOp(col)!] }}
               </span>
@@ -155,7 +155,7 @@ function computeAggregate(col: Column<T>): string {
 
           <button v-for="opt in OPTIONS" :key="opt.op"
             class="w-full px-3 py-1.5 text-left text-xs flex items-center gap-2 transition-colors" :class="getActiveOp(col) === opt.op
-              ? 'bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-300 font-semibold'
+              ? 'bg-primary-50 dark:bg-primary-900/40 text-primary-600 dark:text-primary-300 font-semibold'
               : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-slate-800'
             " @click.stop="selectOp(col, opt.op)">
             <span class="w-4 text-center font-bold text-[11px]">{{ opt.icon }}</span>

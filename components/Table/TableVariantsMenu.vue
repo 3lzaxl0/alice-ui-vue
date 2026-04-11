@@ -45,7 +45,7 @@ const handleSaveVariant = () => {
       <AliceButton
         variant="primary" design="ghost-subtle"
         size="icon"
-        class="hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+        class="hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20"
         title="Vistas y Configuración"
         :icon="Layout"
       />
@@ -102,7 +102,7 @@ const handleSaveVariant = () => {
           </span>
           <button
             @click="emit('reset-to-default')"
-            class="text-[10px] font-bold text-blue-500 hover:text-blue-700 uppercase tracking-tighter flex items-center gap-1 transition-colors cursor-pointer outline-none"
+            class="text-[10px] font-bold text-primary-500 hover:text-primary-700 uppercase tracking-tighter flex items-center gap-1 transition-colors cursor-pointer outline-none"
             title="Restablecer a la configuración original"
           >
             <RotateCcw :size="10" />
@@ -158,7 +158,7 @@ const handleSaveVariant = () => {
             class="flex items-center justify-between group p-2 rounded-lg cursor-pointer transition-colors border"
             :class="[
               activeVariantName === variant.name
-                ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800'
+                ? 'bg-primary-50 dark:bg-primary-900/20 border-primary-200 dark:border-primary-800'
                 : 'hover:bg-gray-50 dark:hover:bg-slate-700/50 border-transparent',
             ]"
             @click="emit('apply-variant', variant)"
@@ -166,13 +166,13 @@ const handleSaveVariant = () => {
             <div class="flex items-center gap-2 truncate">
               <div
                 v-if="activeVariantName === variant.name"
-                class="w-1.5 h-1.5 rounded-full bg-blue-500 shrink-0"
+                class="w-1.5 h-1.5 rounded-full bg-primary-500 shrink-0"
               ></div>
               <span
                 class="text-sm truncate"
                 :class="
                   activeVariantName === variant.name
-                    ? 'text-blue-700 dark:text-blue-300 font-medium'
+                    ? 'text-primary-700 dark:text-primary-300 font-medium'
                     : 'text-gray-700 dark:text-gray-300'
                 "
                 >{{ variant.label }}</span
@@ -184,7 +184,7 @@ const handleSaveVariant = () => {
               size="icon-sm"
               :icon-size="14"
               @click.stop="emit('delete-variant', variant.name)"
-              class="text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+              class="text-error-400 hover:text-error-600 hover:bg-error-50 dark:hover:bg-error-900/20"
               :icon="Trash2"
             />
           </div>

@@ -1,4 +1,71 @@
 @theme {
+  /* --- Semantic Color Palettes (Mapping to CSS Variables) --- */
+  
+  /* Primary Case (Standard Blue) */
+  --color-primary-50: var(--alice-primary-50);
+  --color-primary-100: var(--alice-primary-100);
+  --color-primary-200: var(--alice-primary-200);
+  --color-primary-300: var(--alice-primary-300);
+  --color-primary-400: var(--alice-primary-400);
+  --color-primary-500: var(--alice-primary-500);
+  --color-primary-600: var(--alice-primary-600);
+  --color-primary-700: var(--alice-primary-700);
+  --color-primary-800: var(--alice-primary-800);
+  --color-primary-900: var(--alice-primary-900);
+  --color-primary-950: var(--alice-primary-950);
+
+  /* Info Case (Standard Blue, can be customized later) */
+  --color-info-50: var(--alice-info-50);
+  --color-info-100: var(--alice-info-100);
+  --color-info-200: var(--alice-info-200);
+  --color-info-300: var(--alice-info-300);
+  --color-info-400: var(--alice-info-400);
+  --color-info-500: var(--alice-info-500);
+  --color-info-600: var(--alice-info-600);
+  --color-info-700: var(--alice-info-700);
+  --color-info-800: var(--alice-info-800);
+  --color-info-900: var(--alice-info-900);
+  --color-info-950: var(--alice-info-950);
+
+  /* Success Case (Standard Emerald) */
+  --color-success-50: var(--alice-success-50);
+  --color-success-100: var(--alice-success-100);
+  --color-success-200: var(--alice-success-200);
+  --color-success-300: var(--alice-success-300);
+  --color-success-400: var(--alice-success-400);
+  --color-success-500: var(--alice-success-500);
+  --color-success-600: var(--alice-success-600);
+  --color-success-700: var(--alice-success-700);
+  --color-success-800: var(--alice-success-800);
+  --color-success-900: var(--alice-success-900);
+  --color-success-950: var(--alice-success-950);
+
+  /* Warning Case (Standard Amber) */
+  --color-warning-50: var(--alice-warning-50);
+  --color-warning-100: var(--alice-warning-100);
+  --color-warning-200: var(--alice-warning-200);
+  --color-warning-300: var(--alice-warning-300);
+  --color-warning-400: var(--alice-warning-400);
+  --color-warning-500: var(--alice-warning-500);
+  --color-warning-600: var(--alice-warning-600);
+  --color-warning-700: var(--alice-warning-700);
+  --color-warning-800: var(--alice-warning-800);
+  --color-warning-900: var(--alice-warning-900);
+  --color-warning-950: var(--alice-warning-950);
+
+  /* Error Case (Standard Rose) */
+  --color-error-50: var(--alice-error-50);
+  --color-error-100: var(--alice-error-100);
+  --color-error-200: var(--alice-error-200);
+  --color-error-300: var(--alice-error-300);
+  --color-error-400: var(--alice-error-400);
+  --color-error-500: var(--alice-error-500);
+  --color-error-600: var(--alice-error-600);
+  --color-error-700: var(--alice-error-700);
+  --color-error-800: var(--alice-error-800);
+  --color-error-900: var(--alice-error-900);
+  --color-error-950: var(--alice-error-950);
+
   /* Border Radius Tokens */
   --radius-alice-sm: 8px;
   --radius-alice-md: 12px;
@@ -28,6 +95,72 @@
 @layer base {
   :root {
     --alice-radius-default: var(--radius-alice-md);
+
+    /* --- Semantic Palettes: 50-950 Scales --- */
+
+    /* Primary & Info (Default: Blue) */
+    --alice-primary-50: #eff6ff;
+    --alice-primary-100: #dbeafe;
+    --alice-primary-200: #bfdbfe;
+    --alice-primary-300: #93c5fd;
+    --alice-primary-400: #60a5fa;
+    --alice-primary-500: #3b82f6;
+    --alice-primary-600: #2563eb;
+    --alice-primary-700: #1d4ed8;
+    --alice-primary-800: #1e40af;
+    --alice-primary-900: #1e3a8a;
+    --alice-primary-950: #172554;
+
+    --alice-info-50: #eff6ff;
+    --alice-info-100: #dbeafe;
+    --alice-info-200: #bfdbfe;
+    --alice-info-300: #93c5fd;
+    --alice-info-400: #60a5fa;
+    --alice-info-500: #3b82f6;
+    --alice-info-600: #2563eb;
+    --alice-info-700: #1d4ed8;
+    --alice-info-800: #1e40af;
+    --alice-info-900: #1e3a8a;
+    --alice-info-950: #172554;
+
+    /* Success (Default: Emerald) */
+    --alice-success-50: #ecfdf5;
+    --alice-success-100: #d1fae5;
+    --alice-success-200: #a7f3d0;
+    --alice-success-300: #6ee7b7;
+    --alice-success-400: #34d399;
+    --alice-success-500: #10b981;
+    --alice-success-600: #059669;
+    --alice-success-700: #047857;
+    --alice-success-800: #065f46;
+    --alice-success-900: #064e3b;
+    --alice-success-950: #022c22;
+
+    /* Warning (Default: Amber) */
+    --alice-warning-50: #fffbeb;
+    --alice-warning-100: #fef3c7;
+    --alice-warning-200: #fde68a;
+    --alice-warning-300: #fcd34d;
+    --alice-warning-400: #fbbf24;
+    --alice-warning-500: #f59e0b;
+    --alice-warning-600: #d97706;
+    --alice-warning-700: #b45309;
+    --alice-warning-800: #92400e;
+    --alice-warning-900: #78350f;
+    --alice-warning-950: #451a03;
+
+    /* Error (Default: Rose) */
+    --alice-error-50: #fff1f2;
+    --alice-error-100: #ffe4e6;
+    --alice-error-200: #fecdd3;
+    --alice-error-300: #fda4af;
+    --alice-error-400: #fb7185;
+    --alice-error-500: #f43f5e;
+    --alice-error-600: #e11d48;
+    --alice-error-700: #be123c;
+    --alice-error-800: #9f1239;
+    --alice-error-900: #881337;
+    --alice-error-950: #4c0519;
   }
 }
 
