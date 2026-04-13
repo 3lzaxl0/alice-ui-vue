@@ -42,6 +42,10 @@ withDefaults(
     transitionName?: string
     /** Max cached components for KeepAlive */
     keepAliveMax?: number
+    /** Whether the header should show a refresh button */
+    headerRefreshable?: boolean
+    /** Whether the header refresh button is in loading state */
+    headerRefreshing?: boolean
   }>(),
   {
     sidebarTitle: 'Portal Agua',
@@ -60,6 +64,7 @@ withDefaults(
 const emit = defineEmits<{
   (e: 'logout'): void
   (e: 'switchRole', domainCode: string): void
+  (e: 'headerRefresh'): void
 }>()
 
 const route = useRoute()
@@ -111,19 +116,30 @@ function handleSwitchRole(code: string) {
             :title="headerTitle"
             :description="headerDescription"
             :icon="headerIcon"
-          />
+            :show-refresh="headerRefreshable"
+            :refreshing="headerRefreshing"
+            @refresh="emit('headerRefresh')"
+          >
+            <template #actions>
+              <slot name="header-actions" />
+            </template>
+          </AlicePageHeader>
         </slot>
 
         <!-- Viewport / Content Section -->
-        <div class="px-6 pb-6 pt-4 h-full overflow-y-auto custom-scrollbar flex flex-col">
+        <div class="px-6 pb-6 pt-4 h-full overflow-y-auto custom-scrollbar flex flex-col gap-4">
           <slot>
             <!-- Integrated Routing Logic -->
             <RouterView v-slot="{ Component }">
               <transition :name="transitionName" mode="out-in">
-                <KeepAlive v-if="persistence" :max="keepAliveMax">
-                  <component :is="Component" :key="route.path" />
-                </KeepAlive>
-                <component :is="Component" v-else :key="route.path" />
+                <template v-if="persistence">
+                  <KeepAlive :max="keepAliveMax">
+                    <component :is="Component" :key="route.fullPath" />
+                  </KeepAlive>
+                </template>
+                <template v-else>
+                  <component :is="Component" :key="route.fullPath" />
+                </template>
               </transition>
             </RouterView>
           </slot>

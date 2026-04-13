@@ -1,4 +1,4 @@
-export type FilterType = 'text' | 'number' | 'date' | 'select' | 'tags'
+export type FilterType = 'text' | 'number' | 'date' | 'select' | 'tags' | 'currency'
 
 export interface FilterOption {
   label: string
@@ -50,6 +50,7 @@ export interface Column<T> {
   // Advanced Formatting
   unitKey?: keyof T | string // Key for unit of measure
   dateFormat?: 'iso' | 'full' | 'short' | 'raw' | 'datetime' | 'timestamp'
+  currencyCode?: string
   align?: 'left' | 'center' | 'right'
   // Text Truncation: truncate text at this many characters and show a "Ver más" link
   maxLength?: number

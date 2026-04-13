@@ -83,7 +83,6 @@ const contentPadding = computed(() => {
 })
 
 const headerFooterPadding = computed(() => {
-  if (props.padding === 'none') return 'p-0'
   if (props.padding === 'compact') return 'px-4 py-3'
   return 'px-6 py-4'
 })

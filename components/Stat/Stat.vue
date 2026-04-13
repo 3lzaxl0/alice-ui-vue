@@ -47,13 +47,13 @@ const displayValue = computed(() => {
 <template>
   <AliceCard :interactive="interactive" :class="computedContainerClass">
     <div class="flex items-center justify-between mb-2">
-      <AliceText variant="label">{{ title }}</AliceText>
+      <AliceText variant="subtitle">{{ title }}</AliceText>
       <div v-if="icon" :class="computedIconClass">
         <component :is="icon" :size="20" />
       </div>
     </div>
 
-    <AliceText variant="h2" tag="span" :class="[computedValueClass, valueClass]">
+    <AliceText variant="h3" tag="span" :class="[computedValueClass, valueClass]">
       {{ displayValue }}
       <AliceText v-if="$slots.suffix" tag="span" variant="caption" weight="bold" class="opacity-60 ml-0.5">
         <slot name="suffix" />

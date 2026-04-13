@@ -23,6 +23,7 @@ interface Props {
   type?: "button" | "submit" | "reset";
   icon?: Component | object; // Component
   iconSize?: number;
+  loadingAnimateIcon?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -36,6 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
   disabled: false,
   type: "button",
   iconSize: 20,
+  loadingAnimateIcon: false,
 });
 
 const computedClass = computed(() => {
@@ -57,7 +59,7 @@ const computedClass = computed(() => {
   <button :type="type" :class="computedClass" :disabled="disabled || loading">
     <!-- Loading Spinner -->
     <div
-      v-if="loading"
+      v-if="loading && !loadingAnimateIcon"
       class="absolute inset-0 flex items-center justify-center"
     >
       <Loader2 class="animate-spin" :size="20" />
@@ -65,10 +67,16 @@ const computedClass = computed(() => {
 
     <!-- Content (Inner scaling for Zen Browser effect) -->
     <div
-      :class="{ 'opacity-0': loading }"
+      :class="{ 'opacity-0': loading && !loadingAnimateIcon }"
       class="flex items-center justify-center gap-2 w-full transition-transform duration-300 ease-out group-hover:scale-[1.04] group-active:scale-[0.97] transform-gpu backface-hidden antialiased"
     >
-      <component :is="icon" v-if="icon" :size="iconSize" class="shrink-0" />
+      <component
+        :is="icon"
+        v-if="icon"
+        :size="iconSize"
+        class="shrink-0"
+        :class="{ 'animate-spin': loading && loadingAnimateIcon }"
+      />
       <span v-if="$slots.default" class="truncate"><slot /></span>
     </div>
   </button>

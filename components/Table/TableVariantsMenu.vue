@@ -128,9 +128,8 @@ const handleSaveVariant = () => {
               size="sm"
               class="px-2"
               title="Guardar como nueva vista"
-            >
-              <Save :size="14" />
-            </AliceButton>
+              :icon="Save"
+            />
             <AliceButton
               v-if="
                 activeVariantName &&
@@ -141,9 +140,8 @@ const handleSaveVariant = () => {
               size="sm"
               class="px-2"
               title="Actualizar vista actual"
-            >
-              <RefreshCw :size="14" />
-            </AliceButton>
+              :icon="RefreshCw"
+            />
           </div>
         </div>
 

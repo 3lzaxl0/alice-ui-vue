@@ -60,6 +60,7 @@ export { default as AliceThemeToggle } from "./components/ThemeToggle/ThemeToggl
 export { default as AliceColorPicker } from "./components/ColorPicker/ColorPicker.vue";
 export { default as AliceSegmentedControl } from "./components/SegmentedControl/SegmentedControl.vue";
 export { default as AliceImageUpload } from "./components/ImageUpload/ImageUpload.vue";
+export { default as AliceImage } from "./components/Image/Image.vue";
 
 // Components - Advanced Input
 export { default as AliceSearchInput } from "./components/SearchInput/SearchInput.vue";
@@ -77,9 +78,12 @@ export {
   formatDate,
   toGraphQLDateTime,
 } from "./utils/date";
+export { formatCurrency } from "./utils/currency";
 export {
   injectThemeScale,
   hexToHsl,
   generateScale,
 } from "./utils/theme";
 export { useTheme } from "./composables/useTheme";
+export { usePageHeader } from "./composables/usePageHeader";
+export { useAlicePageRefresh } from "./composables/useAlicePageRefresh";

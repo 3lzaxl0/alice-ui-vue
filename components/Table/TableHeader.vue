@@ -98,11 +98,11 @@ function getOptionsForColumn(col: Column<T>) {
           right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
         }" :draggable="openFilterColumn !== String(col.key)" @dragstart="emit('drag-start', $event, String(col.key))"
         @dragover="emit('drag-over', $event, String(col.key))" @dragend="emit('drag-end', $event)"
-        @drop="emit('drop', $event)" @click="emit('sort', String(col.key))">
+        @drop="emit('drop', $event)" @click="col.sortable && emit('sort', String(col.key))">
         <div class="flex items-center gap-2">
 
           <!-- Filter Button -->
-            <AlicePopover :model-value="openFilterColumn === String(col.key)"
+            <AlicePopover v-if="col.filterable !== false" :model-value="openFilterColumn === String(col.key)"
               @update:model-value="(val: boolean) => !val && emit('filter-close')" 
               teleport placement="bottom-right" :offset="8"
               content-class="cursor-default alice-table-filter-popover">

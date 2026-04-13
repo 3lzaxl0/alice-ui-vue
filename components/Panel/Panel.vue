@@ -21,7 +21,7 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   variant: 'primary',
   bodyPadding: 'p-0',
-  overflowVisible: false,
+  overflowVisible: true,
   collapsible: false,
   defaultCollapsed: false,
   collapsed: undefined,

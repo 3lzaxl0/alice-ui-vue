@@ -11,6 +11,7 @@ import AliceDialog from '../../components/Dialog/Dialog.vue'
 import { tableVariants } from './Table.variants'
 import type { Column } from '../../types'
 import { formatDate as sharedFormatDate } from '../../utils/date'
+import { formatCurrency as sharedFormatCurrency } from '../../utils/currency'
 
 defineOptions({
   name: 'AliceTableRow',
@@ -43,6 +44,10 @@ const emit = defineEmits<{
 // Formatters
 function formatDate(value: unknown, format: string) {
   return sharedFormatDate(value, format)
+}
+
+function formatCurrency(value: unknown, currencyCode?: string) {
+  return sharedFormatCurrency(Number(value || 0), currencyCode)
 }
 
 function getSafeValue(item: T, key: string | number | symbol): unknown {
@@ -185,6 +190,11 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
           <!-- Date Formatting -->
           <span v-else-if="col.dateFormat" class="whitespace-nowrap">
             {{ formatDate(getSafeValue(item, col.key), col.dateFormat) }}
+          </span>
+
+          <!-- Currency Formatting -->
+          <span v-else-if="col.type === 'currency'" class="font-mono whitespace-nowrap">
+            {{ formatCurrency(getSafeValue(item, col.key), col.currencyCode) }}
           </span>
 
           <!-- Numeric + Unit -->

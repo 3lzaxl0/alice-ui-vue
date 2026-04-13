@@ -2,6 +2,7 @@
 import { ref, computed, watch } from 'vue'
 import AlicePopover from '../../components/Popover/Popover.vue'
 import type { Column } from '../../types'
+import { formatCurrency } from '../../utils/currency'
 
 defineOptions({ name: 'AliceTableFooter' })
 
@@ -99,6 +100,10 @@ function computeAggregate(col: Column<T>): string {
       break
     default:
       return ''
+  }
+
+  if (col.type === 'currency') {
+    return formatCurrency(result, col.currencyCode)
   }
 
   return result % 1 === 0
