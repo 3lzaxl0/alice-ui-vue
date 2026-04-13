@@ -83,15 +83,15 @@ export function generateScale(baseHsl: HSL) {
     if (weight === 500) {
       l = baseL
     } else if (weight < 500) {
-      // Interpolate between White (100) and BaseL
+      // Interpolate between Light (98) and BaseL
       // position is 0.5 to 0.96
       const t = (position - 0.5) / (0.96 - 0.5) // map 0.5..0.96 to 0..1
-      l = baseL + (100 - baseL) * t
+      l = baseL + (98 - baseL) * t
     } else {
-      // Interpolate between BaseL and Black (0)
+      // Interpolate between BaseL and Dark (7)
       // position is 0.5 to 0.05
       const t = (0.5 - position) / (0.5 - 0.05) // map 0.5..0.05 to 0..1
-      l = baseL - baseL * t
+      l = baseL - (baseL - 7) * t
     }
 
     // Dynamic saturation: lighter shades are often less saturated, darker ones a bit more
