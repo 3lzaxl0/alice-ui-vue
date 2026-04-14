@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
-import { ChevronDown, X } from 'lucide-vue-next'
+import { onMounted, onUnmounted, ref, computed, watch, nextTick } from 'vue'
+import { ChevronDown, X, Search } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import AliceCheckbox from '../Checkbox/Checkbox.vue'
 import { useMultiSelect } from './useMultiSelect'
+import { smartFuzzyMatch } from '../../utils/fuzzy'
 
 defineOptions({
   name: 'AliceMultiSelect',
@@ -21,16 +22,34 @@ const props = defineProps<{
   error?: boolean | string
   errorMessage?: string
   helperText?: string
+  searchable?: boolean
 }>()
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: (string | number)[]): void
 }>()
 
+const searchQuery = ref('')
+const searchInputRef = ref<HTMLInputElement | null>(null)
+
+// Fuzzy filter options
+const filteredOptions = computed(() => {
+  if (!props.searchable || !searchQuery.value) return props.options
+
+  return props.options
+    .map(opt => {
+      const match = smartFuzzyMatch(searchQuery.value, opt.label)
+      return match ? { ...opt, score: match.score } : null
+    })
+    .filter((opt): opt is { label: string; value: string | number; score: number } => opt !== null)
+    .sort((a, b) => b.score - a.score)
+})
+
 const {
   isOpen,
   containerRef,
   buttonRef,
+  listboxRef,
   activeIndex,
   selectedDisplay,
   fullSelectionLabel,
@@ -42,11 +61,20 @@ const {
   toggleOpen,
   handleClickOutside,
   handleKeydown,
-} = useMultiSelect(props, emit)
+} = useMultiSelect({ ...props, options: filteredOptions.value }, emit)
 
 import { useFilterValidation } from '../FilterPanel/useFilterValidation'
 
 useFilterValidation(props)
+
+watch(isOpen, async (val) => {
+  if (val && props.searchable) {
+    await nextTick()
+    setTimeout(() => searchInputRef.value?.focus(), 50)
+  } else if (!val) {
+    searchQuery.value = ''
+  }
+})
 
 onMounted(() => document.addEventListener('click', handleClickOutside))
 onUnmounted(() => document.removeEventListener('click', handleClickOutside))
@@ -115,49 +143,67 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         ref="listboxRef"
         role="listbox"
         aria-multiselectable="true"
-        class="absolute z-50 top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
+        class="absolute z-50 top-full left-0 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden flex flex-col rounded-alice-md origin-top"
       >
-        <!-- Select All Option -->
-        <div
-          v-if="enableSelectAll && options.length > 0"
-          @click="toggleAll"
-          class="px-3 py-2.5 text-sm cursor-pointer flex items-center gap-2 border-b border-gray-100 dark:border-white/10 font-bold text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
-        >
-          <AliceCheckbox
-            :model-value="allSelected"
-            :indeterminate="someSelected && !allSelected"
-            class="pointer-events-none"
-          />
-          <span>Seleccionar Todos ({{ options.length }})</span>
-        </div>
-
-        <div
-          v-for="(option, index) in options"
-          :key="option.value"
-          role="option"
-          :aria-selected="modelValue.includes(option.value)"
-          @click="toggleOption(option.value)"
-          class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2 outline-none"
-          :class="[
-            modelValue.includes(option.value)
-              ? 'bg-primary-50/80 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-600 dark:border-primary-400 font-medium'
-              : 'bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
-            index === activeIndex
-              ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-primary-500/50'
-              : '',
-          ]"
-        >
-          <div class="flex items-center gap-2 flex-1 min-w-0">
-            <AliceCheckbox
-              :model-value="modelValue.includes(option.value)"
-              class="pointer-events-none"
+        <!-- Search Input -->
+        <div v-if="searchable" class="p-2 border-b border-gray-50 dark:border-white/5 bg-gray-50/30 dark:bg-white/5">
+          <div class="relative">
+            <Search class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" :size="14" />
+            <input
+              ref="searchInputRef"
+              v-model="searchQuery"
+              type="text"
+              class="w-full pl-8 pr-3 py-1.5 text-xs bg-white dark:bg-slate-800 border border-gray-200 dark:border-white/10 rounded-lg outline-none focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all text-gray-900 dark:text-white"
+              placeholder="Escribe para buscar..."
+              @click.stop
+              @keydown.stop="handleKeydown"
             />
-            <span class="truncate">{{ option.label }}</span>
           </div>
         </div>
 
-        <div v-if="options.length === 0" class="px-4 py-6 text-sm text-gray-400 text-center italic">
-          No hay opciones disponibles
+        <div class="max-h-60 overflow-y-auto py-1 custom-scrollbar">
+          <!-- Select All Option -->
+          <div
+            v-if="enableSelectAll && filteredOptions.length > 0"
+            @click="toggleAll"
+            class="px-3 py-2.5 text-sm cursor-pointer flex items-center gap-2 border-b border-gray-100 dark:border-white/10 font-bold text-gray-900 dark:text-gray-100 bg-gray-50/50 dark:bg-slate-800/50 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
+          >
+            <AliceCheckbox
+              :model-value="allSelected"
+              :indeterminate="someSelected && !allSelected"
+              class="pointer-events-none"
+            />
+            <span>Seleccionar Todos ({{ filteredOptions.length }})</span>
+          </div>
+
+          <div
+            v-for="(option, index) in filteredOptions"
+            :key="option.value"
+            role="option"
+            :aria-selected="modelValue.includes(option.value)"
+            @click="toggleOption(option.value)"
+            class="px-3 py-2.5 text-sm cursor-pointer flex items-center justify-between transition-colors border-l-2 outline-none"
+            :class="[
+              modelValue.includes(option.value)
+                ? 'bg-primary-50/80 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 border-primary-600 dark:border-primary-400 font-medium'
+                : 'bg-white dark:bg-slate-900 hover:bg-gray-50 dark:hover:bg-slate-700/50 text-gray-700 dark:text-gray-200 border-transparent',
+              index === activeIndex
+                ? 'bg-gray-100 dark:bg-slate-800 ring-2 ring-inset ring-primary-500/50'
+                : '',
+            ]"
+          >
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+              <AliceCheckbox
+                :model-value="modelValue.includes(option.value)"
+                class="pointer-events-none"
+              />
+              <span class="truncate">{{ option.label }}</span>
+            </div>
+          </div>
+
+          <div v-if="filteredOptions.length === 0" class="px-4 py-6 text-sm text-gray-400 text-center italic">
+            {{ searchQuery ? 'No hay coincidencias' : 'No hay opciones disponibles' }}
+          </div>
         </div>
       </div>
     </transition>

@@ -16,6 +16,7 @@ const props = withDefaults(
     loading?: boolean
     loadingText?: string
     active?: boolean
+    height?: 'auto' | 'full'
   }>(),
   {
     title: '',
@@ -27,6 +28,7 @@ const props = withDefaults(
     loading: false,
     loadingText: 'Sincronizando...',
     active: false,
+    height: 'auto',
   },
 )
 
@@ -76,19 +78,22 @@ const activeClass = computed(() => {
   if (!props.active) return ''
   return 'border-primary-500! dark:border-primary-400! bg-primary-50/90 dark:bg-primary-500/10'
 })
+
+const heightOuterClass = computed(() => props.height === 'full' ? 'h-full flex flex-col' : '')
+const heightContentClass = computed(() => props.height === 'full' ? 'flex-1 min-h-0' : '')
 </script>
 
 <template>
   <div
-    class="relative border border-gray-100 dark:border-white/10 flex flex-col transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden"
-    :class="[radiusClass, shadowClass, activeClass]"
+    class="relative border border-gray-100 dark:border-white/10 transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden"
+    :class="[radiusClass, shadowClass, activeClass, heightOuterClass]"
   >
     <AliceLoading :active="loading" :text="loadingText" />
 
     <!-- Header -->
     <div
       v-if="title || $slots.header || $slots.action"
-      class="flex justify-between p-4 border-b border-gray-100 dark:border-white/5"
+      class="flex justify-between p-4 border-b border-gray-100 dark:border-white/5 shrink-0"
       :class="headerVerticalAlignClass"
     >
       <div class="flex-1 w-full" :class="titleAlignClass">
@@ -105,14 +110,14 @@ const activeClass = computed(() => {
     </div>
 
     <!-- Content -->
-    <div class="p-4 flex flex-col gap-3">
+    <div class="p-4 flex flex-col gap-3" :class="heightContentClass">
       <slot />
     </div>
 
     <!-- Footer -->
     <div
       v-if="$slots.footer"
-      class="flex justify-end gap-3 p-3 border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-slate-900/30"
+      class="flex justify-end gap-3 p-3 border-t border-gray-100 dark:border-white/10 bg-gray-50/50 dark:bg-slate-900/30 shrink-0"
       :class="radiusClass.replace('rounded-', 'rounded-b-')"
     >
       <slot name="footer" />

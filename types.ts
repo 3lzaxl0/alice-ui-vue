@@ -42,8 +42,8 @@ export interface Column<T> {
   type?: FilterType
   filterOptions?: FilterOption[] // For 'select' type
   render?: (item: T) => unknown // Optional custom render function (if not using slots)
-  formatter?: (value: unknown) => string // Custom formatter
-  tooltipFormatter?: (value: unknown) => string | undefined // Tooltip formatter
+  formatter?: (value: unknown, item?: T) => string // Custom formatter
+  tooltipFormatter?: (value: unknown, item?: T) => string | undefined // Tooltip formatter
   variant?: 'success' | 'warning' | 'error' | 'info' | 'default' | string
   variantMap?: Record<string, 'success' | 'warning' | 'error' | 'info' | 'default' | string>
   badgeType?: 'normal' | 'filled' | 'soft'
@@ -58,6 +58,14 @@ export interface Column<T> {
   hideZero?: boolean // Hides the cell content if value is exactly 0 or '0'
   // Footer Aggregation
   footer?: 'sum' | 'avg' | 'count' | 'min' | 'max'
+  // Image Support
+  imageKey?: keyof T | string // Key for the image URL (supports dot notation)
+  imageConfig?: {
+    size?: number
+    rounded?: 'sm' | 'md' | 'lg' | 'full'
+    objectFit?: 'cover' | 'contain'
+    preview?: boolean
+  }
 }
 
 export interface SortState {

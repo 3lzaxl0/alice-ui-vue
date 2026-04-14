@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { Upload, Eye, Trash2 } from 'lucide-vue-next'
 import AliceLoading from '../Loading/Loading.vue'
-import AliceDialog from '../Dialog/Dialog.vue'
+import AliceImagePreview from '../ImagePreview/ImagePreview.vue'
 import AliceButton from '../Button/Button.vue'
 import AliceText from '../Text/Text.vue'
 
@@ -221,17 +221,11 @@ const removeImage = (url: string) => {
     </div>
 
     <!-- Preview Lightbox -->
-    <AliceDialog
+    <AliceImagePreview
       v-model:show="isPreviewOpen"
+      :src="currentPreviewUrl"
       title="Vista Previa de Imagen"
-      hide-footer
-      padding="none"
-      max-width="max-w-4xl"
-    >
-      <div class="bg-slate-900 flex items-center justify-center min-h-[400px] overflow-hidden">
-        <img :src="currentPreviewUrl" class="max-w-full max-h-[85vh] object-contain shadow-2xl" alt="Vista previa" />
-      </div>
-    </AliceDialog>
+    />
   </div>
 </template>
 

@@ -33,7 +33,7 @@ export function useSearchInput(
   const listboxRef = ref<HTMLElement | null>(null)
 
   // Sync internal query with model value label
-  const updateQueryFromModel = (newVal: Result | null) => {
+  const updateQueryFromModel = (newVal: Result | null | undefined) => {
     if (newVal) {
       searchQuery.value = newVal.label
     } else {
