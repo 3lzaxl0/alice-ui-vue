@@ -15,6 +15,7 @@ const props = withDefaults(
     headerVerticalAlign?: 'start' | 'center'
     loading?: boolean
     loadingText?: string
+    active?: boolean
   }>(),
   {
     title: '',
@@ -25,6 +26,7 @@ const props = withDefaults(
     headerVerticalAlign: undefined,
     loading: false,
     loadingText: 'Sincronizando...',
+    active: false,
   },
 )
 
@@ -69,12 +71,17 @@ const headerVerticalAlignClass = computed(() => {
   }
   return props.subtitle ? 'items-start' : 'items-center'
 })
+
+const activeClass = computed(() => {
+  if (!props.active) return ''
+  return 'border-primary-500! dark:border-primary-400! bg-primary-50/90 dark:bg-primary-500/10'
+})
 </script>
 
 <template>
   <div
-    class="relative border border-gray-100 dark:border-white/10 flex flex-col transition-shadow bg-white dark:bg-slate-900 overflow-hidden"
-    :class="[radiusClass, shadowClass]"
+    class="relative border border-gray-100 dark:border-white/10 flex flex-col transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden"
+    :class="[radiusClass, shadowClass, activeClass]"
   >
     <AliceLoading :active="loading" :text="loadingText" />
 

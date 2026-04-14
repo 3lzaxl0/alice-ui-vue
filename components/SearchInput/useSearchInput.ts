@@ -1,4 +1,5 @@
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
+import { smartFuzzyMatch } from '../../utils/fuzzy'
 
 interface Result {
   label: string
@@ -6,6 +7,7 @@ interface Result {
   description?: string
   labelIndices?: number[]
   descriptionIndices?: number[]
+  score?: number
 }
 
 export function useSearchInput(
@@ -38,6 +40,12 @@ export function useSearchInput(
       if (!isOpen.value) searchQuery.value = ''
     }
   }
+
+  watch(
+    () => props.modelValue,
+    (newVal) => updateQueryFromModel(newVal),
+    { immediate: true },
+  )
 
   function handleInput(event: Event) {
     const query = (event.target as HTMLInputElement).value
@@ -97,23 +105,37 @@ export function useSearchInput(
 
   const displayedResults = computed(() => {
     const list = props.results || []
-    
+
     if (!props.localSearch) return list
     if (!searchQuery.value) return list
-    
+
     // Do not filter out if they just opened the menu and their query matches the currently selected label perfectly
     if (props.modelValue && props.modelValue.label === searchQuery.value && !isOpen.value) {
       return list
     }
 
-    const q = searchQuery.value.toLowerCase()
-    
-    return list.filter(r => {
-      const matchLabel = r.label.toLowerCase().includes(q)
-      const matchDesc = r.description ? r.description.toLowerCase().includes(q) : false
-      const matchValue = String(r.value).toLowerCase().includes(q)
-      return matchLabel || matchDesc || matchValue
-    })
+    const q = searchQuery.value
+
+    return list
+      .map((r) => {
+        const labelMatch = smartFuzzyMatch(q, r.label)
+        const descMatch = r.description ? smartFuzzyMatch(q, r.description) : null
+        const valueMatch = smartFuzzyMatch(q, String(r.value))
+
+        const score = Math.max(labelMatch?.score || 0, descMatch?.score || 0, valueMatch?.score || 0)
+
+        if (labelMatch || descMatch || valueMatch) {
+          return {
+            ...r,
+            labelIndices: labelMatch?.indices,
+            descriptionIndices: descMatch?.indices,
+            score,
+          }
+        }
+        return null
+      })
+      .filter((r): r is NonNullable<typeof r> => r !== null)
+      .sort((a, b) => b.score - a.score)
   })
 
   function scrollActiveIntoView() {

@@ -5,6 +5,7 @@ import AliceBadge from '../Badge/Badge.vue'
 import AliceDataList from '../DataList/DataList.vue'
 import AliceIconInfo from '../IconInfo/IconInfo.vue'
 import AliceDivider from '../Divider/Divider.vue'
+import { CircleCheckBig } from 'lucide-vue-next'
 
 defineOptions({
   name: 'AliceEntityCard',
@@ -67,15 +68,16 @@ const filteredMetadata = computed(() => {
 const interactiveClasses = computed(() => {
   const classes = []
   if (props.selectable) {
-    classes.push('cursor-pointer transition-all duration-200 select-none')
+    classes.push('cursor-pointer transition-all duration-300 select-none')
   }
-  
+
   if (props.active) {
-    classes.push('border-primary-500! dark:border-primary-400! shadow-md shadow-primary-500/20 ring-2 ring-primary-500/30')
+    // We already have prominent classes in AliceCard for active state
+    classes.push('border-primary-500! dark:border-primary-400!')
   } else if (props.selectable) {
-    classes.push('hover:shadow-md hover:border-gray-300 dark:hover:border-slate-600')
+    classes.push('hover:bg-gray-50/50 dark:hover:bg-white/5')
   }
-  
+
   return classes.join(' ')
 })
 
@@ -100,6 +102,7 @@ const overlayBgClass = computed(() => {
       class="h-full w-full"
       :class="interactiveClasses"
       :aria-selected="active"
+      :active="active"
     >
       <!-- Acciones de Cabecera (Badge por defecto) -->
       <template #action v-if="badgeLabel || $slots['header-action']">
@@ -145,6 +148,14 @@ const overlayBgClass = computed(() => {
         <slot name="footer" />
       </template>
     </AliceCard>
+
+    <!-- Indicador de Selección (Deseo del Usuario) -->
+    <div
+      v-if="active"
+      class="absolute top-3 right-3 z-30 pointer-events-none"
+    >
+      <CircleCheckBig class="text-primary-600" />
+    </div>
 
     <!-- Overlay de Estado (Anulado, Bloqueado, etc) -->
     <div
