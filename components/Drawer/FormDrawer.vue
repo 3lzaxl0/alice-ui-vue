@@ -76,12 +76,12 @@ function handleCancel() {
     @confirm="handleConfirm"
     @cancel="handleCancel"
   >
-    <div class="flex flex-col gap-6 pt-2">
+    <div class="flex flex-col gap-6">
       <!-- Slot principal para los campos del formulario -->
       <slot />
     </div>
 
-    <!-- Slot opcional para contenido al final del drawer (fuera del scroll del form si se desea, 
+    <!-- Slot opcional para contenido al final del drawer (fuera del scroll del form si se desea,
          aunque AliceDrawer ya tiene su propio footer fijo) -->
     <template #footer v-if="$slots.footer">
       <slot name="footer" />

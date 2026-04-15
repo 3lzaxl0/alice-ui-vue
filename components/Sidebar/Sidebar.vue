@@ -25,6 +25,7 @@ const props = withDefaults(
     /** Currently active domainCode (v-model compatible) */
     activeRoleCode?: string | null
     userRoles?: UserRole[]
+    showColorPicker?: boolean
   }>(),
   {
     title: 'Portal Agua',
@@ -34,6 +35,7 @@ const props = withDefaults(
     userName: '',
     activeRoleCode: null,
     userRoles: () => [],
+    showColorPicker: false,
   },
 )
 
@@ -218,6 +220,7 @@ function handleRoleChange(value: string | number) {
       <!-- Theme & Color Customization -->
       <div class="flex flex-col gap-0.5 mb-1">
          <AliceColorPicker 
+            v-if="showColorPicker"
             @open-change="(val) => isCustomizing = val" 
          />
          <AliceThemeToggle />

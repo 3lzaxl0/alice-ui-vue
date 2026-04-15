@@ -46,6 +46,8 @@ withDefaults(
     headerRefreshable?: boolean
     /** Whether the header refresh button is in loading state */
     headerRefreshing?: boolean
+    /** Show color picker in sidebar */
+    showColorPicker?: boolean
   }>(),
   {
     sidebarTitle: 'Portal Agua',
@@ -58,6 +60,7 @@ withDefaults(
     showLogout: true,
     transitionName: 'slide-fade',
     keepAliveMax: 10,
+    showColorPicker: false,
   },
 )
 
@@ -89,6 +92,7 @@ function handleSwitchRole(code: string) {
       :user-roles="userRoles"
       :show-theme-toggle="showThemeToggle"
       :show-logout="showLogout"
+      :show-color-picker="showColorPicker"
       @logout="handleLogout"
       @switch-role="handleSwitchRole"
     >

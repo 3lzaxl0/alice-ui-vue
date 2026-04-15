@@ -113,10 +113,14 @@ const reposition = () => {
 
   // Clamping to screen
   left = Math.max(10, Math.min(left, viewportWidth - popoverWidth - 10))
+  top = Math.max(10, Math.min(top, viewportHeight - popoverHeight - 10))
 
   calculatedStyle.value = {
     top: `${top}px`,
     left: `${left}px`,
+    maxHeight: `${viewportHeight - 20}px`,
+    display: 'flex',
+    flexDirection: 'column'
   }
 }
 
@@ -212,12 +216,14 @@ defineExpose({
             contentClass,
           ]" @click.self="mobileFullscreen ? close() : undefined">
             <div @click="closeOnClick ? close() : undefined"
-              class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/10 shadow-alice-panel rounded-alice-md"
+              class="bg-white dark:bg-slate-900 border border-gray-200 dark:border-white/10 shadow-alice-panel rounded-alice-md flex flex-col overflow-hidden"
               :class="mobileFullscreen
-                ? 'max-md:w-full max-md:rounded-b-none max-md:rounded-t-xl max-md:overflow-hidden max-md:animate-slide-up max-md:border-b-0 max-md:border-l-0 max-md:border-r-0'
+                ? 'max-md:w-full max-md:rounded-b-none max-md:rounded-t-xl max-md:animate-slide-up max-md:border-b-0 max-md:border-l-0 max-md:border-r-0'
                 : ''
               ">
-              <slot :close="close" />
+              <div class="overflow-y-auto w-full">
+                <slot :close="close" />
+              </div>
             </div>
           </div>
         </transition>
