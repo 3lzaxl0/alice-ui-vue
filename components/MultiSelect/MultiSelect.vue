@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, computed, watch, nextTick } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch, nextTick, reactive, toRef } from 'vue'
 import { ChevronDown, X, Search } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import AliceCheckbox from '../Checkbox/Checkbox.vue'
@@ -45,6 +45,11 @@ const filteredOptions = computed(() => {
     .sort((a, b) => b.score - a.score)
 })
 
+const multiSelectState = reactive({
+  modelValue: toRef(props, 'modelValue'),
+  options: filteredOptions,
+})
+
 const {
   isOpen,
   containerRef,
@@ -61,7 +66,7 @@ const {
   toggleOpen,
   handleClickOutside,
   handleKeydown,
-} = useMultiSelect({ ...props, options: filteredOptions.value }, emit)
+} = useMultiSelect(multiSelectState, emit)
 
 import { useFilterValidation } from '../FilterPanel/useFilterValidation'
 
