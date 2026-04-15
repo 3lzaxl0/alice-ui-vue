@@ -286,7 +286,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                     >
                       <div class="flex items-center gap-1 text-primary-700 dark:text-primary-400 font-extrabold">
                         <Package :size="12" />
-                        <span class="tabular-nums text-xs">
+                        <span class="tabular-nums">
                           {{ Array.isArray(getSafeValue(item, col.key)) ? (getSafeValue(item, col.key) as unknown[]).length : 0 }}
                         </span>
                       </div>
@@ -295,7 +295,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                   <template #default="{ close }">
                     <div class="flex flex-col gap-3 min-w-[200px] p-3">
                       <div class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700">
-                        <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Contenido Detallado</span>
+                        <span class="font-bold text-gray-400 uppercase tracking-widest">Contenido Detallado</span>
                         <AliceButton variant="primary" design="ghost-subtle" size="icon-sm" :icon-size="14" @click="close" class="text-gray-400 hover:text-gray-600 -mr-1" :icon="X" />
                       </div>
                       <div class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
@@ -329,7 +329,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               <AliceText
                 v-else
                 variant="body"
-                class="font-medium text-slate-700 dark:text-slate-300 truncate"
+                truncate
               >
                 {{ col.formatter ? col.formatter(getSafeValue(item, col.key), item) : getSafeValue(item, col.key) }}
               </AliceText>

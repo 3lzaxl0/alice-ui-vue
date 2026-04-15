@@ -4,6 +4,7 @@ import { Calendar as CalendarIcon, X } from 'lucide-vue-next'
 import AliceLabel from '../Label/Label.vue'
 import AliceCalendar from '../Calendar/Calendar.vue'
 import AliceButton from '../Button/Button.vue'
+import AlicePopover from '../Popover/Popover.vue'
 
 defineOptions({
   name: 'AliceDatePicker',
@@ -21,9 +22,13 @@ const props = withDefaults(
     helperText?: string
     displayFormat?: string
     name?: string
+    placement?: 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top-left' | 'top-right' | 'top-center'
+    mobileFullscreen?: boolean
   }>(),
   {
     displayFormat: 'DD/MM/YYYY',
+    placement: 'bottom-left',
+    mobileFullscreen: true,
   },
 )
 
@@ -44,12 +49,7 @@ const {
   selectDate,
   clearDate,
   toggleCalendar,
-  handleClickOutside,
 } = useDatePicker(props, emit)
-
-import { onMounted, onUnmounted } from 'vue'
-onMounted(() => document.addEventListener('click', handleClickOutside))
-onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 </script>
 
 <template>
@@ -58,90 +58,94 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
       {{ label }}
     </AliceLabel>
 
-    <div
-      class="h-alice-input-height px-3 bg-white dark:bg-white/5 border flex items-center gap-2 transition-all duration-300 rounded-alice-md relative w-full group/input"
-      :class="[
-        isOpen
-          ? 'border-primary-500 ring-2 ring-primary-500/20'
-          : 'border-gray-200 dark:border-slate-700 hover:border-primary-500/50',
-        disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
-        (!!error || !!errorMessage) ? 'border-error-500 focus-within:border-error-500 focus-within:ring-error-500/20 text-error-900 dark:text-error-400' : '',
-      ]"
+    <AlicePopover
+      v-model="isOpen"
+      :placement="placement"
+      :mobile-fullscreen="mobileFullscreen"
+      :close-on-click="false"
+      trigger-class="w-full"
     >
-      <!-- Typeable input container with mask overlay -->
-      <div class="flex-1 relative h-full flex items-center overflow-hidden">
-        <!-- Mask Overlay -->
+      <template #trigger>
         <div
-          v-if="!disabled"
-          class="absolute inset-0 flex items-center text-sm pointer-events-none text-gray-300 dark:text-gray-600 font-mono whitespace-pre"
+          class="h-alice-input-height px-3 bg-white dark:bg-white/5 border flex items-center gap-2 transition-all duration-300 rounded-alice-md relative w-full group/input"
+          :class="[
+            isOpen
+              ? 'border-primary-500 ring-2 ring-primary-500/20'
+              : 'border-gray-200 dark:border-slate-700 hover:border-primary-500/50',
+            disabled ? 'opacity-50 cursor-not-allowed bg-gray-50 dark:bg-slate-900' : '',
+            (!!error || !!errorMessage) ? 'border-error-500 focus-within:border-error-500 focus-within:ring-error-500/20 text-error-900 dark:text-error-400' : '',
+          ]"
         >
-          {{ maskOverlay }}
+          <!-- Typeable input container with mask overlay -->
+          <div class="flex-1 relative h-full flex items-center overflow-hidden">
+            <!-- Mask Overlay -->
+            <div
+              v-if="!disabled"
+              class="absolute inset-0 flex items-center text-sm pointer-events-none text-gray-300 dark:text-gray-600 font-mono whitespace-pre"
+            >
+              {{ maskOverlay }}
+            </div>
+
+            <!-- Main Input -->
+            <input
+              ref="inputRef"
+              :id="id"
+              :name="name || id"
+              type="text"
+              :value="inputText"
+              :disabled="disabled"
+              autocomplete="off"
+              inputmode="numeric"
+              class="w-full bg-transparent text-sm outline-none text-gray-900 dark:text-white font-mono relative z-10"
+              @input="handleInput"
+              @keydown="handleKeydown"
+              @blur="handleBlur"
+              @paste="handlePaste"
+              @focus="isOpen = false"
+            />
+          </div>
+
+          <!-- Actions Area -->
+          <div class="flex items-center gap-1">
+            <!-- Clear Action -->
+            <AliceButton
+              v-if="modelValue && !disabled"
+              variant="primary" design="ghost-subtle"
+              size="icon-sm"
+              :icon-size="14"
+              @click.stop="clearDate"
+              class="hover:text-error-500 hover:bg-error-50 dark:hover:bg-error-900/20 text-gray-400"
+              tabindex="-1"
+              :icon="X"
+            />
+
+            <!-- Divider -->
+            <div v-if="!disabled" class="w-px h-4 bg-gray-100 dark:bg-slate-700 mx-0.5"></div>
+
+            <!-- Calendar Button -->
+            <AliceButton
+              variant="primary" design="ghost-subtle"
+              size="icon-sm"
+              :icon-size="16"
+              @click.stop="toggleCalendar"
+              class="text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+              :class="{
+                'text-primary-500 bg-primary-50 dark:bg-primary-900/20': isOpen,
+                'cursor-not-allowed opacity-50': disabled,
+              }"
+              :disabled="disabled"
+              tabindex="-1"
+              title="Abrir calendario"
+              :icon="CalendarIcon"
+            />
+          </div>
         </div>
+      </template>
 
-        <!-- Main Input -->
-        <input
-          ref="inputRef"
-          :id="id"
-          :name="name || id"
-          type="text"
-          :value="inputText"
-          :disabled="disabled"
-          autocomplete="off"
-          inputmode="numeric"
-          class="w-full bg-transparent text-sm outline-none text-gray-900 dark:text-white font-mono relative z-10"
-          @input="handleInput"
-          @keydown="handleKeydown"
-          @blur="handleBlur"
-          @paste="handlePaste"
-          @focus="isOpen = false"
-        />
-      </div>
-
-      <!-- Actions Area -->
-      <div class="flex items-center gap-1">
-        <!-- Clear Action -->
-        <AliceButton
-          v-if="modelValue && !disabled"
-          variant="primary" design="ghost-subtle"
-          size="icon-sm"
-          :icon-size="14"
-          @click="clearDate"
-          class="hover:text-error-500 hover:bg-error-50 dark:hover:bg-error-900/20 text-gray-400"
-          tabindex="-1"
-          :icon="X"
-        />
-
-        <!-- Divider -->
-        <div v-if="!disabled" class="w-px h-4 bg-gray-100 dark:bg-slate-700 mx-0.5"></div>
-
-        <!-- Calendar Button -->
-        <AliceButton
-          variant="primary" design="ghost-subtle"
-          size="icon-sm"
-          :icon-size="16"
-          @click.stop="toggleCalendar"
-          class="text-gray-400 hover:text-primary-500 hover:bg-primary-50 dark:hover:bg-primary-900/20"
-          :class="{
-            'text-primary-500 bg-primary-50 dark:bg-primary-900/20': isOpen,
-            'cursor-not-allowed opacity-50': disabled,
-          }"
-          :disabled="disabled"
-          tabindex="-1"
-          title="Abrir calendario"
-          :icon="CalendarIcon"
-        />
-      </div>
-    </div>
-
-    <!-- Calendar Dropdown -->
-    <transition name="alice-pop">
-      <div
-        v-if="isOpen"
-        class="absolute z-alice-modal top-full right-0 mt-1 p-4 bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl rounded-alice-lg origin-top-right min-w-[280px]"
-      >
+      <template #default>
         <AliceCalendar :model-value="modelValue" @update:model-value="selectDate" />
-      </div>
-    </transition>
+      </template>
+    </AlicePopover>
 
     <!-- Feedback Messages -->
     <p v-if="error && typeof error === 'string'" class="mt-1 text-xs text-error-500 font-medium whitespace-pre-wrap">

@@ -55,7 +55,7 @@ withDefaults(
               class="shrink-0"
               :class="item.iconClass || 'text-gray-400'"
             />
-            <span class="font-medium text-gray-600 dark:text-gray-400 truncate" :title="item.label">
+            <span class="text-gray-600 dark:text-gray-400 truncate" :title="item.label">
               {{ item.label }}
             </span>
           </slot>
@@ -71,7 +71,7 @@ withDefaults(
           ]"
         >
           <slot name="item-value" :item="item" :index="index">
-            <span class="font-bold block truncate" :title="String(item.value)">
+            <span class="font-semibold block truncate" :title="String(item.value)">
               {{ item.value }}
             </span>
           </slot>

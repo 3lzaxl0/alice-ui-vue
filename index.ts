@@ -22,8 +22,12 @@ export { default as AliceFormDrawer } from "./components/Drawer/FormDrawer.vue";
 export { default as AliceBanner } from "./components/Banner/Banner.vue";
 export { default as AliceLoading } from "./components/Loading/Loading.vue";
 export { default as AliceEntityCard } from "./components/EntityCard/EntityCard.vue";
-import { useToast as useToastHook } from "./components/Toast/useToast";
+import { 
+  useToast as useToastHook,
+  addAliceToast as addAliceToastFn 
+} from "./components/Toast/useToast";
 export const useAliceToast = useToastHook;
+export const addAliceToast = addAliceToastFn;
 
 // Components - Table
 export { default as AliceTable } from "./components/Table/Table.vue";
@@ -45,7 +49,7 @@ export { default as AlicePanel } from "./components/Panel/Panel.vue";
 export { default as AliceCard } from "./components/Card/Card.vue";
 export { default as AliceText } from "./components/Text/Text.vue";
 export { default as AliceActivityItem } from "./components/ActivityItem/ActivityItem.vue";
-export { default as AliceDataList } from "./components/DataList/DataList.vue";
+export { default as AliceDataList, type DataListItem } from "./components/DataList/DataList.vue";
 export { default as AliceNote } from "./components/Note/Note.vue";
 export { default as AliceDivider } from "./components/Divider/Divider.vue";
 export { default as AliceEmpty } from "./components/Empty/Empty.vue";
