@@ -35,8 +35,6 @@ const emit = defineEmits<{
   (e: 'toggle-selection', item: T): void
   (e: 'selection-drag-start', item: T): void
   (e: 'selection-drag-hover', item: T): void
-  (e: 'drag-over', event: DragEvent, key: string): void
-  (e: 'drop', event: DragEvent): void
 }>()
 </script>
 
@@ -98,8 +96,6 @@ const emit = defineEmits<{
         @toggle-selection="emit('toggle-selection', $event)"
         @selection-drag-start="emit('selection-drag-start', $event)"
         @selection-drag-hover="emit('selection-drag-hover', $event)"
-        @drag-over="(e, key) => emit('drag-over', e, key)"
-        @drop="(e) => emit('drop', e)"
       >
         <!-- Forward all slots to TableRow -->
         <template v-for="(_, name) in $slots" #[name]="slotProps">

@@ -113,7 +113,7 @@ export function useTableColumns<T>(
     }
   }
 
-  function handleDragOver(e: DragEvent, targetKey: string) {
+  function handleDragOver(e: DragEvent, targetKey: string, cellElement: HTMLElement) {
     e.preventDefault() // Allow dropping
     if (!draggingColumnKey.value || draggingColumnKey.value === targetKey) {
       dropIndicator.value = null
@@ -124,14 +124,22 @@ export function useTableColumns<T>(
       e.dataTransfer.dropEffect = 'move'
     }
 
-    const targetElement = e.currentTarget as HTMLElement
-    const rect = targetElement.getBoundingClientRect()
+    const rect = cellElement.getBoundingClientRect()
     const offsetX = e.clientX - rect.left
     const isRightHalf = offsetX > rect.width / 2
 
-    dropIndicator.value = {
-      key: targetKey,
-      side: isRightHalf ? 'right' : 'left',
+    const newSide = isRightHalf ? 'right' : 'left'
+    
+    // Only trigger reactivity if the indicator location changed
+    if (
+      !dropIndicator.value ||
+      dropIndicator.value.key !== targetKey ||
+      dropIndicator.value.side !== newSide
+    ) {
+      dropIndicator.value = {
+        key: targetKey,
+        side: newSide,
+      }
     }
   }
 

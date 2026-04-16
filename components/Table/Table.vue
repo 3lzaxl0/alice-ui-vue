@@ -292,43 +292,56 @@ const viewportStyle = computed(() => {
   return style
 })
 
-// Calculate position for the vertical drop indicator using DOM coordinates for 100% accuracy
-const dropIndicatorOffset = ref<number | null>(null)
-const dropIndicatorHeight = ref<number>(0)
+// High-Performance Drag & Drop logic using native DOM bypassing Vue reactivity
+const dropIndicatorEl = ref<HTMLElement | null>(null)
+const isDraggingDropIndicator = ref(false)
+let dragViewportRect: DOMRect | null = null
 
-function onDragOver(e: DragEvent, key: string) {
-  handleDragOver(e, key)
+function onDragStartMain(e: DragEvent, key: string) {
+  handleDragStart(e, key)
+  if (scrollViewport.value) {
+    dragViewportRect = scrollViewport.value.getBoundingClientRect()
+  }
+  isDraggingDropIndicator.value = true
+}
 
-  if (dropIndicator.value) {
-    const target = e.currentTarget as HTMLElement
-    if (target && target.getBoundingClientRect) {
-      const rect = target.getBoundingClientRect()
-      const viewport = scrollViewport.value
-      if (viewport) {
-        const viewportRect = viewport.getBoundingClientRect()
-        const scrollLeft = viewport.scrollLeft
-        const relativeLeft = rect.left - viewportRect.left + scrollLeft
+function onGlobalDragOver(e: DragEvent) {
+  const target = e.target as HTMLElement
+  const cell = target.closest('[data-col-key]') as HTMLElement
+  if (!cell) return
+  const key = cell.getAttribute('data-col-key')
+  if (!key) return
 
-        dropIndicatorOffset.value =
-          dropIndicator.value.side === 'left' ? relativeLeft : relativeLeft + rect.width
+  // Pass cell to compute correct dimension halves
+  handleDragOver(e, key, cell)
 
-        // Ensure the line covers the entire scrollable area
-        dropIndicatorHeight.value = viewport.scrollHeight
-      }
+  if (dropIndicator.value && dropIndicatorEl.value) {
+    const rect = cell.getBoundingClientRect()
+    const viewport = scrollViewport.value
+    if (viewport && dragViewportRect) {
+      const scrollLeft = viewport.scrollLeft
+      const relativeLeft = rect.left - dragViewportRect.left + scrollLeft
+
+      const newLeft = dropIndicator.value.side === 'left' ? relativeLeft : relativeLeft + rect.width
+      const newHeight = viewport.scrollHeight
+
+      // Apply styles natively skipping Vue renderer entirely!
+      dropIndicatorEl.value.style.left = `${newLeft}px`
+      dropIndicatorEl.value.style.height = `${newHeight}px`
     }
-  } else {
-    dropIndicatorOffset.value = null
   }
 }
 
-function onDrop(e: DragEvent) {
+function onGlobalDrop(e: DragEvent) {
   handleDrop(e)
-  dropIndicatorOffset.value = null
+  isDraggingDropIndicator.value = false
+  dragViewportRect = null
 }
 
-function onDragEnd() {
+function onDragEndMain() {
   handleDragEnd()
-  dropIndicatorOffset.value = null
+  isDraggingDropIndicator.value = false
+  dragViewportRect = null
 }
 
 // UI Helpers
@@ -435,15 +448,12 @@ defineExpose({
       :style="viewportStyle"
       @scroll="handleScroll"
     >
-      <!-- Modern Vertical Drop Indicator -->
+      <!-- Modern Vertical Drop Indicator (Managed Natively) -->
       <transition name="alice-fade">
         <div
-          v-if="dropIndicatorOffset !== null"
+          v-show="isDraggingDropIndicator"
+          ref="dropIndicatorEl"
           class="absolute top-0 w-0.5 bg-primary-500 z-alice-popover pointer-events-none shadow-[0_0_15px_rgba(var(--color-primary-500-rgb),0.5)] transition-all duration-300 ease-out"
-          :style="{
-            left: dropIndicatorOffset + 'px',
-            height: dropIndicatorHeight + 'px',
-          }"
         >
           <!-- Top Ornament -->
           <div
@@ -466,7 +476,11 @@ defineExpose({
         </div>
       </transition>
 
-      <table class="w-full text-left border-separate border-spacing-0">
+      <table 
+        class="w-full text-left border-separate border-spacing-0"
+        @dragover.prevent="onGlobalDragOver"
+        @drop.prevent="onGlobalDrop"
+      >
         <TableHeader
           :data="data"
           :visible-columns="visibleColumns as Column<T>[]"
@@ -481,7 +495,6 @@ defineExpose({
           :sticky-offsets="stickyOffsets"
           :sticky-right-offsets="stickyRightOffsets"
           :dragging-column-key="draggingColumnKey"
-          :drop-indicator="dropIndicator"
           :show-dividers="showDividers"
           @toggle-select-all="toggleSelectAll"
           @sort="(key: string) => handleSort(key, true)"
@@ -490,10 +503,8 @@ defineExpose({
           @filter-clear="clearFilter"
           @filter-close="openFilterColumn = null"
           @resize-start="startResize"
-          @drag-start="handleDragStart"
-          @drag-over="onDragOver"
-          @drop="onDrop"
-          @drag-end="onDragEnd"
+          @drag-start="onDragStartMain"
+          @drag-end="onDragEndMain"
         />
 
         <TableBody
@@ -518,8 +529,6 @@ defineExpose({
           @toggle-selection="toggleSelection as any"
           @selection-drag-start="handleSelectionDragStart"
           @selection-drag-hover="handleSelectionDragHover"
-          @drag-over="onDragOver"
-          @drop="onDrop"
         >
           <!-- Forward all slots to TableBody -->
           <template v-for="(_, name) in $slots" #[name]="slotProps">

@@ -25,7 +25,6 @@ const props = defineProps<{
   stickyOffsets: Record<string, string>
   stickyRightOffsets: Record<string, string>
   draggingColumnKey: string | null
-  dropIndicator: { key: string; side: 'left' | 'right' } | null
   showDividers: boolean
 }>()
 
@@ -38,9 +37,7 @@ const emit = defineEmits<{
   (e: 'filter-close'): void
   (e: 'resize-start', event: MouseEvent, key: string): void
   (e: 'drag-start', event: DragEvent, key: string): void
-  (e: 'drag-over', event: DragEvent, key: string): void
   (e: 'drag-end', event: DragEvent): void
-  (e: 'drop', event: DragEvent): void
 }>()
 
 
@@ -96,9 +93,11 @@ function getOptionsForColumn(col: Column<T>) {
           maxWidth: col.maxWidth,
           left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
           right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
-        }" :draggable="openFilterColumn !== String(col.key)" @dragstart="emit('drag-start', $event, String(col.key))"
-        @dragover="emit('drag-over', $event, String(col.key))" @dragend="emit('drag-end', $event)"
-        @drop="emit('drop', $event)" @click="col.sortable && emit('sort', String(col.key))">
+        }" :draggable="openFilterColumn !== String(col.key)" 
+        :data-col-key="String(col.key)"
+        @dragstart="emit('drag-start', $event, String(col.key))"
+        @dragend="emit('drag-end', $event)"
+        @click="col.sortable && emit('sort', String(col.key))">
         <div class="flex items-center gap-2">
 
           <!-- Filter Button -->

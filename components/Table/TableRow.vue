@@ -40,8 +40,6 @@ const emit = defineEmits<{
   (e: 'toggle-selection', item: T): void
   (e: 'selection-drag-start', item: T): void
   (e: 'selection-drag-hover', item: T): void
-  (e: 'drag-over', event: DragEvent, key: string): void
-  (e: 'drop', event: DragEvent): void
 }>()
 
 // Formatters
@@ -157,8 +155,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
         maxWidth: col.maxWidth,
         height: rowHeight + 'px',
       }"
-      @dragover="emit('drag-over', $event, String(col.key))"
-      @drop="emit('drop', $event)"
+      :data-col-key="String(col.key)"
     >
       <div
         class="px-3 flex items-center h-full"
