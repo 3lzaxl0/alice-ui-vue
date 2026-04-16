@@ -1,6 +1,5 @@
 <script setup lang="ts" generic="T">
 import { ref, computed, watch } from 'vue'
-import AliceText from '../../components/Text/Text.vue'
 import AlicePopover from '../../components/Popover/Popover.vue'
 import type { Column } from '../../types'
 import { formatCurrency } from '../../utils/currency'
@@ -135,7 +134,7 @@ function computeAggregate(col: Column<T>): string {
         }">
         <!-- Clickable footer cell with Popover -->
         <AlicePopover v-if="getActiveOp(col)" :model-value="openMenu === String(col.key)"
-          @update:model-value="(val: boolean) => openMenu = val ? String(col.key) : null"
+          @update:model-value="(val: boolean) => openMenu = val ? String(col.key) : null" 
           teleport placement="top-center" :offset="4"
           content-class="mb-1 py-1 min-w-[140px] origin-bottom">
           <template #trigger>
@@ -153,9 +152,9 @@ function computeAggregate(col: Column<T>): string {
               </span>
 
               <!-- Value -->
-              <AliceText variant="body">
+              <span class="text-sm font-semibold tabular-nums text-gray-700 dark:text-gray-200">
                 {{ computeAggregate(col) }}
-              </AliceText>
+              </span>
             </div>
           </template>
 

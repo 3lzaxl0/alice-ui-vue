@@ -180,7 +180,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               v-if="col.imageKey"
               class="shrink-0 border border-slate-200 dark:border-white/10 shadow-xs bg-slate-100 dark:bg-slate-800 overflow-hidden"
               :class="[
-                col.imageConfig?.rounded === 'full' ? 'rounded-full' :
+                col.imageConfig?.rounded === 'full' ? 'rounded-full' : 
                 col.imageConfig?.rounded === 'sm' ? 'rounded-sm' :
                 col.imageConfig?.rounded === 'lg' ? 'rounded-xl' : 'rounded-lg',
                 col.imageConfig?.preview !== false ? 'cursor-zoom-in' : ''
@@ -260,11 +260,11 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                   'justify-end': col.align === 'right',
                 }"
               >
-                <AliceText variant="body" class="tabular-nums font-bold">
+                <AliceText variant="caption" class="tabular-nums font-bold">
                   {{ getSafeValue(item, col.key) }}
                 </AliceText>
                 <span
-                  class="text-[10px] font-bold leading-none px-1 py-0.5 rounded border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 text-gray-400 dark:text-gray-500 uppercase tracking-tight"
+                  class="text-[9px] leading-none font-bold px-1 py-0.5 rounded border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700/50 text-gray-400 dark:text-gray-500 uppercase tracking-tight"
                 >
                   {{ getSafeValue(item, col.unitKey) }}
                 </span>
@@ -295,7 +295,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                   <template #default="{ close }">
                     <div class="flex flex-col gap-3 min-w-[200px] p-3">
                       <div class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700">
-                        <span class="font-bold text-gray-400 uppercase tracking-widest">Detalle</span>
+                        <span class="font-bold text-gray-400 uppercase tracking-widest">Contenido Detallado</span>
                         <AliceButton variant="primary" design="ghost-subtle" size="icon-sm" :icon-size="14" @click="close" class="text-gray-400 hover:text-gray-600 -mr-1" :icon="X" />
                       </div>
                       <div class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar">

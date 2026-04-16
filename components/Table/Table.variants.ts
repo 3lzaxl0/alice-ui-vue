@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority'
 
-const selectedBg = '!bg-primary-100/40 dark:!bg-primary-950'
+const selectedBg = '!bg-primary-100 dark:!bg-primary-950'
 const baseBg = 'bg-white dark:bg-slate-950'
 const stripeBg = 'bg-slate-50 dark:bg-slate-900'
 const hoverClasses = 'hover:bg-primary-50 dark:hover:bg-slate-800'
