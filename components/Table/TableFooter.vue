@@ -131,6 +131,7 @@ function computeAggregate(col: Column<T>): string {
           width: columnWidths[String(col.key)] || col.width,
           minWidth: col.minWidth,
           maxWidth: col.maxWidth,
+          overflow: 'hidden',
         }">
         <!-- Clickable footer cell with Popover -->
         <AlicePopover v-if="getActiveOp(col)" :model-value="openMenu === String(col.key)"

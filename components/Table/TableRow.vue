@@ -154,6 +154,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
         minWidth: col.minWidth,
         maxWidth: col.maxWidth,
         height: rowHeight + 'px',
+        overflow: 'hidden',
       }"
       :data-col-key="String(col.key)"
     >

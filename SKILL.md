@@ -55,6 +55,46 @@ All business logic must be completely decoupled from the UI.
 | **AliceBadge** | `variant`, `type` | **Variant**: `success`, `warning`, `error`, `info`, `primary`, `indigo`, `purple`, `pink`, etc.<br>**Type**: `normal`, `filled`, `soft` |
 | **AliceTable** | `columns`, `data`, `pagination`, `loading` | Complex configuration system via `Column<T>` interface in `types.ts`. |
 
+### 2.5 AliceTable Column Width Rules (MANDATORY)
+
+The `AliceTable` uses `table-layout: fixed` at all times. This means column widths **must** be declared correctly or layout will break. Apply the following rules **every time** you define a `Column<T>[]` array:
+
+#### Rule A — Auto-width columns (expand to fill remaining space)
+Use only `minWidth`. The table will distribute the remaining horizontal space among these columns.
+```ts
+{
+  key: 'descripcion',
+  header: 'Descripción',
+  minWidth: '200px',   // ✅ Required: prevents the column from collapsing
+  // NO width property  ← lets it expand
+}
+```
+
+#### Rule B — Fixed-width columns (exact px, never expand)
+Set **both** `width` AND `minWidth` to the same value. This locks the column at that exact size.
+```ts
+{
+  key: 'codigo',
+  header: 'Código',
+  width: '100px',      // ✅ Required: locks the column to this size
+  minWidth: '100px',   // ✅ Required: prevents shrinking below this size
+  align: 'center',
+}
+```
+
+> [!IMPORTANT]
+> **NEVER** define a column without at least `minWidth`. Without it, the column may collapse to zero or cause unpredictable layout shifts under `table-layout: fixed`.
+> **NEVER** set `width` without also setting `minWidth` to the same value — without `minWidth`, the column can shrink below its `width` when space is tight.
+
+#### Quick Reference
+| Intent | `width` | `minWidth` |
+| :--- | :--- | :--- |
+| Expands to fill space | ❌ omit | ✅ set (e.g. `200px`) |
+| Fixed, never expands | ✅ set | ✅ same value as `width` |
+| Scroll activates when... | total `minWidth` sum > viewport | — |
+
+
+
 ---
 
 ## 🏗️ 3. Feature Architecture (Clean Architecture)

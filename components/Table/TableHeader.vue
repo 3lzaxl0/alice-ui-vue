@@ -93,6 +93,7 @@ function getOptionsForColumn(col: Column<T>) {
           maxWidth: col.maxWidth,
           left: col.frozen ? stickyOffsets[String(col.key)] : undefined,
           right: col.frozenRight ? stickyRightOffsets[String(col.key)] : undefined,
+          overflow: 'hidden',
         }" :draggable="openFilterColumn !== String(col.key)" 
         :data-col-key="String(col.key)"
         @dragstart="emit('drag-start', $event, String(col.key))"

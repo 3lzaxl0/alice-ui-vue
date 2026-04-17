@@ -247,6 +247,34 @@ const transitionId = computed(() =>
   props.tableId ? `alice-table-${props.tableId}` : 'alice-table-default',
 )
 
+// Table layout: always use table-layout:fixed so explicit column widths are
+// respected from the start. Columns WITH width → exact px. Columns WITHOUT
+// width → share remaining space equally (table-layout:fixed default behavior).
+// The table minWidth ensures horizontal scroll activates when total exceeds viewport.
+const tableComputedStyle = computed(() => {
+  const selectionColWidth = props.selectionType !== 'none' ? 48 : 0
+
+  let totalFixed = selectionColWidth
+  let totalAutoMin = 0
+
+  for (const col of visibleColumns.value) {
+    const explicitWidth = columnWidths.value[String(col.key)] || col.width
+    if (explicitWidth) {
+      totalFixed += parseInt(explicitWidth, 10) || 150
+    } else {
+      // Auto columns: use their minWidth or a sensible default
+      const min = col.minWidth ? parseInt(col.minWidth, 10) || 150 : 150
+      totalAutoMin += min
+    }
+  }
+
+  return {
+    tableLayout: 'fixed' as const,
+    width: '100%',
+    minWidth: `${totalFixed + totalAutoMin}px`,
+  }
+})
+
 /* -------------------------------------------------------------------------- */
 /*                                RESPONSIVENESS                              */
 /* -------------------------------------------------------------------------- */
@@ -478,6 +506,7 @@ defineExpose({
 
       <table 
         class="w-full text-left border-separate border-spacing-0"
+        :style="tableComputedStyle"
         @dragover.prevent="onGlobalDragOver"
         @drop.prevent="onGlobalDrop"
       >

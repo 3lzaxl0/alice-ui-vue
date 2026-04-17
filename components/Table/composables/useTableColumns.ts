@@ -9,6 +9,7 @@ export function useTableColumns<T>(
   /*                               resize LOGIC                                 */
   /* -------------------------------------------------------------------------- */
   const columnWidths = ref<Record<string, string>>({})
+  const hasBeenResized = ref(false)
   const resizingColumn = ref<string | null>(null)
   const startX = ref(0)
   const startWidth = ref(0)
@@ -55,6 +56,7 @@ export function useTableColumns<T>(
     newWidth = Math.max(minW, Math.min(newWidth, maxW))
 
     columnWidths.value[resizingColumn.value] = `${newWidth}px`
+    hasBeenResized.value = true
   }
 
   function stopResize() {
@@ -253,6 +255,7 @@ export function useTableColumns<T>(
   return {
     // State
     columnWidths,
+    hasBeenResized,
     orderedColumnKeys, // Exposed for external saving/loading
     hiddenColumns, // Exposed for external saving/loading
 
