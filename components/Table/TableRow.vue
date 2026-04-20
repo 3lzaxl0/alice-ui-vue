@@ -57,6 +57,36 @@ function getSafeValue(item: T, key: string | number | symbol): unknown {
   return key.split('.').reduce<unknown>((obj, part) => (obj as Record<string, unknown>)?.[part], item)
 }
 
+// Helpers for label and variant resolution
+function resolveLabel(col: Column<T>, item: T): string {
+  const rawValue = getSafeValue(item, col.key)
+  if (col.formatter) return col.formatter(rawValue, item)
+  return String(rawValue ?? '')
+}
+
+function resolveVariant(col: Column<T>, item: T): string {
+  if (col.variant) return col.variant
+  if (!col.variantMap) return 'default'
+
+  const rawValue = getSafeValue(item, col.key)
+  const strRawValue = String(rawValue)
+
+  // 1. Try raw value match (current behavior)
+  if (strRawValue in col.variantMap) {
+    return col.variantMap[strRawValue] as string
+  }
+
+  // 2. Try formatted value match (new behavior for derived statuses)
+  if (col.formatter) {
+    const formattedValue = col.formatter(rawValue, item)
+    if (formattedValue in col.variantMap) {
+      return col.variantMap[formattedValue] as string
+    }
+  }
+
+  return 'default'
+}
+
 // Expand dialog state for maxLength truncation
 const expandDialogVisible = ref(false)
 const expandDialogTitle = ref('')
@@ -217,24 +247,16 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                   position="top"
                 >
                   <AliceBadge
-                    :label="
-                      col.formatter
-                        ? col.formatter(getSafeValue(item, col.key), item)
-                        : String(getSafeValue(item, col.key))
-                    "
-                    :variant="(col.variant || (col.variantMap && col.variantMap[String(getSafeValue(item, col.key))])) as any || 'default'"
+                    :label="resolveLabel(col, item)"
+                    :variant="resolveVariant(col, item) as any"
                     :type="col.badgeType || 'soft'"
                   />
                 </AliceTooltip>
 
                 <AliceBadge
                   v-else
-                  :label="
-                    col.formatter
-                      ? col.formatter(getSafeValue(item, col.key), item)
-                      : String(getSafeValue(item, col.key))
-                  "
-                  :variant="(col.variant || (col.variantMap && col.variantMap[String(getSafeValue(item, col.key))])) as any || 'default'"
+                  :label="resolveLabel(col, item)"
+                  :variant="resolveVariant(col, item) as any"
                   :type="col.badgeType || 'soft'"
                 />
               </template>
@@ -310,7 +332,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                 class="flex items-center gap-1 min-w-0 group/truncate"
               >
                 <AliceText variant="body" class="truncate flex-1 min-w-0 font-medium">
-                  {{ col.formatter ? col.formatter(getSafeValue(item, col.key), item) : getSafeValue(item, col.key) }}
+                  {{ resolveLabel(col, item) }}
                 </AliceText>
                 <AliceButton
                   variant="primary"
@@ -329,7 +351,7 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
                 variant="body"
                 truncate
               >
-                {{ col.formatter ? col.formatter(getSafeValue(item, col.key), item) : getSafeValue(item, col.key) }}
+                {{ resolveLabel(col, item) }}
               </AliceText>
             </div>
           </div>
