@@ -18,6 +18,8 @@ const props = withDefaults(
       | 'light'
       | 'none'
     shadow?: 'none' | 'sm' | 'md' | 'lg' | 'xl' | 'panel'
+    pattern?: 'none' | 'zebra' | 'dots'
+    borderStyle?: 'solid' | 'dashed' | 'dotted' | 'none'
     loading?: boolean
     loadingText?: string
     loadingType?: 'spinner' | 'skeleton'
@@ -27,6 +29,8 @@ const props = withDefaults(
     radius: '3xl',
     borderVariant: 'default',
     shadow: 'sm',
+    pattern: 'none',
+    borderStyle: 'solid',
     loading: false,
     loadingText: 'Cargando información...',
     loadingType: 'spinner',
@@ -84,12 +88,32 @@ const shadowClass = computed(() => {
   }
   return map[props.shadow] || ''
 })
+
+const borderStyleClass = computed(() => {
+  if (props.borderVariant === 'none') return ''
+  const map: Record<string, string> = {
+    solid: 'border-solid',
+    dashed: 'border-dashed border-2',
+    dotted: 'border-dotted',
+    none: 'border-none',
+  }
+  return map[props.borderStyle] || 'border-solid'
+})
+
+const patternClass = computed(() => {
+  const map: Record<string, string> = {
+    none: '',
+    zebra: 'bg-[repeating-linear-gradient(-45deg,rgba(0,0,0,0.02),rgba(0,0,0,0.02)_15px,transparent_15px,transparent_30px)] dark:bg-[repeating-linear-gradient(-45deg,rgba(255,255,255,0.02),rgba(255,255,255,0.02)_15px,transparent_15px,transparent_30px)]',
+    dots: 'bg-[radial-gradient(rgba(0,0,0,0.05)_1.5px,transparent_1.5px)] dark:bg-[radial-gradient(rgba(255,255,255,0.05)_1.5px,transparent_1.5px)] bg-[size:15px_15px]',
+  }
+  return map[props.pattern] || ''
+})
 </script>
 
 <template>
   <div
     class="bg-white dark:bg-slate-900 relative w-full overflow-hidden"
-    :class="[paddingClass, radiusClass, borderClass, shadowClass]"
+    :class="[paddingClass, radiusClass, borderClass, shadowClass, borderStyleClass, patternClass]"
   >
     <Loading :active="loading" :type="loadingType" :text="loadingText" />
     <slot />

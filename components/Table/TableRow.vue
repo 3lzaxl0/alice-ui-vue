@@ -346,13 +346,13 @@ function hasExpandableContent(col: Column<T>, item: T): boolean {
               </div>
 
               <!-- Default Text -->
-              <AliceText
+              <span
                 v-else
-                variant="body"
-                truncate
+                class="block truncate text-sm text-slate-800 dark:text-white w-full"
+                :title="String(resolveLabel(col, item))"
               >
                 {{ resolveLabel(col, item) }}
-              </AliceText>
+              </span>
             </div>
           </div>
         </slot>

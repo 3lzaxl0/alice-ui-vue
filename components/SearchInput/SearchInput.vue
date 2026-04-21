@@ -4,6 +4,7 @@ import { Search, X, Loader2 } from 'lucide-vue-next'
 import { useSearchInput } from './useSearchInput'
 
 import AliceLabel from '../Label/Label.vue'
+import { AliceDivider } from '../..'
 
 // Helper to render text with highlights
 const HighlightedText = ({ text, indices }: { text: string; indices?: number[] }) => {
@@ -49,6 +50,14 @@ interface Props {
   error?: boolean | string
   errorMessage?: string
   helperText?: string
+  /** Unique key to persist and restore recent selections via localStorage */
+  persistentKey?: string
+  /** Max number of recent items to remember (default: 5) */
+  maxRecent?: number
+  /** Minimum characters to trigger a search event (default: 0) */
+  minChars?: number
+  /** Debounce delay for the search event in milliseconds (default: 0) */
+  debounceMs?: number
 }
 
 defineOptions({
@@ -63,6 +72,8 @@ const props = withDefaults(defineProps<Props>(), {
   placeholder: 'Buscar...',
   disabled: false,
   error: false,
+  minChars: 0,
+  debounceMs: 0,
 })
 
 const emit = defineEmits<{
@@ -78,6 +89,8 @@ const {
   listboxRef,
   activeIndex,
   displayedResults,
+  showingRecents,
+  recentCount,
   handleInput,
   selectResult,
   clear,
@@ -155,19 +168,38 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
           </div>
 
           <template v-else-if="displayedResults.length > 0">
+            <!-- Recents section header -->
+            <div
+              v-if="showingRecents && recentCount > 0"
+              class="px-3 py-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-400 dark:text-primary-500 select-none"
+            >
+              <span class="flex-1">Recientes</span>
+            </div>
+
             <div
               v-for="(result, index) in displayedResults"
               :key="result.value"
               role="option"
               :aria-selected="index === activeIndex"
               @mousedown.prevent="selectResult(result)"
-              class="px-3 py-2 text-sm cursor-pointer border-b border-gray-50 dark:border-slate-800 last:border-0 transition-colors flex flex-col gap-0.5"
+              class="px-3 py-2 text-sm cursor-pointer transition-colors flex flex-col gap-0.5"
               :class="[
                 index === activeIndex
                   ? 'bg-primary-50 dark:bg-primary-900/30 ring-inset ring-2 ring-primary-500/50'
                   : 'hover:bg-gray-50 dark:hover:bg-slate-700/50',
               ]"
             >
+              <!-- Separator between recents and the rest -->
+
+              <AliceDivider
+                v-if="showingRecents && index === recentCount"
+              />
+              <div
+                v-if="showingRecents && index === recentCount"
+                class="px-3 py-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 select-none -mx-3 mb-1 mt-1"
+              >
+                <span>Todos</span>
+              </div>
               <div class="font-medium text-gray-700 dark:text-gray-200">
                 <template
                   v-for="(chunk, idx) in HighlightedText({

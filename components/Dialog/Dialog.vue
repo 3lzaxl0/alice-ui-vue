@@ -122,13 +122,15 @@ const headerFooterPadding = computed(() => {
                   </slot>
                 </div>
               </div>
-              <button
+              <AliceButton
                 v-if="!preventClose"
                 @click="close"
-                class="p-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700 rounded-full transition-colors"
-              >
-                <X :size="20" />
-              </button>
+                variant="error"
+                design="ghost-subtle"
+                radius="full"
+                size="icon"
+                :icon="X"
+              />
             </div>
 
             <!-- Content Area -->
