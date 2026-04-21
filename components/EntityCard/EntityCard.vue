@@ -5,7 +5,6 @@ import AliceBadge from '../Badge/Badge.vue'
 import AliceDataList from '../DataList/DataList.vue'
 import AliceIconInfo from '../IconInfo/IconInfo.vue'
 import AliceDivider from '../Divider/Divider.vue'
-import { CircleCheckBig } from 'lucide-vue-next'
 
 defineOptions({
   name: 'AliceEntityCard',
@@ -117,7 +116,15 @@ const overlayBgClass = computed(() => {
 
       <!-- Lista de Metadatos (CECO, Centro de Producción, Responsable, etc.) -->
       <div v-if="filteredMetadata.length > 0" class="mb-2">
-        <AliceDataList :items="filteredMetadata" />
+        <AliceDataList :items="filteredMetadata">
+          <template #item-value="slotProps">
+            <slot name="metadata-value" v-bind="slotProps">
+              <span class="font-semibold block truncate" :title="String(slotProps.item.value)">
+                {{ slotProps.item.value }}
+              </span>
+            </slot>
+          </template>
+        </AliceDataList>
       </div>
 
       <!-- Divisoria automática si hay contenido inferior -->
@@ -148,14 +155,6 @@ const overlayBgClass = computed(() => {
         <slot name="footer" />
       </template>
     </AliceCard>
-
-    <!-- Indicador de Selección (Deseo del Usuario) -->
-    <div
-      v-if="active"
-      class="absolute top-3 right-3 z-30 pointer-events-none"
-    >
-      <CircleCheckBig class="text-primary-600" />
-    </div>
 
     <!-- Overlay de Estado (Anulado, Bloqueado, etc) -->
     <div

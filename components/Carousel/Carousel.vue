@@ -134,12 +134,17 @@ onUnmounted(() => {
 
 <template>
   <AliceContainer
-    class="relative w-full group/carousel"
+    class="relative w-full group/carousel select-none"
+    :class="isDragging ? 'cursor-grabbing' : 'cursor-grab'"
     :pattern="pattern"
     :border-style="borderStyle"
     :border-variant="borderStyle === 'none' ? 'none' : 'default'"
     :padding="padding"
     shadow="none"
+    @mousedown="handleMouseDown"
+    @mousemove="handleMouseMove"
+    @mouseup="handleMouseUpOrLeave"
+    @mouseleave="handleMouseUpOrLeave"
   >
     <!-- Left Arrow -->
     <button
@@ -157,14 +162,10 @@ onUnmounted(() => {
     <!-- Scroll Track -->
     <div
       ref="trackRef"
-      class="flex overflow-x-auto scrollbar-hide cursor-grab select-none"
+      class="flex overflow-x-auto scrollbar-hide"
       :class="gapClass"
       style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth;"
       @scroll="updateScrollState"
-      @mousedown="handleMouseDown"
-      @mousemove="handleMouseMove"
-      @mouseup="handleMouseUpOrLeave"
-      @mouseleave="handleMouseUpOrLeave"
     >
       <slot :select-item="selectItem" :selected="modelValue" />
     </div>

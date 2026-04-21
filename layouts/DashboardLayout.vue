@@ -84,18 +84,10 @@ function handleSwitchRole(code: string) {
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-slate-950 flex flex-col lg:flex-row">
     <!-- Navigation Sidebar -->
-    <AliceSidebar
-      :title="sidebarTitle"
-      :persistence="persistence"
-      :user-name="userName"
-      :active-role-code="activeRoleCode"
-      :user-roles="userRoles"
-      :show-theme-toggle="showThemeToggle"
-      :show-logout="showLogout"
-      :show-color-picker="showColorPicker"
-      @logout="handleLogout"
-      @switch-role="handleSwitchRole"
-    >
+    <AliceSidebar :title="sidebarTitle" :persistence="persistence" :user-name="userName"
+      :active-role-code="activeRoleCode" :user-roles="userRoles" :show-theme-toggle="showThemeToggle"
+      :show-logout="showLogout" :show-color-picker="showColorPicker" @logout="handleLogout"
+      @switch-role="handleSwitchRole">
       <template #default>
         <slot name="sidebar" />
       </template>
@@ -106,24 +98,15 @@ function handleSwitchRole(code: string) {
     </AliceSidebar>
 
     <!-- Main Content Area -->
-    <main
-      class="flex-1 transition-all duration-300 relative p-2 md:py-4 md:pe-4 md:ps-1 overflow-hidden h-screen"
-    >
+    <main class="flex-1 transition-all duration-300 relative p-2 md:py-4 md:pe-4 md:ps-1 overflow-hidden h-screen"
+      style="contain: layout;">
       <!-- Floating Card Container -->
       <div
-        class="h-full w-full bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-md shadow-gray-300/60 dark:shadow-black/60 flex flex-col overflow-hidden relative transition-all duration-300 border-none"
-      >
+        class="h-full w-full bg-white dark:bg-slate-900 rounded-2xl md:rounded-3xl shadow-md shadow-gray-300/60 dark:shadow-black/60 flex flex-col overflow-hidden relative transition-all duration-300 border-none">
         <!-- Automated Page Header -->
         <slot name="header">
-          <AlicePageHeader
-            v-if="headerTitle"
-            :title="headerTitle"
-            :description="headerDescription"
-            :icon="headerIcon"
-            :show-refresh="headerRefreshable"
-            :refreshing="headerRefreshing"
-            @refresh="emit('headerRefresh')"
-          >
+          <AlicePageHeader v-if="headerTitle" :title="headerTitle" :description="headerDescription" :icon="headerIcon"
+            :show-refresh="headerRefreshable" :refreshing="headerRefreshing" @refresh="emit('headerRefresh')">
             <template #actions>
               <slot name="header-actions" />
             </template>
@@ -156,5 +139,4 @@ function handleSwitchRole(code: string) {
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

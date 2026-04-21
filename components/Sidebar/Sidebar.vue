@@ -127,14 +127,16 @@ function handleRoleChange(value: string | number) {
   </div>
 
   <!-- Mobile Overlay -->
-  <div
-    v-if="isMobileOpen"
-    class="fixed inset-0 bg-black/50 z-1400 lg:hidden backdrop-blur-sm transition-opacity"
-    @click="closeMobile"
-  ></div>
+  <Transition name="alice-fade">
+    <div
+      v-if="isMobileOpen"
+      class="fixed inset-0 bg-black/60 z-1440 lg:hidden backdrop-blur-sm"
+      @click="closeMobile"
+    ></div>
+  </Transition>
 
   <aside
-    class="fixed inset-y-0 left-0 flex flex-col h-screen transition-all duration-300 ease-in-out lg:translate-x-0"
+    class="fixed inset-y-0 left-0 flex flex-col h-screen transition-[transform,width] duration-300 ease-in-out lg:translate-x-0"
     :class="[
       isMobileOpen ? 'z-alice-sidebar-mobile' : 'z-30',
       // Mobile: Drawer transform + styles (needs background)
@@ -240,7 +242,7 @@ function handleRoleChange(value: string | number) {
 
   <!-- Content Spacer (Desktop Only) -->
   <div
-    class="transition-all duration-300 ease-in-out shrink-0 hidden lg:block"
+    class="transition-[width] duration-300 ease-in-out shrink-0 hidden lg:block"
     :class="[expanded ? 'w-64' : 'w-20']"
   ></div>
 </template>

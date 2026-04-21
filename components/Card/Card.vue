@@ -76,7 +76,7 @@ const headerVerticalAlignClass = computed(() => {
 
 const activeClass = computed(() => {
   if (!props.active) return ''
-  return 'border-primary-500! dark:border-primary-400! bg-primary-50/90 dark:bg-primary-500/10'
+  return 'ring-1 ring-inset ring-primary-500/80 dark:ring-primary-400/80 bg-primary-50/90 dark:bg-primary-500/10 border-primary-500/30'
 })
 
 const heightOuterClass = computed(() => props.height === 'full' ? 'h-full flex flex-col' : '')
