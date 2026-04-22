@@ -58,6 +58,7 @@ interface Props {
   minChars?: number
   /** Debounce delay for the search event in milliseconds (default: 0) */
   debounceMs?: number
+  readonly?: boolean
 }
 
 defineOptions({
@@ -74,6 +75,7 @@ const props = withDefaults(defineProps<Props>(), {
   error: false,
   minChars: 0,
   debounceMs: 0,
+  readonly: false,
 })
 
 const emit = defineEmits<{
@@ -105,7 +107,7 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
 
 <template>
   <div class="flex flex-col gap-0 w-full relative group" ref="containerRef">
-    <AliceLabel v-if="label" :for="id" :disabled="disabled" :error="!!error || !!errorMessage">
+    <AliceLabel v-if="label" :for="id" :disabled="disabled || readonly" :error="!!error || !!errorMessage">
       {{ label }}
     </AliceLabel>
 
@@ -129,20 +131,22 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         :value="searchQuery"
         :placeholder="placeholder"
         :disabled="disabled"
+        :readonly="readonly"
         autocomplete="off"
         @input="handleInput"
         @focus="handleFocus"
         @keydown="handleKeydown"
-        class="w-full h-alice-input-height px-3 text-sm bg-white dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white shadow-alice-input focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none disabled:bg-gray-100 dark:disabled:bg-slate-900 disabled:text-gray-400 rounded-alice-md pl-10"
+        class="w-full h-alice-input-height px-3 text-sm border shadow-alice-input transition-all outline-none rounded-alice-md pl-10"
         :class="[
           modelValue || searchQuery ? 'pr-10' : 'pr-3',
-          (!!error || !!errorMessage) ? 'border-error-500 dark:border-error-400 focus:ring-error-500/20 focus:border-error-500 dark:focus:border-error-400' : ''
+          (!!error || !!errorMessage) ? 'border-error-500 dark:border-error-400 focus:ring-2 focus:ring-error-500/20 focus:border-error-500 dark:focus:border-error-400' : 'border-gray-200 dark:border-white/10 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500',
+          (disabled || readonly) ? 'bg-gray-100 dark:bg-slate-900 text-gray-400 cursor-not-allowed' : 'bg-white dark:bg-white/5 text-gray-900 dark:text-white'
         ]"
       />
 
       <!-- Clear Button -->
       <button
-        v-if="searchQuery && !disabled"
+        v-if="searchQuery && !disabled && !readonly"
         @click="clear"
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
       >

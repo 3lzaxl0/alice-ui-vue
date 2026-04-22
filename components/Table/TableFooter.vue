@@ -17,11 +17,11 @@ const OPTIONS: { op: FooterOp; label: string; icon: string }[] = [
 ]
 
 const SHORT_LABELS: Record<FooterOp, string> = {
-  sum: 'Σ Suma',
-  avg: 'x̄ Prom',
-  count: '# Total',
-  min: '↓ Mín',
-  max: '↑ Máx',
+  sum: 'Σ',
+  avg: 'x̄',
+  count: '#',
+  min: '↓',
+  max: '↑',
 }
 
 const props = defineProps<{

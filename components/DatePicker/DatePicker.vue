@@ -24,6 +24,7 @@ const props = withDefaults(
     name?: string
     placement?: 'bottom-left' | 'bottom-right' | 'bottom-center' | 'top-left' | 'top-right' | 'top-center'
     mobileFullscreen?: boolean
+    maxDate?: string | null
   }>(),
   {
     displayFormat: 'DD/MM/YYYY',
@@ -143,7 +144,7 @@ const {
       </template>
 
       <template #default>
-        <AliceCalendar :model-value="modelValue" @update:model-value="selectDate" />
+        <AliceCalendar :model-value="modelValue" :max-date="maxDate" @update:model-value="selectDate" />
       </template>
     </AlicePopover>
 

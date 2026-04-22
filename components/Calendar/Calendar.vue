@@ -8,6 +8,7 @@ defineOptions({
 
 const props = defineProps<{
   modelValue: string | null // YYYY-MM-DD
+  maxDate?: string | null // YYYY-MM-DD
 }>()
 
 const emit = defineEmits<{
@@ -24,6 +25,7 @@ const {
   nextMonth,
   selectDate,
   isToday,
+  isDateDisabled,
   goToday,
   handleKeydown,
 } = useCalendar(props, emit)
@@ -93,14 +95,16 @@ const {
           activeDateStr === dayObj.dateStr && modelValue !== dayObj.dateStr
             ? 'bg-gray-200 dark:bg-slate-600 ring-2 ring-inset ring-primary-500/30'
             : '',
+          isDateDisabled(dayObj.dateStr)
+            ? 'opacity-20 pointer-events-none grayscale cursor-not-allowed'
+            : '',
         ]"
       >
         {{ dayObj.day }}
       </button>
     </div>
 
-    <!-- Footer -->
-    <div class="mt-4 pt-2 border-t border-gray-100 dark:border-white/5">
+    <div v-if="!isDateDisabled(new Date().toISOString().split('T')[0]!)" class="mt-4 pt-2 border-t border-gray-100 dark:border-white/5">
       <button
         type="button"
         @click.stop="goToday"

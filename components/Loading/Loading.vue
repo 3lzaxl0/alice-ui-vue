@@ -2,13 +2,17 @@
 import { computed } from 'vue'
 import { RefreshCw } from 'lucide-vue-next'
 
+import AliceProgress from '../Progress/Progress.vue'
+
 defineOptions({ name: 'AliceLoading' })
 
 const props = withDefaults(
   defineProps<{
     active?: boolean
-    type?: 'spinner' | 'skeleton'
+    type?: 'spinner' | 'skeleton' | 'master'
     text?: string
+    description?: string
+    progress?: number
     blur?: boolean
     transparent?: boolean
     variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error' | 'info' | 'white'
@@ -17,6 +21,8 @@ const props = withDefaults(
     active: false,
     type: 'spinner',
     text: 'Cargando...',
+    description: '',
+    progress: 0,
     blur: true,
     transparent: false,
     variant: 'primary',
@@ -79,6 +85,45 @@ const bgClass = computed(() => {
              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg w-24"></div>
              <div class="h-10 bg-gray-200 dark:bg-gray-700 rounded-lg w-32"></div>
            </div>
+        </div>
+      </template>
+
+      <template v-else-if="type === 'master'">
+        <div class="fixed inset-0 z-100 bg-white dark:bg-slate-950 flex flex-col items-center justify-center p-8 overflow-hidden">
+          <!-- Premium Backdrop Glow -->
+          <div class="absolute top-0 left-1/4 w-96 h-96 bg-primary-500/10 rounded-full blur-[120px] animate-pulse"></div>
+          <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-success-500/10 rounded-full blur-[120px] animate-pulse"></div>
+ 
+          <!-- Loading Content -->
+          <div class="relative w-full max-w-md flex flex-col items-center gap-8 -translate-y-8">
+            <!-- Animated Spinner/Logo Container -->
+            <div class="relative">
+              <div class="absolute inset-0 bg-primary-500 blur-xl opacity-20 animate-pulse"></div>
+              <RefreshCw class="animate-spin text-primary-500 relative" :size="48" />
+            </div>
+ 
+            <!-- Text & Progress -->
+            <div class="w-full text-center space-y-4">
+              <div class="space-y-1">
+                <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">
+                  {{ text }}
+                </h2>
+                <p v-if="description" class="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                  {{ description }}
+                </p>
+              </div>
+ 
+              <div class="pt-2">
+                <AliceProgress 
+                  :value="progress" 
+                  :show-percentage="true" 
+                  size="md" 
+                  variant="primary"
+                  class="shadow-xl shadow-primary-500/5"
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </template>
     </div>

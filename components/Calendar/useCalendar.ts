@@ -2,7 +2,8 @@ import { ref, computed, watch } from 'vue'
 
 export function useCalendar(
   props: {
-    modelValue: string | null // YYYY-MM-DD
+    modelValue: string | null
+    maxDate?: string | null
   },
   emit: {
     (e: 'update:modelValue', value: string | null): void
@@ -128,7 +129,20 @@ export function useCalendar(
   }
 
   const selectDate = (dateStr: string) => {
+    if (isDateDisabled(dateStr)) return
     emit('update:modelValue', dateStr)
+  }
+
+  const isDateDisabled = (dateStr: string) => {
+    if (!props.maxDate) return false
+    
+    let max = props.maxDate
+    if (max === 'today') {
+      const today = new Date()
+      max = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`
+    }
+    
+    return dateStr > max
   }
 
   const isToday = (dateStr: string) => {
@@ -145,6 +159,8 @@ export function useCalendar(
     const m = String(today.getMonth() + 1).padStart(2, '0')
     const d = String(today.getDate()).padStart(2, '0')
     const dateStr = `${y}-${m}-${d}`
+
+    if (isDateDisabled(dateStr)) return
 
     viewDate.value = new Date(y, today.getMonth(), 1)
     activeDateStr.value = dateStr
@@ -217,6 +233,7 @@ export function useCalendar(
     nextMonth,
     selectDate,
     isToday,
+    isDateDisabled,
     goToday,
     handleKeydown,
   }

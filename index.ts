@@ -21,6 +21,7 @@ export { default as AliceDrawer } from "./components/Drawer/Drawer.vue";
 export { default as AliceFormDrawer } from "./components/Drawer/FormDrawer.vue";
 export { default as AliceBanner } from "./components/Banner/Banner.vue";
 export { default as AliceLoading } from "./components/Loading/Loading.vue";
+export { default as AliceProgress } from "./components/Progress/Progress.vue";
 export { default as AliceEntityCard } from "./components/EntityCard/EntityCard.vue";
 import { 
   useToast as useToastHook,
@@ -92,3 +93,4 @@ export {
 export { useTheme } from "./composables/useTheme";
 export { usePageHeader } from "./composables/usePageHeader";
 export { useAlicePageRefresh } from "./composables/useAlicePageRefresh";
+export { useClipboard } from "./composables/useClipboard";

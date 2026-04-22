@@ -98,7 +98,6 @@ const mobileMenuOpen = ref(false)
                 <AliceButton
                   variant="primary" design="ghost-subtle"
                   size="icon"
-                  class="hover:bg-gray-100 dark:hover:bg-slate-800"
                   :icon="MoreVertical"
                 />
               </template>
@@ -134,9 +133,8 @@ const mobileMenuOpen = ref(false)
           />
 
           <AliceButton
-            variant="primary" design="ghost-subtle"
+            variant="success" design="ghost-subtle"
             size="icon"
-            class="hover:text-success-600 hover:bg-success-50 dark:hover:bg-success-900/20"
             @click="emit('export')"
             title="Exportar a Excel"
             :icon="Download"
@@ -147,7 +145,6 @@ const mobileMenuOpen = ref(false)
           <AliceButton
             variant="primary" design="ghost-subtle"
             size="icon"
-            class="hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20"
             @click="emit('toggle-fullscreen')"
             :title="isFullscreen ? 'Restaurar' : 'Maximizar'"
             :icon="isFullscreen ? Minimize2 : Maximize2"

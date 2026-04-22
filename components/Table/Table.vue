@@ -426,17 +426,18 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    ref="tableContainer"
-    class="flex flex-col border border-gray-100 dark:border-white/10 alice-table-container rounded-alice-md"
-    :style="{ 'view-transition-name': transitionId }"
-    :class="[
-      isFullscreen
-        ? 'fixed inset-0 z-50 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden'
-        : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
-      isFixedMode ? 'h-fit' : 'flex-1 min-h-0',
-    ]"
-  >
+  <Teleport to="body" :disabled="!isFullscreen">
+    <div
+      ref="tableContainer"
+      class="flex flex-col border border-gray-100 dark:border-white/10 alice-table-container rounded-alice-md"
+      :style="{ 'view-transition-name': transitionId }"
+      :class="[
+        isFullscreen
+          ? 'fixed inset-0 z-1600 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden'
+          : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
+        isFixedMode ? 'h-fit' : 'flex-1 min-h-0',
+      ]"
+    >
     <!-- Toolbar -->
     <TableToolbar
       :has-selection="hasSelection"
@@ -587,4 +588,5 @@ defineExpose({
       @next-page="nextPage"
     />
   </div>
+  </Teleport>
 </template>

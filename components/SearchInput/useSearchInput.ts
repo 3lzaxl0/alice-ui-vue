@@ -52,6 +52,7 @@ export function useSearchInput(
     maxRecent?: number
     minChars?: number
     debounceMs?: number
+    readonly?: boolean
   },
   emit: {
     (e: 'update:modelValue', value: Result | null): void
@@ -102,6 +103,7 @@ export function useSearchInput(
   }
 
   function handleInput(event: Event) {
+    if (props.readonly) return
     const query = (event.target as HTMLInputElement).value
     searchQuery.value = query
     isOpen.value = true
@@ -139,7 +141,7 @@ export function useSearchInput(
   }
 
   function handleFocus() {
-    if (!props.disabled) {
+    if (!props.disabled && !props.readonly) {
       isOpen.value = true
       activeIndex.value = -1
       if (searchQuery.value) emitSearch(searchQuery.value)
@@ -248,6 +250,7 @@ export function useSearchInput(
   }
 
   function handleKeydown(event: KeyboardEvent) {
+    if (props.readonly) return
     if (!isOpen.value) {
       if (event.key === 'ArrowDown' || event.key === 'ArrowUp' || event.key === 'Enter') {
         event.preventDefault()

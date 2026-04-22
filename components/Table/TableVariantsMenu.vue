@@ -43,9 +43,8 @@ const handleSaveVariant = () => {
   <AlicePopover ref="popoverRef" placement="bottom-right" :close-onClick="false" mobile-fullscreen teleport>
     <template #trigger>
       <AliceButton
-        variant="primary" design="ghost-subtle"
+        variant="warning" design="ghost-subtle"
         size="icon"
-        class="hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20"
         title="Vistas y Configuración"
         :icon="Layout"
       />
@@ -61,11 +60,10 @@ const handleSaveVariant = () => {
         >
 
         <AliceButton
-          variant="primary" design="ghost-subtle"
+          variant="error" design="ghost-subtle"
           size="icon-sm"
           :icon-size="16"
           @click="popoverRef?.close()"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-700"
           :icon="X"
         />
       </div>
