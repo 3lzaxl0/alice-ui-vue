@@ -22,7 +22,7 @@ const emit = defineEmits<{
       <component :is="icon" v-if="icon" :size="28" class="text-primary-600 dark:text-primary-400 shrink-0" />
       <div class="min-w-0">
         <h1
-          class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-none mb-1 truncate"
+          class="text-2xl font-bold text-gray-900 dark:text-white tracking-tight leading-8 mb-1 truncate"
         >
           {{ title }}
         </h1>
