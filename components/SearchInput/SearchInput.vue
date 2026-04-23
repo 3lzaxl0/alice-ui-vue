@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { onMounted, onUnmounted, ref, nextTick, watch, type CSSProperties } from 'vue'
 import { Search, X, Loader2 } from 'lucide-vue-next'
 import { useSearchInput } from './useSearchInput'
 
@@ -101,8 +101,62 @@ const {
   handleKeydown,
 } = useSearchInput(props, emit)
 
+// --- Teleport / Positioning Logic ---
+const dropdownStyle = ref<CSSProperties>({
+  position: 'fixed',
+  zIndex: 9999,
+  pointerEvents: 'none',
+  opacity: 0,
+})
+
+function updateDropdownPosition() {
+  if (!isOpen.value || !inputRef.value) return
+
+  const rect = inputRef.value.getBoundingClientRect()
+  const spaceBelow = window.innerHeight - rect.bottom
+  const spaceAbove = rect.top
+  const estimatedDropdownHeight = 240 // max-h-60 = 240px
+
+  const style: CSSProperties = {
+    position: 'fixed',
+    left: `${rect.left}px`,
+    width: `${rect.width}px`,
+    zIndex: 9999,
+    opacity: 1,
+    pointerEvents: 'auto',
+  }
+
+  if (spaceBelow < estimatedDropdownHeight && spaceAbove > spaceBelow) {
+    style.bottom = `${window.innerHeight - rect.top + 4}px`
+    style.transformOrigin = 'bottom'
+    style.top = undefined
+  } else {
+    style.top = `${rect.bottom + 4}px`
+    style.transformOrigin = 'top'
+    style.bottom = undefined
+  }
+
+  dropdownStyle.value = style
+}
+
+watch(isOpen, async (val) => {
+  if (val) {
+    await nextTick()
+    updateDropdownPosition()
+    window.addEventListener('scroll', updateDropdownPosition, true)
+    window.addEventListener('resize', updateDropdownPosition)
+  } else {
+    window.removeEventListener('scroll', updateDropdownPosition, true)
+    window.removeEventListener('resize', updateDropdownPosition)
+  }
+})
+
 onMounted(() => document.addEventListener('click', handleClickOutside))
-onUnmounted(() => document.removeEventListener('click', handleClickOutside))
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
+  window.removeEventListener('scroll', updateDropdownPosition, true)
+  window.removeEventListener('resize', updateDropdownPosition)
+})
 </script>
 
 <template>
@@ -153,99 +207,102 @@ onUnmounted(() => document.removeEventListener('click', handleClickOutside))
         <X :size="16" />
       </button>
 
-      <!-- Dropdown Results -->
-      <transition name="alice-pop">
-        <div
-          v-if="
-            isOpen &&
-            (displayedResults.length > 0 ||
-              loading ||
-              (searchQuery && displayedResults.length === 0))
-          "
-          :id="`${id}-listbox`"
-          ref="listboxRef"
-          role="listbox"
-          class="absolute z-50 mt-1 w-full bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-60 overflow-y-auto py-1 rounded-alice-md origin-top custom-scrollbar"
-        >
-          <div v-if="loading" class="px-3 py-2 text-sm text-gray-500 flex items-center gap-2">
-            <Loader2 :size="14" class="animate-spin" /> Buscando...
-          </div>
-
-          <template v-else-if="displayedResults.length > 0">
-            <!-- Recents section header -->
-            <div
-              v-if="showingRecents && recentCount > 0"
-              class="px-3 py-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-400 dark:text-primary-500 select-none"
-            >
-              <span class="flex-1">Recientes</span>
-            </div>
-
-            <div
-              v-for="(result, index) in displayedResults"
-              :key="result.value"
-              role="option"
-              :aria-selected="index === activeIndex"
-              @mousedown.prevent="selectResult(result)"
-              class="px-3 py-2 text-sm cursor-pointer transition-colors flex flex-col gap-0.5"
-              :class="[
-                index === activeIndex
-                  ? 'bg-primary-50 dark:bg-primary-900/30 ring-inset ring-2 ring-primary-500/50'
-                  : 'hover:bg-gray-50 dark:hover:bg-slate-700/50',
-              ]"
-            >
-              <!-- Separator between recents and the rest -->
-
-              <AliceDivider
-                v-if="showingRecents && index === recentCount"
-              />
-              <div
-                v-if="showingRecents && index === recentCount"
-                class="px-3 py-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 select-none -mx-3 mb-1 mt-1"
-              >
-                <span>Todos</span>
-              </div>
-              <div class="font-medium text-gray-700 dark:text-gray-200">
-                <template
-                  v-for="(chunk, idx) in HighlightedText({
-                    text: result.label,
-                    indices: result.labelIndices,
-                  })"
-                  :key="idx"
-                >
-                  <span v-if="typeof chunk === 'string'">{{ chunk }}</span>
-                  <span
-                    v-else
-                    class="text-primary-500 dark:text-primary-400 font-bold underline decoration-primary-500/30 underline-offset-2"
-                    >{{ chunk.char }}</span
-                  >
-                </template>
-              </div>
-              <div v-if="result.description" class="text-xs text-gray-400">
-                <template
-                  v-for="(chunk, idx) in HighlightedText({
-                    text: result.description,
-                    indices: result.descriptionIndices,
-                  })"
-                  :key="idx"
-                >
-                  <span v-if="typeof chunk === 'string'">{{ chunk }}</span>
-                  <span v-else class="text-primary-400/80 dark:text-primary-300 font-semibold">{{
-                    chunk.char
-                  }}</span>
-                </template>
-              </div>
-            </div>
-          </template>
-
+      <!-- Dropdown Results (Teleported to body) -->
+      <Teleport to="body">
+        <transition name="alice-pop">
           <div
-            v-else
-            class="px-3 text-sm text-gray-400 text-center flex flex-col items-center gap-2 py-6"
+            v-if="
+              isOpen &&
+              (displayedResults.length > 0 ||
+                loading ||
+                (searchQuery && displayedResults.length === 0))
+            "
+            :id="`${id}-listbox`"
+            ref="listboxRef"
+            role="listbox"
+            :style="dropdownStyle"
+            class="bg-white dark:bg-slate-900 border border-gray-100 dark:border-white/10 shadow-xl overflow-hidden max-h-47 overflow-y-auto py-1 rounded-alice-md custom-scrollbar"
           >
-            <Search :size="20" class="text-gray-200" />
-            No se encontraron resultados
+            <div v-if="loading" class="px-3 py-2 text-sm text-gray-500 flex items-center gap-2">
+              <Loader2 :size="14" class="animate-spin" /> Buscando...
+            </div>
+
+            <template v-else-if="displayedResults.length > 0">
+              <!-- Recents section header -->
+              <div
+                v-if="showingRecents && recentCount > 0"
+                class="px-3 py-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-primary-400 dark:text-primary-500 select-none"
+              >
+                <span class="flex-1">Recientes</span>
+              </div>
+
+              <div
+                v-for="(result, index) in displayedResults"
+                :key="result.value"
+                role="option"
+                :aria-selected="index === activeIndex"
+                @mousedown.prevent="selectResult(result)"
+                class="px-3 py-2 text-sm cursor-pointer transition-colors flex flex-col gap-0.5"
+                :class="[
+                  index === activeIndex
+                    ? 'bg-primary-50 dark:bg-primary-900/30 ring-inset ring-2 ring-primary-500/50'
+                    : 'hover:bg-gray-50 dark:hover:bg-slate-700/50',
+                ]"
+              >
+                <!-- Separator between recents and the rest -->
+
+                <AliceDivider
+                  v-if="showingRecents && index === recentCount"
+                />
+                <div
+                  v-if="showingRecents && index === recentCount"
+                  class="px-3 py-1 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400 dark:text-slate-500 select-none -mx-3 mb-1 mt-1"
+                >
+                  <span>Todos</span>
+                </div>
+                <div class="font-medium text-gray-700 dark:text-gray-200">
+                  <template
+                    v-for="(chunk, idx) in HighlightedText({
+                      text: result.label,
+                      indices: result.labelIndices,
+                    })"
+                    :key="idx"
+                  >
+                    <span v-if="typeof chunk === 'string'">{{ chunk }}</span>
+                    <span
+                      v-else
+                      class="text-primary-500 dark:text-primary-400 font-bold underline decoration-primary-500/30 underline-offset-2"
+                      >{{ chunk.char }}</span
+                    >
+                  </template>
+                </div>
+                <div v-if="result.description" class="text-xs text-gray-400">
+                  <template
+                    v-for="(chunk, idx) in HighlightedText({
+                      text: result.description,
+                      indices: result.descriptionIndices,
+                    })"
+                    :key="idx"
+                  >
+                    <span v-if="typeof chunk === 'string'">{{ chunk }}</span>
+                    <span v-else class="text-primary-400/80 dark:text-primary-300 font-semibold">{{
+                      chunk.char
+                    }}</span>
+                  </template>
+                </div>
+              </div>
+            </template>
+
+            <div
+              v-else
+              class="px-3 text-sm text-gray-400 text-center flex flex-col items-center gap-2 py-6"
+            >
+              <Search :size="20" class="text-gray-200" />
+              No se encontraron resultados
+            </div>
           </div>
-        </div>
-      </transition>
+        </transition>
+      </Teleport>
     </div>
 
     <!-- Feedback Messages -->

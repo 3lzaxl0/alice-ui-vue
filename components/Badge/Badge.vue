@@ -10,6 +10,7 @@ interface Props {
   variant?: BadgeVariantProps['variant']
   type?: BadgeVariantProps['type']
   icon?: Component
+  color?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -23,14 +24,39 @@ defineOptions({
 
 const computedClass = computed(() => {
   return badgeVariants({
-    variant: props.variant,
+    variant: props.color ? 'default' : props.variant,
     type: props.type,
   })
+})
+
+const computedStyles = computed(() => {
+  if (!props.color) return {}
+  
+  if (props.type === 'filled') {
+    return {
+      backgroundColor: props.color,
+      borderColor: props.color,
+      color: 'white'
+    }
+  }
+
+  if (props.type === 'soft') {
+    return {
+      backgroundColor: `${props.color}15`,
+      borderColor: `${props.color}30`,
+      color: props.color
+    }
+  }
+
+  return {
+    color: props.color,
+    borderColor: 'transparent'
+  }
 })
 </script>
 
 <template>
-  <span :class="computedClass">
+  <span :class="computedClass" :style="computedStyles">
     <component v-if="icon" :is="icon" :size="12" stroke-width="2" />
     {{ label }}
   </span>

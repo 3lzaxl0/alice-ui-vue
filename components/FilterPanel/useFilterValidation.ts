@@ -32,7 +32,7 @@ export function useFilterValidation(props: {
       isValid = false
     } else if (Array.isArray(val)) {
       // For MultiSelect, DateRange, etc. Arrays must have at least one defined element
-      isValid = val.length > 0 && val.some((v) => v !== null && v !== undefined && v !== '')
+      isValid = val.some((v) => v !== null && v !== undefined && v !== '')
     } else {
       isValid = true
     }
@@ -40,15 +40,17 @@ export function useFilterValidation(props: {
     return { valid: isValid, name: props.label || 'Campo Requerido' }
   }
 
+  const uniqueId = props.id || `filter-${Math.random().toString(36).substring(2, 9)}`
+
   onMounted(() => {
-    if (context && props.required && props.id) {
-      context.registerValidator(props.id, validator)
+    if (context && props.required) {
+      context.registerValidator(uniqueId, validator)
     }
   })
 
   onUnmounted(() => {
-    if (context && props.id) {
-      context.unregisterValidator(props.id)
+    if (context) {
+      context.unregisterValidator(uniqueId)
     }
   })
 

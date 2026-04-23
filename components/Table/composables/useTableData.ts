@@ -29,6 +29,14 @@ export function useTableData<T>(
   /*                                    LOGIC                                   */
   /* -------------------------------------------------------------------------- */
 
+  function getSafeValue(item: T, key: string): unknown {
+    if (!key.includes('.')) return (item as Record<string, unknown>)[key]
+    return key.split('.').reduce<unknown>(
+      (obj, part) => (obj as Record<string, unknown>)?.[part],
+      item,
+    )
+  }
+
   // 1. Process Data (Filter & Sort)
   const processedData = computed(() => {
     let result = [...data.value]
@@ -37,7 +45,7 @@ export function useTableData<T>(
     if (Object.keys(activeFilters.value).length > 0) {
       result = result.filter((item) => {
         return Object.entries(activeFilters.value).every(([key, filter]) => {
-          const rowValue = item[key as keyof T]
+          const rowValue = getSafeValue(item, key)
           const filterVal = filter.value
 
           if (filterVal === null || filterVal === undefined || filterVal === '') return true
@@ -48,6 +56,10 @@ export function useTableData<T>(
             // Support both string and number comparison for select options
             return filterVal.some((v) => String(v) === String(rowValue))
           }
+
+          const numRow = Number(rowValue)
+          const numFilter = Number(filterVal)
+          const isNumericComparison = !isNaN(numRow) && !isNaN(numFilter) && typeof rowValue !== 'boolean'
 
           const itemStr =
             rowValue !== null && rowValue !== undefined ? String(rowValue).toLowerCase() : ''
@@ -62,19 +74,20 @@ export function useTableData<T>(
               ) {
                 return getLocalDateString(rowValue) === filterVal
               }
+              if (isNumericComparison) return numRow === numFilter
               return itemStr === filterStr
             case 'startsWith':
               return itemStr.startsWith(filterStr)
             case 'endsWith':
               return itemStr.endsWith(filterStr)
             case 'gt':
-              return Number(rowValue) > Number(filterVal)
+              return numRow > numFilter
             case 'lt':
-              return Number(rowValue) < Number(filterVal)
+              return numRow < numFilter
             case 'gte':
-              return Number(rowValue) >= Number(filterVal)
+              return numRow >= numFilter
             case 'lte':
-              return Number(rowValue) <= Number(filterVal)
+              return numRow <= numFilter
             case 'before': {
               const rowDate = getLocalDateString(rowValue)
               return rowDate !== '' && rowDate < (filterVal as string)
@@ -94,9 +107,9 @@ export function useTableData<T>(
     // B. Sorting
     if (currentSortColumn.value && currentSortDirection.value) {
       result.sort((a, b) => {
-        const colKey = currentSortColumn.value as keyof T
-        const valA = a[colKey]
-        const valB = b[colKey]
+        const colKey = currentSortColumn.value as string
+        const valA = getSafeValue(a, colKey)
+        const valB = getSafeValue(b, colKey)
 
         const numA = Number(valA)
         const numB = Number(valB)
@@ -105,8 +118,11 @@ export function useTableData<T>(
           return currentSortDirection.value === 'asc' ? numA - numB : numB - numA
         }
 
-        if (valA > valB) return currentSortDirection.value === 'asc' ? 1 : -1
-        if (valA < valB) return currentSortDirection.value === 'asc' ? -1 : 1
+        const strA = String(valA ?? '')
+        const strB = String(valB ?? '')
+
+        if (strA > strB) return currentSortDirection.value === 'asc' ? 1 : -1
+        if (strA < strB) return currentSortDirection.value === 'asc' ? -1 : 1
         return 0
       })
     }

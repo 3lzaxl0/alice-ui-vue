@@ -149,11 +149,16 @@ const close = () => {
 }
 
 const handleClickOutside = (event: MouseEvent) => {
-  const target = event.target as Node
+  const target = event.target as HTMLElement
   const isOutsideTrigger = containerRef.value && !containerRef.value.contains(target)
   const isOutsideContent = contentRef.value && !contentRef.value.contains(target)
 
-  if (isOutsideTrigger && isOutsideContent) {
+  // Check if the click was on a teleported element that should not close this popover
+  // For example, another popover or a select dropdown list
+  const isInsideOtherPopover = target.closest('.z-alice-popover')
+  const isInsideSelectDropdown = target.closest('[role="listbox"]')
+
+  if (isOutsideTrigger && isOutsideContent && !isInsideOtherPopover && !isInsideSelectDropdown) {
     close()
   }
 }

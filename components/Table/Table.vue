@@ -426,167 +426,170 @@ defineExpose({
 </script>
 
 <template>
-  <Teleport to="body" :disabled="!isFullscreen">
-    <div
-      ref="tableContainer"
-      class="flex flex-col border border-gray-100 dark:border-white/10 alice-table-container rounded-alice-md"
-      :style="{ 'view-transition-name': transitionId }"
-      :class="[
-        isFullscreen
-          ? 'fixed inset-0 z-1600 m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden'
-          : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
-        isFixedMode ? 'h-fit' : 'flex-1 min-h-0',
-      ]"
-    >
-    <!-- Toolbar -->
-    <TableToolbar
-      :has-selection="hasSelection"
-      :selected-count="selectedSet.size"
-      :data-count="processedData.length"
-      :is-fullscreen="isFullscreen"
-      :hide-variants="hideVariants"
-      :table-id="tableId"
-      :columns="columns as Column<T>[]"
-      :hidden-columns="hiddenColumns"
-      :all-variants="allVariants"
-      :active-variant-name="activeVariantName"
-      :is-exporting="isExporting"
-      @toggle-fullscreen="toggleFullscreen"
-      @export="handleExport"
-      @reset-to-default="resetToDefault"
-      @toggle-column="toggleColumnVisibility"
-      @save-variant="handleSaveVariant"
-      @update-active-variant="handleUpdateActiveVariant"
-      @delete-variant="deleteVariant"
-      @apply-variant="applyVariant"
-      @save-state="saveState"
-    >
-      <template #selection-actions>
-        <slot name="selection-actions" :selected="Array.from(selectedSet)" />
-      </template>
-      <template #toolbar-actions>
-        <slot name="toolbar-actions" />
-      </template>
-    </TableToolbar>
-
-    <!-- Table Content -->
-    <div
-      ref="scrollViewport"
-      class="overflow-auto custom-scrollbar relative alice-smooth-scroll"
-      :class="[!pagination ? 'rounded-b-xl' : '', !isFixedMode ? 'flex-1 min-h-0' : '']"
-      :style="viewportStyle"
-      @scroll="handleScroll"
-    >
-      <!-- Modern Vertical Drop Indicator (Managed Natively) -->
-      <transition name="alice-fade">
-        <div
-          v-show="isDraggingDropIndicator"
-          ref="dropIndicatorEl"
-          class="absolute top-0 w-0.5 bg-primary-500 z-alice-popover pointer-events-none shadow-[0_0_15px_rgba(var(--color-primary-500-rgb),0.5)] transition-all duration-300 ease-out"
-        >
-          <!-- Top Ornament -->
-          <div
-            class="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(var(--color-primary-500-rgb),0.8)] z-10"
-          >
-            <div class="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"></div>
-          </div>
-
-          <!-- Decorative Line Gradient -->
-          <div
-            class="absolute inset-0 bg-linear-to-b from-primary-400 via-primary-500 to-primary-400 opacity-80"
-          ></div>
-
-          <!-- Bottom Ornament -->
-          <div
-            class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(var(--color-primary-500-rgb),0.8)] z-10"
-          >
-            <div class="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"></div>
-          </div>
-        </div>
-      </transition>
-
-      <table 
-        class="w-full text-left border-separate border-spacing-0"
-        :style="tableComputedStyle"
-        @dragover.prevent="onGlobalDragOver"
-        @drop.prevent="onGlobalDrop"
+  <div class="alice-table-root" style="display: contents">
+    <Teleport to="body" :disabled="!isFullscreen">
+      <div
+        ref="tableContainer"
+        class="flex flex-col border border-gray-100 dark:border-white/10 alice-table-container rounded-alice-md"
+        :style="{ 'view-transition-name': transitionId }"
+        :class="[
+          isFullscreen
+            ? 'fixed inset-0 z-alice-modal m-0 h-screen w-screen p-2 md:p-4 bg-white dark:bg-slate-950 shadow-2xl overflow-hidden'
+            : ['relative', !hideShadow ? 'shadow-alice-panel' : '', 'bg-white dark:bg-transparent'],
+          isFixedMode ? 'h-fit' : 'flex-1 min-h-0',
+        ]"
       >
-        <TableHeader
-          :data="data"
-          :visible-columns="visibleColumns as Column<T>[]"
-          :selection-type="selectionType"
-          :is-all-selected="isAllSelected"
-          :is-indeterminate="isIndeterminate"
-          :current-sort-column="currentSortColumn"
-          :current-sort-direction="currentSortDirection"
-          :active-filters="activeFilters"
-          :open-filter-column="openFilterColumn"
-          :column-widths="columnWidths"
-          :sticky-offsets="stickyOffsets"
-          :sticky-right-offsets="stickyRightOffsets"
-          :dragging-column-key="draggingColumnKey"
-          :show-dividers="showDividers"
-          @toggle-select-all="toggleSelectAll"
-          @sort="(key: string) => handleSort(key, true)"
-          @filter-toggle="toggleFilter"
-          @filter-apply="applyFilter"
-          @filter-clear="clearFilter"
-          @filter-close="openFilterColumn = null"
-          @resize-start="startResize"
-          @drag-start="onDragStartMain"
-          @drag-end="onDragEndMain"
-        />
+      <!-- Toolbar -->
+      <TableToolbar
+        :has-selection="hasSelection"
+        :selected-count="selectedSet.size"
+        :data-count="processedData.length"
+        :is-fullscreen="isFullscreen"
+        :hide-variants="hideVariants"
+        :table-id="tableId"
+        :columns="columns as Column<T>[]"
+        :hidden-columns="hiddenColumns"
+        :all-variants="allVariants"
+        :active-variant-name="activeVariantName"
+        :is-exporting="isExporting"
+        @toggle-fullscreen="toggleFullscreen"
+        @export="handleExport"
+        @reset-to-default="resetToDefault"
+        @toggle-column="toggleColumnVisibility"
+        @save-variant="handleSaveVariant"
+        @update-active-variant="handleUpdateActiveVariant"
+        @delete-variant="deleteVariant"
+        @apply-variant="applyVariant"
+        @save-state="saveState"
+      >
+        <template #selection-actions>
+          <slot name="selection-actions" :selected="Array.from(selectedSet)" />
+        </template>
+        <template #toolbar-actions>
+          <slot name="toolbar-actions" />
+        </template>
+      </TableToolbar>
 
-        <TableBody
-          :loading="loading"
-          :processed-data="processedData as any"
-          :is-virtual="isVirtual"
-          :virtual-data="virtualData as any"
-          :displayed-data="displayedData as any"
-          :visible-columns="visibleColumns as any"
-          :selection-type="selectionType"
-          :selected-set="selectedSet as any"
-          :striped="striped"
-          :row-height="rowHeight"
-          :sticky-offsets="stickyOffsets"
-          :sticky-right-offsets="stickyRightOffsets"
-          :column-widths="columnWidths"
-          :virtual-state="virtualState"
-          :get-global-index="getGlobalIndex"
-          :get-item-key="getItemKey"
-          :dragging-column-key="draggingColumnKey"
-          :show-dividers="showDividers"
-          @toggle-selection="toggleSelection as any"
-          @selection-drag-start="handleSelectionDragStart"
-          @selection-drag-hover="handleSelectionDragHover"
+      <!-- Table Content -->
+      <div
+        ref="scrollViewport"
+        class="overflow-auto custom-scrollbar relative alice-smooth-scroll"
+        :class="[!pagination ? 'rounded-b-xl' : '', !isFixedMode ? 'flex-1 min-h-0' : '']"
+        :style="viewportStyle"
+        @scroll="handleScroll"
+      >
+        <!-- Modern Vertical Drop Indicator (Managed Natively) -->
+        <transition name="alice-fade">
+          <div
+            v-show="isDraggingDropIndicator"
+            ref="dropIndicatorEl"
+            class="absolute top-0 w-0.5 bg-primary-500 z-alice-popover pointer-events-none shadow-[0_0_15px_rgba(var(--color-primary-500-rgb),0.5)] transition-all duration-300 ease-out"
+          >
+            <!-- Top Ornament -->
+            <div
+              class="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(var(--color-primary-500-rgb),0.8)] z-10"
+            >
+              <div class="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"></div>
+            </div>
+
+            <!-- Decorative Line Gradient -->
+            <div
+              class="absolute inset-0 bg-linear-to-b from-primary-400 via-primary-500 to-primary-400 opacity-80"
+            ></div>
+
+            <!-- Bottom Ornament -->
+            <div
+              class="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-3 bg-primary-500 rounded-full border-2 border-white dark:border-slate-800 shadow-[0_0_10px_rgba(var(--color-primary-500-rgb),0.8)] z-10"
+            >
+              <div class="absolute inset-0 animate-ping rounded-full bg-primary-400 opacity-20"></div>
+            </div>
+          </div>
+        </transition>
+
+        <table
+          class="w-full text-left border-separate border-spacing-0"
+          :style="tableComputedStyle"
+          @dragover.prevent="onGlobalDragOver"
+          @drop.prevent="onGlobalDrop"
         >
-          <!-- Forward all slots to TableBody -->
-          <template v-for="(_, name) in $slots" #[name]="slotProps">
-            <slot :name="name" v-bind="slotProps" />
-          </template>
-        </TableBody>
+          <TableHeader
+            :data="data"
+            :visible-columns="visibleColumns as Column<T>[]"
+            :selection-type="selectionType"
+            :is-all-selected="isAllSelected"
+            :is-indeterminate="isIndeterminate"
+            :current-sort-column="currentSortColumn"
+            :current-sort-direction="currentSortDirection"
+            :active-filters="activeFilters"
+            :open-filter-column="openFilterColumn"
+            :column-widths="columnWidths"
+            :sticky-offsets="stickyOffsets"
+            :sticky-right-offsets="stickyRightOffsets"
+            :dragging-column-key="draggingColumnKey"
+            :show-dividers="showDividers"
+            @toggle-select-all="toggleSelectAll"
+            @sort="(key: string) => handleSort(key, true)"
+            @filter-toggle="toggleFilter"
+            @filter-apply="applyFilter"
+            @filter-clear="clearFilter"
+            @filter-close="openFilterColumn = null"
+            @resize-start="startResize"
+            @drag-start="onDragStartMain"
+            @drag-end="onDragEndMain"
+          />
 
-        <TableFooter
-          :visible-columns="visibleColumns as Column<T>[]"
-          :processed-data="processedData as T[]"
-          :selection-type="selectionType"
-          :sticky-offsets="stickyOffsets"
-          :sticky-right-offsets="stickyRightOffsets"
-          :column-widths="columnWidths"
-          :show-dividers="showDividers"
-          v-model:footer-operations="footerOperations"
-        />
-      </table>
-    </div>
+          <TableBody
+            :loading="loading"
+            :processed-data="processedData as any"
+            :is-virtual="isVirtual"
+            :virtual-data="virtualData as any"
+            :displayed-data="displayedData as any"
+            :visible-columns="visibleColumns as any"
+            :selection-type="selectionType"
+            :selected-set="selectedSet as any"
+            :striped="striped"
+            :row-height="rowHeight"
+            :sticky-offsets="stickyOffsets"
+            :sticky-right-offsets="stickyRightOffsets"
+            :column-widths="columnWidths"
+            :virtual-state="virtualState"
+            :get-global-index="getGlobalIndex"
+            :get-item-key="getItemKey"
+            :dragging-column-key="draggingColumnKey"
+            :show-dividers="showDividers"
+            @toggle-selection="toggleSelection as any"
+            @selection-drag-start="handleSelectionDragStart"
+            @selection-drag-hover="handleSelectionDragHover"
+          >
+            <!-- Forward all slots to TableBody -->
+            <template v-for="(_, name) in $slots" #[name]="slotProps">
+              <slot :name="name" v-bind="slotProps" />
+            </template>
+          </TableBody>
 
-    <!-- Pagination -->
-    <TablePagination
-      v-if="pagination"
-      :current-page="currentPage"
-      :total-pages="totalPages"
-      @prev-page="prevPage"
-      @next-page="nextPage"
-    />
+          <TableFooter
+            :visible-columns="visibleColumns as Column<T>[]"
+            :processed-data="processedData as T[]"
+            :selection-type="selectionType"
+            :sticky-offsets="stickyOffsets"
+            :sticky-right-offsets="stickyRightOffsets"
+            :column-widths="columnWidths"
+            :show-dividers="showDividers"
+            v-model:footer-operations="footerOperations"
+          />
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <TablePagination
+        v-if="pagination"
+        :current-page="currentPage"
+        :total-pages="totalPages"
+        @prev-page="prevPage"
+        @next-page="nextPage"
+      />
+      </div>
+    </Teleport>
   </div>
-  </Teleport>
 </template>
+

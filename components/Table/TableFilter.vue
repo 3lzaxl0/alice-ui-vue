@@ -51,6 +51,7 @@ const operators = computed(() => {
         { label: 'Termina con', value: 'endsWith' },
       ]
     case 'number':
+    case 'currency':
       return [
         { label: 'Igual a', value: 'equals' },
         { label: 'Mayor que', value: 'gt' },
@@ -75,6 +76,7 @@ function getDefaultOperator(type: FilterType): string {
     case 'text':
       return 'contains'
     case 'number':
+    case 'currency':
     case 'date':
       return 'equals'
     default:
@@ -174,16 +176,17 @@ function clearFilter() {
 
       <!-- Value Input -->
 
-      <!-- Type: Text/Number -->
-      <div v-if="['text', 'number'].includes(type)">
+      <!-- Type: Text/Number/Currency -->
+      <div v-if="['text', 'number', 'currency'].includes(type)">
         <AliceInput
           :id="id ? `${id}-value` : 'filter-value'"
           :name="name ? `${name}-value` : (id ? `${id}-value` : 'filter-value')"
           :model-value="inputValue"
           @update:model-value="(val: string | number) => (internalValue = val)"
-          :type="type === 'number' ? 'number' : 'text'"
+          :type="['number', 'currency'].includes(type) ? 'number' : 'text'"
           placeholder="Valor..."
           class="w-full"
+          @keyup.enter="applyFilter"
         />
       </div>
 
