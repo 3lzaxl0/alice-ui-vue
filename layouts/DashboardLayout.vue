@@ -114,18 +114,18 @@ function handleSwitchRole(code: string) {
         </slot>
 
         <!-- Viewport / Content Section -->
-        <div class="px-6 pb-6 pt-4 h-full overflow-y-auto custom-scrollbar flex flex-col gap-4">
+        <div class="px-6 pb-6 pt-4 flex-1 min-h-0 flex flex-col gap-4 overflow-hidden">
           <slot>
             <!-- Integrated Routing Logic -->
-            <RouterView v-slot="{ Component }">
-              <transition :name="transitionName" mode="out-in">
+            <RouterView v-slot="{ Component }" class="flex-1 min-h-0 flex flex-col">
+              <transition :name="transitionName" mode="out-in" class="flex-1 min-h-0 flex flex-col">
                 <template v-if="persistence">
                   <KeepAlive :max="keepAliveMax">
-                    <component :is="Component" :key="route.fullPath" />
+                    <component :is="Component" :key="route.fullPath" class="flex-1 min-h-0" />
                   </KeepAlive>
                 </template>
                 <template v-else>
-                  <component :is="Component" :key="route.fullPath" />
+                  <component :is="Component" :key="route.fullPath" class="flex-1 min-h-0" />
                 </template>
               </transition>
             </RouterView>

@@ -32,6 +32,7 @@ export const addAliceToast = addAliceToastFn;
 
 // Components - Table
 export { default as AliceTable } from "./components/Table/Table.vue";
+export { default as AliceSteps, type StepItem } from "./components/Steps/Steps.vue";
 
 // Components - Navigation
 export { default as AliceLabel } from "./components/Label/Label.vue";
