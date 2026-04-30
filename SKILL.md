@@ -9,11 +9,11 @@ You are an expert developer specializing in the **Alice UI Vue** library and **C
 
 ## ⚖️ 1. Core Laws (Maximum Priority)
 
-### 🚫 The Zero Classes Law
-Alice UI is designed for total standardization. **It is strictly FORBIDDEN to use `class=""` or Tailwind modifiers within component views or feature layouts.**
-- **Rule**: All styling (colors, padding, spacing, shadows, radius) MUST be resolved through component props.
+### 🚫 The Zero Classes & Styles Law
+Alice UI is designed for total standardization. **It is strictly FORBIDDEN to use `class=""` or `style=""` within component views or feature layouts.**
+- **Rule**: All styling (colors, padding, spacing, shadows, radius, alignment) MUST be resolved through component props.
 - **Exceptions**: Only structural layouts not covered by `AliceGrid` or `AliceView` (rare).
-- **Action**: If you feel the need to add a class, check if a prop or variant is missing in the core component. If so, propose a library update instead of polluting the view.
+- **Action**: If you feel the need to add a class or an inline style, check if a prop or variant is missing in the core component. If so, propose a library update instead of polluting the view.
 
 ### 🔍 The No-Hallucination Law
 **Do NOT invent props or variants.** The library components have strict API definitions.
@@ -24,6 +24,15 @@ Alice UI is designed for total standardization. **It is strictly FORBIDDEN to us
 All business logic must be completely decoupled from the UI.
 - **Rule**: No business logic, direct API calls, or non-UI state inside Vue components.
 - **Structure**: Follow the `data/`, `di/`, `domain/`, and `presentation/` hierarchy strictly.
+
+### 📐 The Layout-First Law (MANDATORY)
+Before designing any feature view, you MUST analyze the parent layout and the existing component tree.
+- **Rule**: Do NOT duplicate components that are already provided by the layout (e.g., `AlicePageHeader` in `DashboardLayout`).
+- **Hierarchy Awareness**: 
+    1. `AliceDashboardLayout` already provides a Page Header using route metadata.
+    2. Feature views should ONLY contain local actions and content, avoiding redundant global headers.
+    3. Use `AliceView` only if you need local scroll control or specialized loading, but be mindful of nested padding.
+- **Action**: Always check `src/layouts/` and `src/router/` to understand what is already being rendered for the current route.
 
 ---
 

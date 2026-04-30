@@ -31,6 +31,6 @@ export function usePageHeader() {
     setRefreshing,
     setRefreshHandler,
     clearRefreshHandler,
-    triggerRefresh
+    triggerRefresh,
   }
 }

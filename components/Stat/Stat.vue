@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, type Component } from "vue";
-import { statVariants, statIconVariants, statValueVariants } from "./Stat.variants";
+import { statVariants, statValueVariants } from "./Stat.variants";
 import AliceCard from "../Card/Card.vue";
 import AliceText from "../Text/Text.vue";
+import AliceIcon from "../Icon/Icon.vue";
 
 defineOptions({ name: "AliceStat" });
 
@@ -24,11 +25,6 @@ const computedContainerClass = computed(() => {
   return statVariants({ variant: props.variant });
 });
 
-
-const computedIconClass = computed(() => {
-  return statIconVariants({ variant: props.variant });
-});
-
 const computedValueClass = computed(() => {
   return statValueVariants({ variant: props.variant });
 });
@@ -45,22 +41,24 @@ const displayValue = computed(() => {
 </script>
 
 <template>
-  <AliceCard :interactive="interactive" :class="computedContainerClass">
-    <div class="flex items-center justify-between mb-2">
-      <AliceText variant="subtitle">{{ title }}</AliceText>
-      <div v-if="icon" :class="computedIconClass">
-        <component :is="icon" :size="20" />
+  <AliceCard :interactive="interactive" :class="computedContainerClass" radius="lg">
+    <div class="flex items-center gap-3">
+      <AliceIcon v-if="icon" :icon="icon" :variant="variant" size="md" radius="xl" />
+      
+      <div class="flex flex-col min-w-0">
+        <AliceText variant="description" weight="medium" truncate class="leading-tight">
+          {{ title }}
+        </AliceText>
+        <AliceText variant="h3" tag="span" :class="[computedValueClass, valueClass]" weight="bold" class="mt-0.5 tracking-tight">
+          {{ displayValue }}
+          <AliceText v-if="$slots.suffix" tag="span" variant="caption" weight="bold" class="opacity-60 ml-0.5">
+            <slot name="suffix" />
+          </AliceText>
+        </AliceText>
       </div>
     </div>
 
-    <AliceText variant="h3" tag="span" :class="[computedValueClass, valueClass]">
-      {{ displayValue }}
-      <AliceText v-if="$slots.suffix" tag="span" variant="caption" weight="bold" class="opacity-60 ml-0.5">
-        <slot name="suffix" />
-      </AliceText>
-    </AliceText>
-
-    <AliceText v-if="$slots.footer" variant="caption" tag="div" class="mt-1 opacity-70">
+    <AliceText v-if="$slots.footer" variant="caption" tag="div" class="mt-2 pt-2 border-t border-gray-100 dark:border-white/5 opacity-70">
       <slot name="footer" />
     </AliceText>
   </AliceCard>

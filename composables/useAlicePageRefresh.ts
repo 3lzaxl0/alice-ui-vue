@@ -5,7 +5,7 @@ import { usePageHeader } from './usePageHeader'
  * Standardizes the page-level refresh boilerplate for Admin views.
  * Handles mounting/unmounting of the refresh handler and synchronizes loading state.
  * Supports KeepAlive components by using activated/deactivated hooks.
- * 
+ *
  * @param refreshHandler The function to execute when the PageHeader refresh is triggered.
  * @param isLoading A ref indicating the loading state of the current view.
  */

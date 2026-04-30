@@ -16,6 +16,7 @@ const props = withDefaults(
     loading?: boolean
     loadingText?: string
     active?: boolean
+    interactive?: boolean
     height?: 'auto' | 'full'
   }>(),
   {
@@ -28,6 +29,7 @@ const props = withDefaults(
     loading: false,
     loadingText: 'Sincronizando...',
     active: false,
+    interactive: false,
     height: 'auto',
   },
 )
@@ -58,6 +60,11 @@ const shadowClass = computed(() => {
   return map[props.shadow] || 'shadow-sm hover:shadow-md'
 })
 
+const interactiveClass = computed(() => {
+  if (!props.interactive) return ''
+  return 'cursor-pointer hover:bg-gray-50/50 dark:hover:bg-white/5 active:scale-[0.98]'
+})
+
 const titleAlignClass = computed(() => {
   const map: Record<string, string> = {
     left: 'text-left',
@@ -85,8 +92,8 @@ const heightContentClass = computed(() => props.height === 'full' ? 'flex-1 min-
 
 <template>
   <div
-    class="relative border border-gray-100 dark:border-white/10 transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden"
-    :class="[radiusClass, shadowClass, activeClass, heightOuterClass]"
+    class="relative border border-gray-100 dark:border-white/10 transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden group"
+    :class="[radiusClass, shadowClass, activeClass, interactiveClass, heightOuterClass]"
   >
     <AliceLoading :active="loading" :text="loadingText" />
 
