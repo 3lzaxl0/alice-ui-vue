@@ -50,6 +50,7 @@ export { default as AlicePageHeader } from "./components/PageHeader/PageHeader.v
 export { default as AlicePanel } from "./components/Panel/Panel.vue";
 export { default as AliceCard } from "./components/Card/Card.vue";
 export { default as AliceText } from "./components/Text/Text.vue";
+export { default as AliceSectionHeader } from "./components/SectionHeader/SectionHeader.vue";
 export { default as AliceActivityItem } from "./components/ActivityItem/ActivityItem.vue";
 export { default as AliceDataList, type DataListItem } from "./components/DataList/DataList.vue";
 export { default as AliceNote } from "./components/Note/Note.vue";
@@ -98,3 +99,4 @@ export { useTheme } from "./composables/useTheme";
 export { usePageHeader } from "./composables/usePageHeader";
 export { useAlicePageRefresh } from "./composables/useAlicePageRefresh";
 export { useClipboard } from "./composables/useClipboard";
+export { useDialogStack } from "./composables/useDialogStack";

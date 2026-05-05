@@ -307,7 +307,11 @@ const isFixedMode = computed(() => {
 
 // Computed viewport style for strict fixed heights
 const viewportStyle = computed(() => {
-  const style: Record<string, string> = { overflowAnchor: 'none' }
+  const style: Record<string, string> = {
+    overflowAnchor: 'none',
+    willChange: 'scroll-position',
+    contain: 'strict',
+  }
 
   if (isFixedMode.value) {
     const effectiveVisibleRows = props.visibleRows || 10

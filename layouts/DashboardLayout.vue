@@ -50,7 +50,7 @@ withDefaults(
     showColorPicker?: boolean
   }>(),
   {
-    sidebarTitle: 'Portal Agua',
+    sidebarTitle: '',
     userName: '',
     userRoles: () => [],
     activeRoleCode: null,

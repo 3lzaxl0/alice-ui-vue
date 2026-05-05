@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted } from 'vue'
+import { computed, watch } from 'vue'
 import { X } from 'lucide-vue-next'
 import AliceButton from '../../components/Button/Button.vue'
+import { useDialogStack } from '../../composables/useDialogStack'
 
 interface Props {
   show: boolean
@@ -48,6 +49,8 @@ defineOptions({
   inheritAttrs: false,
 })
 
+const { register, unregister, isTop } = useDialogStack()
+
 function close() {
   if (props.loading) return
   emit('update:show', false)
@@ -63,18 +66,29 @@ function onConfirm() {
   emit('confirm')
 }
 
-// Handle Escape key
+// Handle Escape key — only the topmost dialog in the stack should respond
 function handleEscape(e: KeyboardEvent) {
-  if (e.key === 'Escape' && props.show) {
+  if (e.key === 'Escape' && props.show && isTop()) {
+    e.stopImmediatePropagation()
     if (props.preventClose) return
     close()
   }
 }
 
-onMounted(() => window.addEventListener('keydown', handleEscape))
-onUnmounted(() => window.removeEventListener('keydown', handleEscape))
-
-import { computed } from 'vue'
+// Track show state changes to maintain the global dialog stack
+watch(
+  () => props.show,
+  (val) => {
+    if (val) {
+      register()
+      window.addEventListener('keydown', handleEscape, { capture: true })
+    } else {
+      unregister()
+      window.removeEventListener('keydown', handleEscape, true)
+    }
+  },
+  { immediate: true },
+)
 
 const contentPadding = computed(() => {
   if (props.padding === 'none') return 'p-0'
@@ -93,7 +107,7 @@ const headerFooterPadding = computed(() => {
     <Transition name="alice-fade">
       <div
         v-if="show"
-        class="fixed inset-0 z-alice-modal flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm"
+        class="fixed inset-0 z-alice-modal flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-700/60 backdrop-blur-sm"
         @click.self="handleBackdropClick"
       >
         <Transition appear name="alice-modal">
@@ -113,8 +127,8 @@ const headerFooterPadding = computed(() => {
                 <h3 class="text-xl font-bold text-gray-900 dark:text-white leading-none">
                   {{ title }}
                 </h3>
-                <div 
-                  v-if="$slots.description || description" 
+                <div
+                  v-if="$slots.description || description"
                   class="text-sm text-gray-600 dark:text-gray-400 [&_strong]:font-bold [&_strong]:text-gray-900 dark:[&_strong]:text-white"
                 >
                   <slot name="description">
@@ -126,7 +140,7 @@ const headerFooterPadding = computed(() => {
                 v-if="!preventClose"
                 @click="close"
                 variant="error"
-                design="ghost-subtle"
+                design="ghost"
                 radius="full"
                 size="icon"
                 :icon="X"

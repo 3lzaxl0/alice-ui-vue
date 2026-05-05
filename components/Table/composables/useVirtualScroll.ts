@@ -1,4 +1,4 @@
-import { ref, computed, onMounted, onUnmounted, type Ref } from 'vue'
+import { ref, computed, shallowRef, watch, onMounted, onUnmounted, type Ref } from 'vue'
 
 export function useVirtualScroll<T>(
   processedData: Ref<T[]>,
@@ -11,32 +11,60 @@ export function useVirtualScroll<T>(
   const viewportHeight = ref(600)
   const scrollViewport = ref<HTMLElement | null>(null)
 
-  const isVirtual = computed(() => !pagination.value && mode.value === 'auto')
+  // Virtual scroll is active whenever pagination is off, regardless of mode.
+  // In 'fixed' mode the viewport scrolls inside its explicit-height container.
+  const isVirtual = computed(() => !pagination.value)
 
   const virtualState = computed(() => {
-    if (!isVirtual.value) {
+    const count = processedData.value.length
+
+    if (!isVirtual.value || count === 0) {
       return {
         startIndex: 0,
-        endIndex: processedData.value.length,
+        endIndex: count,
         paddingTop: 0,
         paddingBottom: 0,
       }
     }
 
-    const count = processedData.value.length
-    const visibleCount = Math.ceil(viewportHeight.value / rowHeight.value)
+    const rh = rowHeight.value
+    const vh = viewportHeight.value
+    const st = scrollTop.value
+    const buf = buffer.value
 
-    const rawStart = Math.floor(scrollTop.value / rowHeight.value)
-    const startIndex = Math.max(0, rawStart - buffer.value)
-    const endIndex = Math.min(count, rawStart + visibleCount + buffer.value)
+    const visibleCount = Math.ceil(vh / rh)
+    const rawStart = Math.floor(st / rh)
+    const startIndex = Math.max(0, rawStart - buf)
+    const endIndex = Math.min(count, rawStart + visibleCount + buf)
 
-    const paddingTop = startIndex * rowHeight.value
-    const paddingBottom = Math.max(0, (count - endIndex) * rowHeight.value)
-
-    return { startIndex, endIndex, paddingTop, paddingBottom }
+    return {
+      startIndex,
+      endIndex,
+      paddingTop: startIndex * rh,
+      paddingBottom: Math.max(0, (count - endIndex) * rh),
+    }
   })
 
-  // Throttle scroll with RAF for smooth 60fps
+  // Use shallowRef + manual slice to avoid deep reactive overhead on large arrays
+  const virtualData = shallowRef<T[]>([])
+
+  watch(
+    virtualState,
+    (state) => {
+      virtualData.value = processedData.value.slice(state.startIndex, state.endIndex)
+    },
+    { immediate: true },
+  )
+
+  // Also recompute when data changes
+  watch(processedData, () => {
+    virtualData.value = processedData.value.slice(
+      virtualState.value.startIndex,
+      virtualState.value.endIndex,
+    )
+  })
+
+  // RAF-throttled scroll with passive listener for maximum smoothness
   let ticking = false
 
   function handleScroll(e: Event) {
@@ -66,11 +94,6 @@ export function useVirtualScroll<T>(
 
   onUnmounted(() => {
     window.removeEventListener('resize', updateViewport)
-  })
-
-  const virtualData = computed(() => {
-    if (!isVirtual.value) return processedData.value
-    return processedData.value.slice(virtualState.value.startIndex, virtualState.value.endIndex)
   })
 
   return {

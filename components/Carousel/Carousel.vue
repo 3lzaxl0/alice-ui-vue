@@ -43,6 +43,8 @@ const canScrollRight = ref(false)
 
 // Drag scroll variables
 const isDragging = ref(false)
+const hasDragged = ref(false) // true if the mouse moved more than threshold during drag
+const DRAG_THRESHOLD = 5 // px — below this is considered a click
 let startX = 0
 let scrollLeftPos = 0
 
@@ -84,6 +86,7 @@ function handleMouseDown(e: MouseEvent) {
   const el = trackRef.value
   if (!el) return
   isDragging.value = true
+  hasDragged.value = false
   el.style.scrollBehavior = 'auto' // Prevent laggy smooth snapping during drag
   el.style.cursor = 'grabbing'
   
@@ -102,6 +105,7 @@ function handleMouseMove(e: MouseEvent) {
   e.preventDefault() // Stop scrolling logic inside elements text selection
   const x = e.pageX - el.offsetLeft
   const walk = (x - startX) * 1.5 // multiplier for drag speed
+  if (Math.abs(walk) > DRAG_THRESHOLD) hasDragged.value = true
   el.scrollLeft = scrollLeftPos - walk
   updateScrollState()
 }
@@ -130,6 +134,8 @@ onMounted(async () => {
 onUnmounted(() => {
   resizeObserver?.disconnect()
 })
+
+defineExpose({ hasDragged })
 </script>
 
 <template>
@@ -167,7 +173,7 @@ onUnmounted(() => {
       style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth;"
       @scroll="updateScrollState"
     >
-      <slot :select-item="selectItem" :selected="modelValue" />
+      <slot :select-item="selectItem" :selected="modelValue" :has-dragged="hasDragged" />
     </div>
 
     <!-- Right Arrow -->
@@ -197,5 +203,10 @@ onUnmounted(() => {
 .scrollbar-hide > :deep(*) {
   user-select: none;
   pointer-events: auto;
+}
+/* Prevent native browser image drag ghost during carousel drag */
+.scrollbar-hide :deep(img) {
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 </style>
