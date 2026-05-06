@@ -31,14 +31,14 @@ export const sidebarItemVariants = cva(
         design: 'filled',
         active: false,
         class:
-          'bg-error-600 text-white hover:bg-error-500 hover:text-white dark:bg-error-500 dark:hover:bg-error-400 text-white dark:text-white',
+          'bg-error-600 text-white hover:bg-error-500 hover:text-white text-white dark:text-white',
       },
       {
         variant: 'error',
         design: 'ghost',
         active: false,
         class:
-          'text-error-600 hover:text-error-700 hover:bg-error-50 dark:text-error-400 dark:hover:text-error-300 dark:hover:bg-error-900/40',
+          'text-error-600 hover:text-error-700 hover:bg-error-50',
       },
     ],
     defaultVariants: {

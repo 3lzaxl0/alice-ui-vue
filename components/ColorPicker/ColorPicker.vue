@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, computed, inject } from 'vue'
-import { RotateCcw, Hash, Check } from 'lucide-vue-next'
+import { RotateCcw, Hash, CircleDot } from 'lucide-vue-next'
 import { useTheme } from '../../composables/useTheme'
 import AlicePopover from '../Popover/Popover.vue'
 import AliceButton from '../Button/Button.vue'
@@ -141,7 +141,7 @@ defineOptions({
       </button>
     </template>
 
-    <div class="p-4 flex flex-col gap-6 w-72 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-alice-lg border border-gray-100 dark:border-white/5 shadow-alice-panel overflow-hidden relative select-none">
+    <div class="p-4 flex flex-col gap-6 w-72 max-md:w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-alice-lg border border-gray-100 dark:border-white/5 shadow-alice-panel overflow-hidden relative select-none">
       <!-- Background Matrix -->
       <div class="absolute inset-0 pointer-events-none opacity-[0.03] dark:opacity-[0.05]"
            style="background-image: radial-gradient(#000 1px, transparent 0); background-size: 8px 8px;"></div>
@@ -168,11 +168,12 @@ defineOptions({
               class="relative w-7 h-7 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 group/color"
               :style="{ backgroundColor: color.hex }"
             >
-              <Check
+              <span
                 v-if="primaryColor.toLowerCase() === color.hex.toLowerCase()"
-                class="absolute inset-0 m-auto text-white mix-blend-difference"
-                :size="14"
-              />
+                class="absolute inset-0 m-auto flex items-center justify-center"
+              >
+                <CircleDot class="text-white" :size="14" />
+              </span>
               <!-- Hover Tooltip/Ring -->
               <div class="absolute -inset-1 rounded-full border border-primary-500/0 group-hover/color:border-primary-500/50 transition-colors"></div>
             </button>
@@ -189,11 +190,14 @@ defineOptions({
               class="relative w-7 h-7 rounded-full transition-all duration-300 hover:scale-110 active:scale-95 group/color"
               :style="{ backgroundColor: color.hex }"
             >
-              <Check
+              <span
                 v-if="primaryColor.toLowerCase() === color.hex.toLowerCase()"
-                class="absolute inset-0 m-auto text-white mix-blend-difference"
-                :size="14"
-              />
+                class="absolute inset-0 m-auto flex items-center justify-center"
+              >
+                <span class="w-4 h-4 rounded-full bg-black/40 flex items-center justify-center">
+                  <Check class="text-white" :size="10" />
+                </span>
+              </span>
               <div class="absolute -inset-1 rounded-full border border-primary-500/0 group-hover/color:border-primary-500/30 transition-colors"></div>
             </button>
           </div>

@@ -205,7 +205,7 @@ defineExpose({
 
     <Teleport :to="to" :disabled="!teleport">
       <!-- Positioning Wrapper -->
-      <div v-show="isOpen" class="z-alice-popover" :class="[!teleport ? 'absolute mt-2' : 'fixed']" :style="[contentStyle, calculatedStyle]">
+      <div v-show="isOpen" :class="[!teleport ? 'absolute mt-2' : 'fixed', 'z-alice-popover', mobileFullscreen ? 'max-md:z-alice-toast!' : '']" :style="[contentStyle, calculatedStyle]">
         <!-- Animation & Visual Shell -->
         <transition name="alice-pop">
           <div v-if="isOpen" ref="contentRef" class="focus:outline-none" :class="[

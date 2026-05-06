@@ -14,7 +14,7 @@
   --color-primary-900: var(--alice-primary-900);
   --color-primary-950: var(--alice-primary-950);
 
-  /* Info Case (Standard Blue, can be customized later) */
+  /* Info Case (Cyan) */
   --color-info-50: var(--alice-info-50);
   --color-info-100: var(--alice-info-100);
   --color-info-200: var(--alice-info-200);
@@ -98,7 +98,7 @@
 
     /* --- Semantic Palettes: 50-950 Scales --- */
 
-    /* Primary & Info (Default: Blue) */
+    /* Primary (Default: Blue) & Info (Cyan) */
     --alice-primary-50: #eff6ff;
     --alice-primary-100: #dbeafe;
     --alice-primary-200: #bfdbfe;
@@ -111,17 +111,17 @@
     --alice-primary-900: #1e3a8a;
     --alice-primary-950: #172554;
 
-    --alice-info-50: #eff6ff;
-    --alice-info-100: #dbeafe;
-    --alice-info-200: #bfdbfe;
-    --alice-info-300: #93c5fd;
-    --alice-info-400: #60a5fa;
-    --alice-info-500: #3b82f6;
-    --alice-info-600: #2563eb;
-    --alice-info-700: #1d4ed8;
-    --alice-info-800: #1e40af;
-    --alice-info-900: #1e3a8a;
-    --alice-info-950: #172554;
+    --alice-info-50: #ecfeff;
+    --alice-info-100: #cffafe;
+    --alice-info-200: #a5f3fc;
+    --alice-info-300: #67e8f9;
+    --alice-info-400: #22d3ee;
+    --alice-info-500: #06b6d4;
+    --alice-info-600: #0891b2;
+    --alice-info-700: #0e7490;
+    --alice-info-800: #155e75;
+    --alice-info-900: #164e63;
+    --alice-info-950: #083344;
 
     /* Success (Default: Emerald) */
     --alice-success-50: #ecfdf5;
