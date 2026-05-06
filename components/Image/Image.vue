@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import AliceLoading from '../Loading/Loading.vue'
+import AliceContextMenu, { type ContextMenuOption } from '../ContextMenu/ContextMenu.vue'
+import { Copy, Download } from 'lucide-vue-next'
+import { addAliceToast } from '../Toast/useToast'
 
 defineOptions({ name: 'AliceImage' })
 
@@ -75,11 +78,79 @@ const fitClass = {
   contain: 'object-contain',
   fill: 'object-fill'
 }
+
+const contextOptions: ContextMenuOption[] = [
+  { label: 'Copiar imagen', value: 'copy', icon: Copy },
+  { label: 'Descargar imagen', value: 'download', icon: Download }
+]
+
+const handleContextSelect = async (value: string | number) => {
+  if (!props.src) return
+  
+  if (value === 'copy') {
+    try {
+      const response = await fetch(props.src)
+      const blob = await response.blob()
+      
+      // Convert to PNG since ClipboardItem only supports image/png currently
+      let finalBlob = blob
+      if (blob.type !== 'image/png') {
+        const imageBitmap = await createImageBitmap(blob)
+        const canvas = document.createElement('canvas')
+        canvas.width = imageBitmap.width
+        canvas.height = imageBitmap.height
+        const ctx = canvas.getContext('2d')
+        if (ctx) {
+          ctx.drawImage(imageBitmap, 0, 0)
+          finalBlob = await new Promise<Blob>((resolve, reject) => {
+            canvas.toBlob((b) => {
+              if (b) resolve(b)
+              else reject(new Error('Canvas toBlob failed'))
+            }, 'image/png')
+          })
+        }
+      }
+
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [finalBlob.type]: finalBlob
+        })
+      ])
+      addAliceToast({
+        title: 'Imagen copiada',
+        message: 'La imagen se ha copiado al portapapeles',
+        type: 'success'
+      })
+    } catch (e) {
+      console.error('Failed to copy image', e)
+      addAliceToast({
+        title: 'No se pudo copiar',
+        message: 'Puede deberse a restricciones de seguridad del navegador',
+        type: 'error'
+      })
+    }
+  } else if (value === 'download') {
+    const a = document.createElement('a')
+    a.href = props.src
+    
+    // Determine extension
+    let ext = 'jpg'
+    if (props.src.includes('image/png')) ext = 'png'
+    else if (props.src.includes('image/webp')) ext = 'webp'
+    else if (props.src.includes('image/gif')) ext = 'gif'
+    
+    a.download = `imagen-${Date.now()}.${ext}`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+  }
+}
 </script>
 
 <template>
-  <div class="relative overflow-hidden w-full h-full" :class="aspectClass[aspect]">
-    <!-- Loading Skeleton (Simple Pulse) -->
+  <AliceContextMenu :options="contextOptions" @select="handleContextSelect">
+    <div class="relative overflow-hidden w-full h-full" :class="aspectClass[aspect]">
+      <!-- Loading Skeleton (Simple Pulse) -->
     <div 
       v-if="!isLoaded && src && type === 'skeleton'" 
       class="absolute inset-0 z-10 bg-slate-200 dark:bg-slate-700 animate-pulse"
@@ -118,5 +189,6 @@ const fitClass = {
         <span class="text-[10px] font-black uppercase tracking-tighter opacity-70">Sin Imagen</span>
       </slot>
     </div>
-  </div>
+    </div>
+  </AliceContextMenu>
 </template>

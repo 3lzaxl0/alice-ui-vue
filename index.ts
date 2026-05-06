@@ -78,6 +78,7 @@ export { default as AliceSearchInput } from "./components/SearchInput/SearchInpu
 export { default as AliceMultiSelect } from "./components/MultiSelect/MultiSelect.vue";
 export { default as AliceSelect } from "./components/Select/Select.vue";
 export { default as AliceDropdownMenu } from "./components/DropdownMenu/DropdownMenu.vue";
+export { default as AliceContextMenu, type ContextMenuOption } from "./components/ContextMenu/ContextMenu.vue";
 export { default as AliceDatePicker } from "./components/DatePicker/DatePicker.vue";
 export { default as AliceDateRangePicker } from "./components/DatePicker/DateRangePicker.vue";
 export { default as AliceSignature } from "./components/Signature/Signature.vue";
