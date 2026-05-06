@@ -28,7 +28,7 @@ withDefaults(
     loading: false,
     selectionType: 'none',
     selected: () => [] as T[],
-    tableMode: 'fixed',
+    tableMode: 'auto',
   }
 )
 

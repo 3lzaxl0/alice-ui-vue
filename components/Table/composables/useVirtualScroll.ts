@@ -84,16 +84,40 @@ export function useVirtualScroll<T>(
     }
   }
 
+  // ResizeObserver watches the viewport element directly.
+  // This fires whenever the viewport changes size: fullscreen toggle, flex layout
+  // reflows, mobile fixed-height mode, sidebar collapse, etc.
+  // Much more reliable than window 'resize' alone.
+  let resizeObserver: ResizeObserver | null = null
+
   onMounted(() => {
     updateViewport()
-    window.addEventListener('resize', updateViewport)
+
     if (scrollViewport.value) {
       scrollTop.value = scrollViewport.value.scrollTop
+
+      resizeObserver = new ResizeObserver(() => {
+        updateViewport()
+      })
+      resizeObserver.observe(scrollViewport.value)
     }
   })
 
   onUnmounted(() => {
-    window.removeEventListener('resize', updateViewport)
+    resizeObserver?.disconnect()
+    resizeObserver = null
+  })
+
+  // Re-attach observer if the viewport ref changes (e.g. Teleport to body for fullscreen)
+  watch(scrollViewport, (el) => {
+    resizeObserver?.disconnect()
+    if (el) {
+      updateViewport()
+      resizeObserver = new ResizeObserver(() => {
+        updateViewport()
+      })
+      resizeObserver.observe(el)
+    }
   })
 
   return {

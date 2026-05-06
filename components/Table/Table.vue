@@ -52,7 +52,7 @@ const props = withDefaults(defineProps<Props<T>>(), {
   mode: 'fixed',
   itemsPerPage: 10,
   rowHeight: 40,
-  buffer: 10,
+  buffer: 1,
   selectionType: 'none',
   selected: () => [],
   striped: true,

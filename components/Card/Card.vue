@@ -18,6 +18,7 @@ const props = withDefaults(
     active?: boolean
     interactive?: boolean
     height?: 'auto' | 'full'
+    scrollable?: boolean
   }>(),
   {
     title: '',
@@ -31,6 +32,7 @@ const props = withDefaults(
     active: false,
     interactive: false,
     height: 'auto',
+    scrollable: false,
   },
 )
 
@@ -80,14 +82,17 @@ const headerVerticalAlignClass = computed(() => {
   }
   return props.subtitle ? 'items-start' : 'items-center'
 })
-
 const activeClass = computed(() => {
   if (!props.active) return ''
   return 'ring-1 ring-inset ring-primary-500/80 dark:ring-primary-400/80 bg-primary-50/90 dark:bg-primary-500/10 border-primary-500/30'
 })
 
-const heightOuterClass = computed(() => props.height === 'full' ? 'h-full flex flex-col' : '')
-const heightContentClass = computed(() => props.height === 'full' ? 'flex-1 min-h-0' : '')
+const heightOuterClass = computed(() =>
+  props.height === 'full' || props.scrollable ? 'h-full flex flex-col' : '',
+)
+const heightContentClass = computed(() =>
+  props.height === 'full' || props.scrollable ? 'flex-1 min-h-0 overflow-y-auto custom-scrollbar' : '',
+)
 </script>
 
 <template>
