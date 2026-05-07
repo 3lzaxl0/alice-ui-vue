@@ -193,3 +193,39 @@ export function formatDate(
 
   return date.toLocaleDateString()
 }
+
+/**
+ * Returns the month name for a given month number (1-12) or string ("01"-"12").
+ */
+export function getMonthName(month: string | number, short = false): string {
+  const index = typeof month === 'string' ? parseInt(month, 10) - 1 : Number(month) - 1
+  const months = [
+    'ENERO',
+    'FEBRERO',
+    'MARZO',
+    'ABRIL',
+    'MAYO',
+    'JUNIO',
+    'JULIO',
+    'AGOSTO',
+    'SEPTIEMBRE',
+    'OCTUBRE',
+    'NOVIEMBRE',
+    'DICIEMBRE',
+  ]
+  const shortMonths = [
+    'ENE',
+    'FEB',
+    'MAR',
+    'ABR',
+    'MAY',
+    'JUN',
+    'JUL',
+    'AGO',
+    'SEP',
+    'OCT',
+    'NOV',
+    'DIC',
+  ]
+  return short ? shortMonths[index] || '' : months[index] || ''
+}

@@ -88,6 +88,15 @@ function resolveVariant(col: Column<T>, item: T): string {
   return 'default'
 }
 
+function resolveUnit(col: Column<T>, item: T): string {
+  if (col.unit) return col.unit
+  if (col.unitKey) {
+    const val = getSafeValue(item, col.unitKey)
+    return val !== undefined && val !== null ? String(val) : ''
+  }
+  return ''
+}
+
 // Expand dialog state for maxLength truncation
 const expandDialogVisible = ref(false)
 const expandDialogTitle = ref('')
@@ -214,14 +223,14 @@ function openImagePreview(url: string, title?: string) {
               </span>
 
               <!-- Numeric + Unit -->
-              <div v-else-if="col.unitKey" class="flex items-center gap-1.5" :class="{
+              <div v-else-if="col.unitKey || col.unit" class="flex items-center gap-1.5" :class="{
                 'justify-center': col.align === 'center',
                 'justify-end': col.align === 'right',
               }">
                 <AliceText variant="caption" weight="bold" class="tabular-nums">
                   {{ getSafeValue(item, col.key) }}
                 </AliceText>
-                <AliceBadge :label="String(getSafeValue(item, col.unitKey))" type="soft" />
+                <AliceBadge :label="resolveUnit(col, item)" type="soft" />
               </div>
 
               <!-- Special Type: Tags -->
@@ -233,14 +242,16 @@ function openImagePreview(url: string, title?: string) {
                   <template #trigger>
                     <AliceButton variant="primary" size="sm" :icon="ScrollText" :icon-size="12">
                       {{ Array.isArray(getSafeValue(item, col.key)) ? (getSafeValue(item, col.key) as unknown[]).length
-                      : 0 }}
+                        : 0 }}
                     </AliceButton>
                   </template>
                   <template #default="{ close }">
                     <div class="flex flex-col gap-3 min-w-[220px] max-w-xs p-3">
-                      <div class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700">
+                      <div
+                        class="flex items-center justify-between pb-2 border-b border-gray-100 dark:border-slate-700">
                         <AliceText variant="label" color="muted">Detalle</AliceText>
-                        <AliceButton variant="error" design="ghost-subtle" size="icon-sm" :icon="X" :icon-size="14" @click="close" />
+                        <AliceButton variant="error" design="ghost-subtle" size="icon-sm" :icon="X" :icon-size="14"
+                          @click="close" />
                       </div>
                       <div class="flex flex-wrap gap-1.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar">
                         <AliceBadge v-for="(tag, idx) in getSafeValue(item, col.key) as unknown[]" :key="idx"

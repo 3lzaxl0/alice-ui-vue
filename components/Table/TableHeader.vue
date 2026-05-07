@@ -81,7 +81,7 @@ function getOptionsForColumn(col: Column<T>) {
       </th>
 
       <th v-for="col in visibleColumns" :key="String(col.key)" :class="tableVariants.headerCell({
-        sortable: !!col.sortable,
+        sortable: col.sortable !== false,
         frozen: !!col.frozen,
         frozenRight: !!col.frozenRight,
         dragging: draggingColumnKey === String(col.key),
@@ -98,7 +98,7 @@ function getOptionsForColumn(col: Column<T>) {
         :data-col-key="String(col.key)"
         @dragstart="emit('drag-start', $event, String(col.key))"
         @dragend="emit('drag-end', $event)"
-        @click="col.sortable && emit('sort', String(col.key))">
+        @click="col.sortable !== false && emit('sort', String(col.key))">
         <div class="flex items-center gap-2">
 
           <!-- Filter Button -->
@@ -137,7 +137,7 @@ function getOptionsForColumn(col: Column<T>) {
           </span>
 
           <!-- Sort Indicators -->
-          <div v-if="col.sortable" class="flex flex-col text-gray-400">
+          <div v-if="col.sortable !== false" class="flex flex-col text-gray-400">
             <ArrowUp v-if="currentSortColumn === String(col.key) && currentSortDirection === 'asc'" :size="14"
               class="text-primary-600" />
             <ArrowDown v-else-if="currentSortColumn === String(col.key) && currentSortDirection === 'desc'" :size="14"

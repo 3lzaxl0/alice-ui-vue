@@ -49,6 +49,7 @@ export interface Column<T> {
   badgeType?: 'normal' | 'filled' | 'soft'
   // Advanced Formatting
   unitKey?: keyof T | string // Key for unit of measure
+  unit?: string // Static unit string
   dateFormat?: 'iso' | 'full' | 'short' | 'raw' | 'datetime' | 'timestamp'
   currencyCode?: string
   align?: 'left' | 'center' | 'right'

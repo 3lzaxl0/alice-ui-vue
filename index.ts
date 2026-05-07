@@ -88,6 +88,7 @@ export * from "./types";
 export {
   getLocalDateString,
   formatDate,
+  getMonthName,
   toGraphQLDateTime,
 } from "./utils/date";
 export { formatCurrency } from "./utils/currency";
