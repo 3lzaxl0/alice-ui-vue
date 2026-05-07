@@ -38,13 +38,13 @@ defineProps<{
   <div class="flex flex-col gap-8 max-w-7xl mx-auto px-4 md:px-0">
     <!-- Hero Section -->
     <div
-      class="relative overflow-hidden bg-linear-to-r from-primary-600 to-primary-700 p-8 md:p-10 text-white shadow-lg rounded-3xl"
+      class="relative overflow-hidden bg-linear-to-r from-primary-600 to-primary-700 p-6 md:p-10 text-white shadow-lg rounded-2xl md:rounded-3xl"
     >
       <div class="relative z-10">
-        <h1 class="text-2xl md:text-4xl font-bold mb-4 tracking-tight">
+        <h1 class="text-2xl md:text-4xl font-bold mb-2 md:mb-4 tracking-tight">
           Bienvenido, <span class="opacity-90">{{ userName }}</span>
         </h1>
-        <p class="text-primary-100 text-lg md:text-xl font-light">
+        <p class="text-primary-100 text-base md:text-xl font-light">
           Selecciona una operación para comenzar o utiliza el menú lateral para navegar por el
           sistema.
         </p>
@@ -60,17 +60,17 @@ defineProps<{
     </div>
 
     <!-- Cards Grid -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
       <RouterLink
         v-for="item in items"
         :key="item.to"
         :to="item.to"
         :class="welcomeCardVariants({ color: item.color as WelcomeColor })"
       >
-        <div class="flex flex-col h-full gap-4">
+        <div class="flex flex-col h-full gap-3 md:gap-4">
           <!-- Icon Container -->
           <div :class="welcomeIconVariants({ color: item.color as WelcomeColor })">
-            <component :is="item.icon" :size="24" stroke-width="2" />
+            <component :is="item.icon" class="w-5 h-5 md:w-6 md:h-6" stroke-width="2" />
           </div>
 
           <!-- Content -->
@@ -80,7 +80,7 @@ defineProps<{
             </h3>
             <p
               v-if="item.description"
-              class="text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2"
+              class="text-xs md:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2"
             >
               {{ item.description }}
             </p>
