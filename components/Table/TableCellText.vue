@@ -63,12 +63,11 @@ watch(() => props.text, checkTruncationDeferred)
       v-if="isTruncated"
       variant="primary"
       design="ghost-subtle"
-      size="sm"
+      size="icon-sm"
       :icon="Eye"
       :icon-size="11"
       @click.stop="emit('expand', header, text)"
     >
-      Ver más
     </AliceButton>
   </div>
 </template>
