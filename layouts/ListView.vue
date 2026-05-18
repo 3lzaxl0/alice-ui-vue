@@ -43,7 +43,7 @@ function handleFilter() {
 </script>
 
 <template>
-  <AliceView :loading="loading">
+  <AliceView :loading="loading" padding="0">
     <!-- Panel de Filtros Automatizado -->
     <AliceFilterPanel v-if="$slots.filters" @filter="handleFilter">
       <slot name="filters" />

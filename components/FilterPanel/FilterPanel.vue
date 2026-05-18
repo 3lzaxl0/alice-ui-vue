@@ -68,7 +68,7 @@ onUnmounted(() => {
 
 <template>
   <div
-    class="bg-white dark:bg-white/2 p-5 border border-gray-100 dark:border-white/10 flex flex-col lg:flex-row items-end lg:items-center justify-between transition-all duration-300 rounded-alice-md shadow-alice-sm"
+    class="bg-white dark:bg-white/2 p-3 border border-gray-100 dark:border-white/10 flex flex-col lg:flex-row items-end lg:items-center justify-between transition-all duration-300 rounded-alice-md shadow-alice-sm"
     :style="{ gap: `${props.gap * 0.25}rem` }"
   >
     <!-- Filters Area -->
