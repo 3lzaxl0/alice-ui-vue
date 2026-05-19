@@ -55,7 +55,7 @@ export const buttonVariants = cva(
         variant: "warning",
         design: "solid",
         class:
-          "bg-warning-500 text-white shadow-sm hover:shadow-md hover:bg-warning-500 active:bg-warning-700 focus:ring-warning-500/50",
+          "bg-warning-600 text-white shadow-sm hover:shadow-md hover:bg-warning-500 active:bg-warning-800 focus:ring-warning-500/50",
       },
       {
         variant: "error",
