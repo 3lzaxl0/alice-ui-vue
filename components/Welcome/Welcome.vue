@@ -1,11 +1,6 @@
 <script setup lang="ts">
 import { type Component } from 'vue'
-import {
-  welcomeCardVariants,
-  welcomeIconVariants,
-  welcomeTitleVariants,
-  welcomeLinkVariants,
-} from './Welcome.variants'
+import WelcomeItemComponent from './WelcomeItem.vue'
 
 defineOptions({
   name: 'AliceWelcome',
@@ -61,41 +56,15 @@ defineProps<{
 
     <!-- Cards Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-      <RouterLink
+      <WelcomeItemComponent
         v-for="item in items"
         :key="item.to"
+        :label="item.label"
         :to="item.to"
-        :class="welcomeCardVariants({ color: item.color as WelcomeColor })"
-      >
-        <div class="flex flex-col h-full gap-3 md:gap-4">
-          <!-- Icon Container -->
-          <div :class="welcomeIconVariants({ color: item.color as WelcomeColor })">
-            <component :is="item.icon" class="w-5 h-5 md:w-6 md:h-6" stroke-width="2" />
-          </div>
-
-          <!-- Content -->
-          <div>
-            <h3 :class="welcomeTitleVariants({ color: item.color as WelcomeColor })">
-              {{ item.label }}
-            </h3>
-            <p
-              v-if="item.description"
-              class="text-xs md:text-sm text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-2"
-            >
-              {{ item.description }}
-            </p>
-          </div>
-
-          <!-- Arrow Indicator (Visible on hover) -->
-          <div
-            class="mt-auto flex justify-end opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-x-[-10px] group-hover:translate-x-0"
-          >
-            <span :class="welcomeLinkVariants({ color: item.color as WelcomeColor })">
-              Ir ahora &rarr;
-            </span>
-          </div>
-        </div>
-      </RouterLink>
+        :icon="item.icon"
+        :description="item.description"
+        :color="item.color as WelcomeColor"
+      />
     </div>
   </div>
 </template>

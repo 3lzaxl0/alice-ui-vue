@@ -48,6 +48,8 @@ withDefaults(
     headerRefreshing?: boolean
     /** Show color picker in sidebar */
     showColorPicker?: boolean
+    /** Whether the content section should be scrollable */
+    scrollable?: boolean
   }>(),
   {
     sidebarTitle: '',
@@ -61,6 +63,7 @@ withDefaults(
     transitionName: 'slide-fade',
     keepAliveMax: 10,
     showColorPicker: false,
+    scrollable: false,
   },
 )
 
@@ -114,7 +117,10 @@ function handleSwitchRole(code: string) {
         </slot>
 
         <!-- Viewport / Content Section -->
-        <div class="px-6 pb-6 pt-4 flex-1 min-h-0 flex flex-col gap-4 overflow-hidden">
+        <div
+          class="px-6 pb-6 pt-4 flex-1 min-h-0 flex flex-col gap-4"
+          :class="scrollable ? 'overflow-y-auto custom-scrollbar' : 'overflow-hidden'"
+        >
           <slot>
             <!-- Integrated Routing Logic -->
             <RouterView v-slot="{ Component }" class="flex-1 min-h-0 flex flex-col">

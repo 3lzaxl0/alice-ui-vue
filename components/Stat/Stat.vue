@@ -42,10 +42,10 @@ const displayValue = computed(() => {
 
 <template>
   <AliceCard :interactive="interactive" :class="computedContainerClass" radius="lg">
-    <div class="flex items-center gap-3">
+    <div class="flex flex-col items-start sm:flex-row sm:items-center gap-2.5 sm:gap-3">
       <AliceIcon v-if="icon" :icon="icon" :variant="variant" size="md" radius="xl" />
       
-      <div class="flex flex-col min-w-0">
+      <div class="flex flex-col min-w-0 w-full sm:flex-1">
         <AliceText variant="description" weight="medium" truncate class="leading-tight">
           {{ title }}
         </AliceText>
