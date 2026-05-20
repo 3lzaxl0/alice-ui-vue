@@ -55,7 +55,7 @@ defineProps<{
     </div>
 
     <!-- Cards Grid -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
+    <div class="grid grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-4 md:gap-6">
       <WelcomeItemComponent
         v-for="item in items"
         :key="item.to"

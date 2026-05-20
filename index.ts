@@ -103,3 +103,5 @@ export { usePageHeader } from "./composables/usePageHeader";
 export { useAlicePageRefresh } from "./composables/useAlicePageRefresh";
 export { useClipboard } from "./composables/useClipboard";
 export { useDialogStack } from "./composables/useDialogStack";
+export { useSequentialLoader, type LoaderStep, type SequentialLoaderOptions } from "./composables/useSequentialLoader";
+
