@@ -5,6 +5,7 @@ interface Props {
   modelValue?: boolean
   disabled?: boolean
   id?: string
+  label?: string
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -33,7 +34,7 @@ function toggle() {
 
 <template>
   <div
-    class="relative inline-flex items-center cursor-pointer select-none group"
+    class="relative inline-flex items-center gap-2.5 cursor-pointer select-none group"
     @click.stop="toggle"
   >
     <input
@@ -46,7 +47,7 @@ function toggle() {
     />
 
     <div
-      class="flex items-center justify-center transition-all duration-200 border rounded-full w-5 h-5 shadow-alice-sm"
+      class="flex items-center justify-center transition-all duration-200 border rounded-full w-5 h-5 shadow-alice-sm shrink-0"
       :class="[
         isChecked
           ? 'bg-white dark:bg-white/5 border-primary-600 border-[6px]'
@@ -54,6 +55,19 @@ function toggle() {
         disabled ? 'opacity-50 cursor-not-allowed grayscale' : 'cursor-pointer',
       ]"
     ></div>
+
+    <!-- Label -->
+    <label
+      v-if="label || $slots.default"
+      :for="id"
+      class="text-sm font-medium transition-colors select-none"
+      :class="[
+        disabled ? 'text-slate-400 cursor-not-allowed' : 'text-slate-700 dark:text-slate-200 cursor-pointer group-hover:text-primary-600 dark:group-hover:text-primary-400'
+      ]"
+      @click.prevent
+    >
+      <slot>{{ label }}</slot>
+    </label>
 
     <!-- Focus Ring -->
     <div

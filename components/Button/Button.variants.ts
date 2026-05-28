@@ -34,7 +34,7 @@ export const buttonVariants = cva(
       },
       rounded: {
         true: "rounded-full",
-        false: "rounded-alice-md",
+        false: "", // No class — radius variant handles the default
       },
     },
     compoundVariants: [
@@ -183,6 +183,7 @@ export const buttonVariants = cva(
       variant: "primary",
       design: "solid",
       size: "md",
+      radius: "md",
       rounded: false,
     },
   },

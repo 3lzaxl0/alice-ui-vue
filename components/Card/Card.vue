@@ -97,7 +97,7 @@ const heightContentClass = computed(() =>
 
 <template>
   <div
-    class="relative border border-gray-100 dark:border-white/10 transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden group"
+    class="relative border border-gray-100 dark:border-white/10 transition-all duration-300 bg-white dark:bg-slate-900 overflow-hidden"
     :class="[radiusClass, shadowClass, activeClass, interactiveClass, heightOuterClass]"
   >
     <AliceLoading :active="loading" :text="loadingText" />

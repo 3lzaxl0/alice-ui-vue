@@ -1,6 +1,6 @@
 @theme {
   /* --- Semantic Color Palettes (Mapping to CSS Variables) --- */
-  
+
   /* Primary Case (Standard Blue) */
   --color-primary-50: var(--alice-primary-50);
   --color-primary-100: var(--alice-primary-100);
@@ -67,10 +67,10 @@
   --color-error-950: var(--alice-error-950);
 
   /* Border Radius Tokens */
-  --radius-alice-sm: 8px;
-  --radius-alice-md: 12px;
-  --radius-alice-lg: 16px;
-  --radius-alice-xl: 24px;
+  --radius-alice-sm: 6px;
+  --radius-alice-md: 10px;
+  --radius-alice-lg: 20px;
+  --radius-alice-xl: 28px;
 
   /* Box Shadow Tokens */
   --shadow-alice-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);

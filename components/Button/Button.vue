@@ -77,7 +77,7 @@ const computedClass = computed(() => {
         class="shrink-0"
         :class="{ 'animate-spin': loading && loadingAnimateIcon }"
       />
-      <span v-if="$slots.default" class="truncate"><slot /></span>
+      <span v-if="$slots.default && size !== 'icon' && size !== 'icon-sm'" class="truncate"><slot /></span>
     </div>
   </button>
 </template>

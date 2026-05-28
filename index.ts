@@ -9,6 +9,7 @@ export { default as AliceButton } from "./components/Button/Button.vue";
 export { default as AliceInput } from "./components/Input/Input.vue";
 export { default as AliceCheckbox } from "./components/Checkbox/Checkbox.vue";
 export { default as AliceRadio } from "./components/Radio/Radio.vue";
+export { default as AliceSwitch } from "./components/Switch/Switch.vue";
 
 // Components - Feedback
 export { default as AliceBadge } from "./components/Badge/Badge.vue";
@@ -44,6 +45,7 @@ export { default as AliceWelcomeItem } from "./components/Welcome/WelcomeItem.vu
 export { default as AliceUnauthorized } from "./components/Unauthorized/Unauthorized.vue";
 
 // Components - Layout
+export { default as AliceLayout } from "./components/Layout/Layout.vue";
 export { default as AliceView } from "./components/View/View.vue";
 export { default as AliceContainer } from "./components/Container/Container.vue";
 export { default as AliceFilterPanel } from "./components/FilterPanel/FilterPanel.vue";
@@ -105,3 +107,19 @@ export { useClipboard } from "./composables/useClipboard";
 export { useDialogStack } from "./composables/useDialogStack";
 export { useSequentialLoader, type LoaderStep, type SequentialLoaderOptions } from "./composables/useSequentialLoader";
 
+// Component Metadata Registry
+import { buttonMeta } from "./components/Button/Button.meta";
+import { badgeMeta } from "./components/Badge/Badge.meta";
+import { cardMeta } from "./components/Card/Card.meta";
+import { textMeta } from "./components/Text/Text.meta";
+import { switchMeta } from "./components/Switch/Switch.meta";
+
+export { default as AliceCodeBlock } from "./components/CodeBlock/CodeBlock.vue";
+
+export const ALICE_COMPONENT_METAS = [
+  buttonMeta,
+  badgeMeta,
+  cardMeta,
+  textMeta,
+  switchMeta,
+];
