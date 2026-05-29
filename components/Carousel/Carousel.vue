@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted, nextTick, provide } from 'vue'
 import { ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import AliceContainer from '../Container/Container.vue'
 
@@ -32,6 +32,8 @@ const props = withDefaults(
     padding: 'md',
   },
 )
+
+provide('carouselItemMinWidth', computed(() => props.itemMinWidth))
 
 const emit = defineEmits<{
   (e: 'update:modelValue', value: number): void
@@ -87,8 +89,6 @@ function handleMouseDown(e: MouseEvent) {
   if (!el) return
   isDragging.value = true
   hasDragged.value = false
-  el.style.scrollBehavior = 'auto' // Prevent laggy smooth snapping during drag
-  el.style.cursor = 'grabbing'
   
   // To avoid selecting text inside the carousel when dragging
   window.getSelection()?.removeAllRanges()
@@ -115,8 +115,6 @@ function handleMouseUpOrLeave() {
   if (!el) return
   if (isDragging.value) {
     isDragging.value = false
-    el.style.scrollBehavior = 'smooth'
-    el.style.cursor = 'grab'
     updateScrollState()
   }
 }
@@ -165,12 +163,15 @@ defineExpose({ hasDragged })
       <ChevronLeft :size="16" />
     </button>
 
-    <!-- Scroll Track -->
     <div
       ref="trackRef"
       class="flex overflow-x-auto scrollbar-hide"
       :class="gapClass"
-      style="scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; scroll-behavior: smooth;"
+      :style="{
+        scrollSnapType: isDragging ? 'none' : 'x mandatory',
+        scrollBehavior: isDragging ? 'auto' : 'smooth',
+        '-webkit-overflow-scrolling': 'touch'
+      }"
       @scroll="updateScrollState"
     >
       <slot :select-item="selectItem" :selected="modelValue" :has-dragged="hasDragged" />

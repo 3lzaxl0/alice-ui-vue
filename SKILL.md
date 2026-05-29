@@ -17,8 +17,8 @@ Alice UI is designed for total standardization. **It is strictly FORBIDDEN to us
 
 ### 🔍 The No-Hallucination Law
 **Do NOT invent props or variants.** The library components have strict API definitions.
-- **Rule**: If you are unsure about a component's capabilities, you MUST read its `.vue` or `*.variants.ts` file before proposing code.
-- **Action**: Always prioritize verified props over assumptions.
+- **Rule**: If you are unsure about a component's capabilities, you MUST read its `.vue`, its `*.meta.ts` (e.g., `Button.meta.ts` which provides metadata, documentation, and real-world usage cases), or its `*.variants.ts` file before proposing or changing code.
+- **Action**: Always prioritize verified props over assumptions, and use the component's metadata/variants registry to understand exactly how properties like `radius`, `variant`, and `design` should be aligned.
 
 ### 🏗️ Clean Architecture Law
 All business logic must be completely decoupled from the UI.

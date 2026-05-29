@@ -109,15 +109,11 @@ const gridAreas = computed(() => {
 })
 
 const containerStyle = computed(() => ({
-  display: 'grid',
-  width: '100%',
-  flex: '1 1 0',         // Crece dentro de AliceView (flex-col)
-  minHeight: '0',        // Necesario para que grid no desborde en flex
-  gridTemplateColumns: gridColumns.value,
-  gridTemplateRows: gridRows.value,
-  gridTemplateAreas: gridAreas.value,
-  gap: props.gap,
-  padding: props.padding,
+  '--grid-cols': gridColumns.value,
+  '--grid-rows': gridRows.value,
+  '--grid-areas': gridAreas.value,
+  '--gap': props.gap,
+  '--padding': props.padding,
 }))
 
 const centerStyle = computed(() => ({
@@ -129,7 +125,7 @@ const centerStyle = computed(() => ({
 </script>
 
 <template>
-  <div :style="containerStyle">
+  <div class="alice-layout" :style="containerStyle">
     <!-- TOP ZONE -->
     <div v-if="hasTop" style="grid-area: top; min-width: 0;">
       <slot name="top" />
@@ -156,3 +152,24 @@ const centerStyle = computed(() => ({
     </div>
   </div>
 </template>
+
+<style scoped>
+.alice-layout {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  flex: 1 1 0%;
+  min-height: 0;
+  gap: var(--gap);
+  padding: var(--padding);
+}
+
+@media (min-width: 1024px) {
+  .alice-layout {
+    display: grid;
+    grid-template-columns: var(--grid-cols);
+    grid-template-rows: var(--grid-rows);
+    grid-template-areas: var(--grid-areas);
+  }
+}
+</style>

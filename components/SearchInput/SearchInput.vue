@@ -59,6 +59,7 @@ interface Props {
   /** Debounce delay for the search event in milliseconds (default: 0) */
   debounceMs?: number
   readonly?: boolean
+  clearable?: boolean
 }
 
 defineOptions({
@@ -76,6 +77,7 @@ const props = withDefaults(defineProps<Props>(), {
   minChars: 0,
   debounceMs: 0,
   readonly: false,
+  clearable: true,
 })
 
 const emit = defineEmits<{
@@ -200,7 +202,7 @@ onUnmounted(() => {
 
       <!-- Clear Button -->
       <button
-        v-if="searchQuery && !disabled && !readonly"
+        v-if="clearable && searchQuery && !disabled && !readonly"
         @click="clear"
         class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 cursor-pointer"
       >

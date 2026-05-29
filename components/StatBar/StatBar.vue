@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 
 defineOptions({ name: 'AliceStatBar' })
 
@@ -18,8 +18,13 @@ const props = withDefaults(defineProps<Props>(), {
   align: 'stretch',
 })
 
+// Provide flat state to nested AliceStat components
+provide('alice-stat-flat', true)
+
 const containerClasses = computed(() => {
-  const classes = ['flex w-full']
+  const classes = [
+    'flex w-full border border-gray-100 dark:border-white/10 bg-white dark:bg-slate-900 rounded-2xl shadow-sm overflow-hidden'
+  ]
   
   // Direction handling
   if (props.direction === 'row') classes.push('flex-row')

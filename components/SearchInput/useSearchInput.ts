@@ -194,17 +194,46 @@ export function useSearchInput(
 
     return list
       .map((r) => {
-        const labelMatch = smartFuzzyMatch(q, r.label)
-        const descMatch = r.description ? smartFuzzyMatch(q, r.description) : null
-        const valueMatch = smartFuzzyMatch(q, String(r.value))
+        const qLower = q.toLowerCase()
+        const labelLower = r.label.toLowerCase()
 
-        const score = Math.max(
-          labelMatch?.score || 0,
-          descMatch?.score || 0,
-          valueMatch?.score || 0,
-        )
+        // 1. Fuzzy match on Label (Component Name)
+        const labelMatch = smartFuzzyMatch(q, r.label)
+
+        // 2. Strict substring match on Description to prevent random scattered character highlights
+        const hasDescSubstring = r.description ? r.description.toLowerCase().includes(qLower) : false
+        const descMatch = hasDescSubstring && r.description ? smartFuzzyMatch(q, r.description) : null
+
+        // 3. Strict substring match on Value
+        const hasValueSubstring = String(r.value).toLowerCase().includes(qLower)
+        const valueMatch = hasValueSubstring ? smartFuzzyMatch(q, String(r.value)) : null
 
         if (labelMatch || descMatch || valueMatch) {
+          let score = 0
+
+          // Heavy weight on component name (label) matches
+          if (labelMatch) {
+            score += labelMatch.score * 10
+
+            // Massive bonus for exact substring matches in name
+            if (labelLower.includes(qLower)) {
+              score += 1500
+            }
+
+            // Super bonus if component name starts with search query
+            if (labelLower.startsWith(qLower) || labelLower.startsWith('alice' + qLower)) {
+              score += 3000
+            }
+          }
+
+          // Minor contribution for description and value matches
+          if (descMatch) {
+            score += descMatch.score
+          }
+          if (valueMatch) {
+            score += valueMatch.score
+          }
+
           return {
             ...r,
             labelIndices: labelMatch?.indices,

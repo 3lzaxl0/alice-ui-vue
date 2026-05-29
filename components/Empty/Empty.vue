@@ -8,13 +8,14 @@ defineOptions({
 interface Props {
   icon?: Component
   title?: string
-  description: string
+  description?: string
   showBorder?: boolean
   compact?: boolean
   fullHeight?: boolean
 }
 
 withDefaults(defineProps<Props>(), {
+  description: '',
   showBorder: true,
   compact: false,
   fullHeight: false,

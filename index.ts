@@ -62,11 +62,14 @@ export { default as AliceEmpty } from "./components/Empty/Empty.vue";
 export { default as AliceIconInfo } from "./components/IconInfo/IconInfo.vue";
 export { default as AliceGrid } from "./components/Grid/Grid.vue";
 export { default as AliceGridItem } from "./components/Grid/GridItem.vue";
+export { default as AliceRow } from "./components/Row/Row.vue";
+export { default as AliceCol } from "./components/Row/Col.vue";
 export { default as AliceFlex } from "./components/Flex/Flex.vue";
 export { default as AliceStatBar } from "./components/StatBar/StatBar.vue";
 export { default as AliceStat } from "./components/Stat/Stat.vue";
 export { default as AliceIcon } from "./components/Icon/Icon.vue";
 export { default as AliceCarousel } from "./components/Carousel/Carousel.vue";
+export { default as AliceCarouselItem } from "./components/Carousel/CarouselItem.vue";
 export { default as AliceUnderConstruction } from "./components/UnderConstruction/UnderConstruction.vue";
 export { default as AliceThemeProvider } from "./components/ThemeProvider/ThemeProvider.vue";
 export { default as AliceThemeToggle } from "./components/ThemeToggle/ThemeToggle.vue";
@@ -113,6 +116,14 @@ import { badgeMeta } from "./components/Badge/Badge.meta";
 import { cardMeta } from "./components/Card/Card.meta";
 import { textMeta } from "./components/Text/Text.meta";
 import { switchMeta } from "./components/Switch/Switch.meta";
+import { dividerMeta } from "./components/Divider/Divider.meta";
+import { emptyMeta } from "./components/Empty/Empty.meta";
+import { iconInfoMeta } from "./components/IconInfo/IconInfo.meta";
+import { statMeta } from "./components/Stat/Stat.meta";
+import { statBarMeta } from "./components/StatBar/StatBar.meta";
+import { carouselMeta } from "./components/Carousel/Carousel.meta";
+import { checkboxMeta } from "./components/Checkbox/Checkbox.meta";
+import { inputMeta } from "./components/Input/Input.meta";
 
 export { default as AliceCodeBlock } from "./components/CodeBlock/CodeBlock.vue";
 
@@ -121,5 +132,13 @@ export const ALICE_COMPONENT_METAS = [
   badgeMeta,
   cardMeta,
   textMeta,
+  dividerMeta,
   switchMeta,
+  emptyMeta,
+  iconInfoMeta,
+  statMeta,
+  statBarMeta,
+  carouselMeta,
+  checkboxMeta,
+  inputMeta,
 ];

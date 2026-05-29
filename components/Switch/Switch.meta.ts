@@ -21,7 +21,7 @@ export const switchMeta: ComponentDoc = {
   ],
   codeTemplate: (opts) => {
     const attrs: string[] = []
-    if (opts.modelValue === true) attrs.push('  v-model="activado"')
+    attrs.push(`  :model-value="${opts.modelValue ?? false}"`)
     if (opts.variant !== 'primary') attrs.push(`  variant="${opts.variant}"`)
     if (opts.size !== 'md') attrs.push(`  size="${opts.size}"`)
     if (opts.disabled === true) attrs.push('  :disabled="true"')
